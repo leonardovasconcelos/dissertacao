@@ -1,0 +1,173 @@
+% --- -----------------------------------------------------------------
+% --- Elementos usados na Capa e na Folha de Rosto.
+% --- EXPRESSÔES ENTRE <> DEVERÂO SER COMPLETADAS COM A INFORMAÇÂO ESPECÍFICA DO TRABALHO
+% --- E OS SÌMBOLOS <> DEVEM SER RETIRADOS 
+% --- -----------------------------------------------------------------
+\autor{HEDER DORNELES SOARES} % deve ser escrito em maiusculo
+
+\titulo{SINCRONIZAÇÃO EM REDES SENSORES SEM FIO}
+
+\instituicao{UNIVERSIDADE FEDERAL FLUMINENSE}
+
+\orientador{CÉLIO VINICIUS NEVES DE ALBUQUERQUE}
+
+\coorientador{RAPHAEL PEREIRA DE OLIVEIRA GUERRA} % se nao existir co-orientador apague essa linha
+
+\local{NITER\'{O}I}
+
+\data{2015} % ano da defesa
+
+\comentario{Dissertação de Mestrado apresentada ao Programa de P\'{o}s-Gradua\c{c}\~{a}o em Computa\c{c}\~{a}o da \mbox{Universidade} Federal Fluminense como requisito parcial para a obten\c{c}\~{a}o do Grau de \mbox{Mestre em Computa\c{c}\~{a}o}. \'{A}rea de concentra\c{c}\~{a}o: \mbox{Redes e Sistemas Distribuídos e Paralelos}} %preencha com a sua area de concentracao
+
+
+% --- -----------------------------------------------------------------
+% --- Capa. (Capa externa, aquela com as letrinhas douradas)(Obrigatorio)
+% --- ----------------------------------------------------------------
+\capa
+
+% --- -----------------------------------------------------------------
+% --- Folha de rosto. (Obrigatorio)
+% --- ----------------------------------------------------------------
+\folhaderosto
+
+
+\pagestyle{ruledheader}
+\setcounter{page}{1}
+\pagenumbering{roman}
+
+% --- -----------------------------------------------------------------
+% --- Termo de aprovacao. (Obrigatorio)
+% --- ----------------------------------------------------------------
+\cleardoublepage
+\thispagestyle{empty}
+
+\vspace{-60mm}
+
+\begin{center}
+   {\large HEDER DORNELES SOARES}\\
+   \vspace{7mm}
+
+   SINCRONIZAÇÃO EM REDES SENSORES SEM FIO\\
+  \vspace{10mm}
+\end{center}
+
+\noindent
+\begin{flushright}
+\begin{minipage}[t]{8cm}
+
+Dissertação de Mestrado apresentada ao Programa de P\'{o}s-Gradua\c{c}\~{a}o em Computa\c{c}\~{a}o da Universidade Federal Fluminense como requisito parcial para a obten\c{c}\~{a}o do \mbox{Grau} de Mestre em Computa\c{c}\~{a}o. \'{A}rea de concentra\c{c}\~{a}o: \mbox{Redes e Sistemas Distribuídos e Paralelos.} %preencha com a sua area de concentracao
+
+\end{minipage}
+\end{flushright}
+\vspace{1.0 cm}
+\noindent
+Aprovada em Janeiro de 2016. \\
+\begin{flushright}
+  \parbox{12cm}
+  {
+  \begin{center}
+  BANCA EXAMINADORA \\
+  \vspace{6mm}
+  \rule{11cm}{.1mm} \\
+    Prof. Célio Vinicius Neves de Albuquerque - Orientador, UFF \\
+    \vspace{6mm}
+  \rule{11cm}{.1mm} \\
+    Prof. Raphael Pereira de Oliveira Guerra, Coorientador, UFF\\
+    \vspace{6mm}
+  \rule{11cm}{.1mm} \\
+    Prof. <NOME DO AVALIADOR>, <INSTITUI\c{C}\~AO>\\
+  \vspace{4mm}
+  \rule{11cm}{.1mm} \\
+    Prof. <NOME DO AVALIADOR>, <INSTITUI\c{C}\~AO>\\
+    \vspace{6mm}
+  \rule{11cm}{.1mm} \\
+    Prof. <NOME DO AVALIADOR>, <INSTITUI\c{C}\~AO>\\
+  \vspace{6mm}
+  \end{center}
+  }
+\end{flushright}
+\begin{center}
+  \vspace{4mm}
+  Niter\'{o}i \\
+  %\vspace{6mm}
+  <ANO>
+
+\end{center}
+
+% --- -----------------------------------------------------------------
+% --- Dedicatoria.(Opcional)
+% --- -----------------------------------------------------------------
+\cleardoublepage
+\thispagestyle{empty}
+\vspace*{200mm}
+
+\begin{flushright}
+{\em 
+Dedicatória(s): Elemento opcional onde o autor presta homenagem ou dedica seu trabalho (ABNT, 2005).
+}
+\end{flushright}
+\newpage
+
+
+% --- -----------------------------------------------------------------
+% --- Agradecimentos.(Opcional)
+% --- -----------------------------------------------------------------
+\pretextualchapter{Agradecimentos}
+\hspace{5mm}
+Elemento opcional, colocado após a dedicatória (ABNT, 2005). 
+
+% --- -----------------------------------------------------------------
+% --- Resumo em portugues.(Obrigatorio)
+% --- -----------------------------------------------------------------
+\begin{resumo}
+
+Elemento obrigatório, constituído de uma sequência de frases concisas e objetivas e não de uma simples enumeração de tópicos, não ultrapassando 500 palavras (ABNT, 2005).
+
+{\hspace{-8mm} \bf{Palavras-chave}}: Palavras representativas do conteúdo do trabalho, isto é, palavras-chave e/ou descritores, conforme a ABNT NBR 6028 (ABNT, 2005).
+
+\end{resumo}
+
+% --- -----------------------------------------------------------------
+% --- Resumo em lingua estrangeira.(Obrigatorio)
+% --- -----------------------------------------------------------------
+\begin{abstract}
+
+Wireless sensors networks are distributed system composed of battery-powered nodes with low computational resources. Like in many distributed systems, some applications of WSN require time synchronization among their nodes. In the particular case of WSN, synchronization algorithms must respect the nodes computational constraints. The well known FTSP protocol is famous for achieving nanosecond precision with low overhead. However, it relies on MAC timestamp, a feature not available in all hardware. In this work, we propose MAC timestamp independent version in order to extend and adapt FTSP to work on hardware that do not have MAC timestamp while keeping the low overhead and high synchronization precision our results indicate an average synchronization error of 3$\mu{s}$ per hop, while adding a corretion message every three seconds.
+
+{\hspace{-8mm} \bf{Keywords}}: WSN, Time Synchronization, FTSP, MAC Timestamp.
+
+\end{abstract}
+
+% --- -----------------------------------------------------------------
+% --- Lista de figuras.(Opcional)
+% --- -----------------------------------------------------------------
+%\cleardoublepage
+\listoffigures
+
+
+% --- -----------------------------------------------------------------
+% --- Lista de tabelas.(Opcional)
+% --- -----------------------------------------------------------------
+\cleardoublepage
+%\label{pag:last_page_introduction}
+\listoftables
+\cleardoublepage
+
+% --- -----------------------------------------------------------------
+% --- Lista de abreviatura.(Opcional)
+%Elemento opcional, que consiste na relação alfabética das abreviaturas e siglas utilizadas no texto, seguidas das %palavras ou expressões correspondentes grafadas por extenso. Recomenda-se a elaboração de lista própria para cada %tipo (ABNT, 2005).
+% --- ----------------------------------------------------------------
+\cleardoublepage
+\pretextualchapter{Lista de Abreviaturas e Siglas}
+\begin{tabular}{lcl}
+<ABREVIATURA> & : & <SIGNIFICADO>;\\
+<ABREVIATURA> & : & <SIGNIFICADO>;\\
+<ABREVIATURA> & : & <SIGNIFICADO>;\\
+\end{tabular}
+% --- -----------------------------------------------------------------
+% --- Sumario.(Obrigatorio)
+% --- -----------------------------------------------------------------
+\pagestyle{ruledheader}
+\tableofcontents
+
+
