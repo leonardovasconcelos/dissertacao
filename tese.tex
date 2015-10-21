@@ -5,6 +5,12 @@
 
 \documentclass[ruledheader]{abnt_UFF}
 
+%outline command
+\newcount\outlineon
+\newcommand{\outline}[1]{\ifnum\outlineon>0\ \\\noindent\fbox{\begin{minipage}{\linewidth}{\footnotesize
+#1}\end{minipage}}\\\\\fi}
+\newcommand{\exclude}[1]{}
+
 %---pacotes para hiphenizacao e acentuacao em portugues
 \usepackage[brazil]{babel}
 \usepackage[latin1]{inputenc}
