@@ -1,13 +1,27 @@
 \chapter{Introdução} \label{cap:cap1}
 \outlineon=1
 
-Este é o primeiro capítulo. 
-
 \outline{
 \begin{itemize}
 \item WSN são redes de sensores com recursos \dots
 \end{itemize}
 }
+
+
+As Redes de Sensores Sem Fio (RSSF) são compostas de pequenos dispositivos equipados com uma antena de comunicação sem fio, um ou mais tipos de sensores, e uma CPU de baixa capacidade de processamento de dados \cite{Baronti:JCC07}. Estes dispositivos geralmente são chamados de \textit{motes}. Devido ao alcance do sinal de rádio limitada e restrição energética uma RSSF tem restrições e caracteristicas únicas que a difere de redes de computadores e sistemas distribuídos tradicionais \cite{arampatzis2005survey}.
+
+As RSSF tem várias aplicações em diversos campos. A implantação de sensores em aplicações militares foi sempre muito difundido, de modo que a introdução de motes era uma incorporação natural para o avanço dos sistemas já utilizados. Aplicações que foram aprimoradas com o uso de RSSF incluem o rastreamento de inimigos e alvos \cite{yang2003}, monitoramento de veículos \cite{sinopoli2003}, sistema contra atirador \cite{simon2004} e sistemas de vigilância \cite{gui2004}. Monitoramento ambiental também provê oportunidades para aplicação de redes sensores sem fio. Nosso meio ambiente tem uma gama muito grande de informação que desempenha um papel importante em nossa qualidade de vida, como a qualidade do ar, água, som e radiação solar que estamos expostos todos os dias e que diretamente afetam nossa saúde \cite{oliveira2011wireless,oliver2004}. Com o interesse cada vez maior em coputação verde nos leva as preocupações com o consumo de energia eletrica em instalações de TI \cite{Chong:IEEEDT14}, e as RSSF têm um papel estratégico no monitoramento e controle destes ambientes \cite{bruno2014}.
+
+
+%Some of those applications require time synchronization mechanisms with good accuracy and scalability, all this complying with their low computational resources and energy availability \cite{bruno2014,simon2004,yang2003}.
+%Traditional synchronization methods, such as NTP \cite{mills1991}, widely used in servers and network clients do not apply in WSN due to non-deterministic factors related to the medium access in wireless transmission from the sensors.
+%Flooding Time Synchronization Protocol (FTSP) is the most popular time synchronization algorithm for WSN \cite{maroti2004}. 
+%It is fault-tolerant, achieves high accuracy ($\sim 1,5\mu{s}$ per hop) utilizing timestamps in low layers of the radio stack, and saves energy using a linear regression technique to compensate clock skews with few exchanges of synchronization messages.
+%However, MAC layer timestamping is not a standardized feature, and hence, not interoperable among different hardware and physical layer protocols.
+%There is an effort from Google to standardize MAC layer timestamping in WSN \cite{Wang:Patent09}, but so far there is not much compliance.
+
+Algumas dessas aplicações requerem mecanismos de sincronização de tempo com boa precisão e escalabilidade, tudo isso em conformidade com os seus baixos recursos computacionais e disponibilidade energética \cite{bruno2014,simon2004,yang2003}. Métodos de sincronização tradicionais, como NTP \cite{mills1991}, amplamente utilizado em servidores e clientes de rede não se aplicam em RSSF devido a fatores não determinístas relacionados com o acesso ao meio na transmissão sem fio dos sensores. O Flooding Time Synchronization Protocol (FTSP) é o algoritmo de sincronização de tempo mais popular para RSSF \cite{maroti2004}. 
+
 
 \section{Motivação}
 
