@@ -1,5 +1,6 @@
-\chapter{Sincronização em redes sensores sem fio} \label{cap:cap2}
-
+\chapter{Trabalhos Relacionados} \label{cap:cap2}
+\outlineon=1
+asdf
 \outline{
 \begin{itemize}
  \item Intro sobre redes sensores sem fio.
@@ -8,17 +9,47 @@
 \end{itemize}
 }
 
+\section{Relógios e o Problema de Sincronização}
+
+
+\section{Sincronização em Redes Sensores Sem Fio}
+
+
+\section{Básico de Sincronização de Tempo}
+
+\subsection{Mensagens de Sincronização}
+
+\subsection{Fontes de Imprecisão em Comunicação}
+
 \section{Protocolos de Sincronização}\label{sec:into}
 
 Falar sobre 
-\begin{itemize}
- \item RBS
+
+
+\subsection{RBS}
 \outline{
     É um método no qual o receptor usa as transmissões da camada física para comparar os relógios.
     Usa o tempo de chegada do pacote como tempo de referência de sincronização.
 }
- \item TPSN
- \item PulseSync
- \item FTSP
-\end{itemize}
+
+\subsection{LTS}
+\outline{
+    Lightweight Tree-Based Synchronization.
+}
+
+\subsection{TPSN}
+\outline{
+    TPSN não elimina incerteza no sender, apenas minimiza o erro.
+    Ele tenta reduzir este não determinismo utilizando timestamping da mensagem na camada MAC.
+}
+ 
+\subsection{PulseSync}
+
+ \outline{
+
+    No trabalho \cite{Lenzen:Sensys09} é realizado um estudo sobre o FTSP e é observado que o protocolo apresenta um crescimento do erro de sincronização baseado no diâmetro da rede.
+    Então propõe o protocolo PulseSync para melhorar esse cenário.
+    Também é dependente de MAC timestamping.
+}
+
 

@@ -16,6 +16,8 @@ As RSSF tem várias aplicações em diversos campos. A implantação de sensores em a
 Algumas dessas aplicações requerem mecanismos de sincronização de tempo com boa precisão e escalabilidade, tudo isso em conformidade com os seus baixos recursos computacionais e disponibilidade energética \cite{bruno2014,simon2004,yang2003}. Métodos de sincronização tradicionais, como NTP \cite{mills1991}, amplamente utilizado em servidores e clientes de rede não se aplicam em RSSF devido a fatores não determinístas relacionados com o acesso ao meio na transmissão sem fio dos sensores. O Flooding Time Synchronization Protocol (FTSP) é o algoritmo de sincronização de relógio mais popular para RSSF \cite{maroti2004}, ele é tolerante a falhas, consegue alta precisão ($\sim 1,5\mu{s}$ por salto) utilizando \textit{timestamps} em camadas baixas da pilha de rádio, usa a técnica de regressão linear para compensar o escorregamento do relógio usando poucas mensagens pela rede. Contudo, \textit{timestamps} na camada MAC não é um recurso padronizado, e portanto, não interoperáveis entre diferentes hardware e protocolos da camada física. Há um esforço do Google para padronizar \textit{timestamping} na camada MAC em RSSF \cite{Wang:Patent09}, mas até agora não há muita conformidade.
 
 
+\section{Definição do Problema}
+
 \section{Motivação}
 
 \outline{
@@ -25,9 +27,9 @@ Algumas dessas aplicações requerem mecanismos de sincronização de tempo com boa 
 }
 
 
-\section{Objetivos}\label{sec:objetivos}
+\section{Contribuição da Dissertação}\label{sec:contrib}
 
-Quais os objetivos do trabalho
+
 
 \outline{
 \begin{itemize}
