@@ -16,9 +16,35 @@ As RSSF tem várias aplicações em diversos campos. A implantação de sensores em a
 Algumas dessas aplicações requerem mecanismos de sincronização de tempo com boa precisão e escalabilidade, tudo isso em conformidade com os seus baixos recursos computacionais e disponibilidade energética \cite{bruno2014,simon2004,yang2003}. Métodos de sincronização tradicionais, como NTP \cite{mills1991}, amplamente utilizado em servidores e clientes de rede não se aplicam em RSSF devido a fatores não determinístas relacionados com o acesso ao meio na transmissão sem fio dos sensores. O Flooding Time Synchronization Protocol (FTSP) é o algoritmo de sincronização de relógio mais popular para RSSF \cite{maroti2004}, ele é tolerante a falhas, consegue alta precisão ($\sim 1,5\mu{s}$ por salto) utilizando \textit{timestamps} em camadas baixas da pilha de rádio, usa a técnica de regressão linear para compensar o escorregamento do relógio usando poucas mensagens pela rede. Contudo, \textit{timestamps} na camada MAC não é um recurso padronizado, e portanto, não interoperáveis entre diferentes hardware e protocolos da camada física. Há um esforço do Google para padronizar \textit{timestamping} na camada MAC em RSSF \cite{Wang:Patent09}, mas até agora não há muita conformidade.
 
 
+\section{Sincronização em Redes Sensores Sem Fio}
+
+\outline{
+    Razões e desafios.
+    NTP e GPS, Necessidade de algoritmos de sincronização especificos para RSSF.
+}
+
+%\section{Básico de Sincronização de Tempo}
+\subsection{Conceitos Básicos}
+
+\subsection{Mensagens de Sincronização}
+\outline{
+    \textit{Pairwise synchronization, One-Way Message Exchange, Two-Way Message Exchange, Receiver-Receiver Synchronization}
+}
+
+\subsection{Fontes de Imprecisão em Comunicação}
+
+\outline{
+    Send delay:
+    Access delay:
+    Propagation delay:
+    Receive delay:
+}
+
 \section{Definição do Problema}
 
-\section{Motivação}
+\outline{Dependência de hardware, padronização do recurso, esforço para que exista futuramente um padrão que esteja presente em todos os tipos de \textit{motes} e possibilite assim a interoperação de protocolos de MAC \textit{timestamp} em sistemas heterogênios.}
+
+\section{Motivação do Trabalho}
 
 \outline{
 \begin{itemize}
@@ -28,9 +54,6 @@ Algumas dessas aplicações requerem mecanismos de sincronização de tempo com boa 
 
 
 \section{Contribuição da Dissertação}\label{sec:contrib}
-
-
-
 \outline{
 \begin{itemize}
  \item Fazer o FTSP funcionar com timestamp a nível de aplicação.
@@ -38,7 +61,7 @@ Algumas dessas aplicações requerem mecanismos de sincronização de tempo com boa 
 }
  
 
-\section{Organização}\label{sec:org}
+\section{Organização do Documento}\label{sec:org}
 
 
 Esta dissertação é composta por seis capítulos. Descrever no final o que cada capítulo apresenta.

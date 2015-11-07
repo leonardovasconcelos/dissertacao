@@ -1,10 +1,17 @@
-\chapter{Revisão FTSP} \label{cap:cap3}
+\chapter{Revisão detalhada do FTSP} \label{cap:cap3}
 \outlineon=1
 
-\outline{Intro}
+\outline{
+\begin{itemize}
+  \item Explicar a técnica.
+  \item Inserir ilustração do processo de sincronização com o relógio externo. 
+  \item Pseudo código
+  \item FTSP+ e subsection
+\end{itemize}
+}
 
 
-\section{Timestamp}
+\section{\textit{Timestamp}}
 
 \outline{
   Explicar como funciona a marcação de tempo no FTSP
@@ -18,12 +25,15 @@
   Como o FTSP corrige essa fonte de imprecisão.
 }
 
+
+\section{Sincronização Multi-saltos}
+
 \outline{
 \begin{itemize}
-  \item Explicar a técnica.
-  \item Inserir ilustração do processo de sincronização com o relógio externo. 
-  \item Pseudo código
-  \item FTSP+ e subsection
+ \item Formato da mensagem de sincronização.
+ \item Gerenciamento de informação redundante.
+ \item Eleição do nó raiz.
+ \item Evento: enviar/receber mensagem de sincronia. 
 \end{itemize}
 
 }
