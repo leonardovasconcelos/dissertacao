@@ -15,6 +15,8 @@ As RSSF tem várias aplicações em diversos campos. A implantação de sensores em a
 
 Algumas dessas aplicações requerem mecanismos de sincronização de tempo com boa precisão e escalabilidade, tudo isso em conformidade com os seus baixos recursos computacionais e disponibilidade energética \cite{bruno2014,simon2004,yang2003}. Métodos de sincronização tradicionais, como NTP \cite{mills1991}, amplamente utilizado em servidores e clientes de rede não se aplicam em RSSF devido a fatores não determinístas relacionados com o acesso ao meio na transmissão sem fio dos sensores. O Flooding Time Synchronization Protocol (FTSP) é o algoritmo de sincronização de relógio mais popular para RSSF \cite{maroti2004}, ele é tolerante a falhas, consegue alta precisão ($\sim 1,5\mu{s}$ por salto) utilizando \textit{timestamps} em camadas baixas da pilha de rádio, usa a técnica de regressão linear para compensar o escorregamento do relógio usando poucas mensagens pela rede. Contudo, \textit{timestamps} na camada MAC não é um recurso padronizado, e portanto, não interoperáveis entre diferentes hardware e protocolos da camada física. Há um esforço do Google para padronizar \textit{timestamping} na camada MAC em RSSF \cite{Wang:Patent09}, mas até agora não há muita conformidade.
 
+Muitos protocolos de sincronização usam MAC timestamp: alguns têm menos precisão do que o FTSP, eles se concentram em outros problemas e fazem suposições mais restritivas \cite{Ganeriwal:Sensys03, vanGreunen:WSNA03}; outros podem conseguir uma melhor precisão entre os nós distantes \cite{Zhang:LNCS07,Lenzen:Sensys09,Sommer:IPSN09}. Elson et ai. propôs o Reference Broadcast Synchronization \cite{Elson:SIGOPS02} (RBS) para eliminar a incerteza do remetente sem MAC timestamp removendo o \textit{sender} do caminho crítico. A idéia é que um terceiro irá transmitir um \textit{beacon} para todos os receptores. O \textit{beacon} não contém qualquer informação de tempo; em vez disso os receptores irão comparar seus relógios um ao outro para calcular o escorregamento de seus relógios. Tem $\sim 30\mu{s}$ erro por salto e é independente da MAC timestamp. Ranganathan e Nygard oferecem uma boa visão geral desses protocolos \cite{Ranganathan:IJU10}.
+
 
 \section{Sincronização em Redes Sensores Sem Fio}
 
@@ -23,8 +25,22 @@ Algumas dessas aplicações requerem mecanismos de sincronização de tempo com boa 
     NTP e GPS, Necessidade de algoritmos de sincronização especificos para RSSF.
 }
 
+Em sistemas distribuídos, cada nó tem seu próprio relógio e sua própria noção de tempo. No entanto, uma escala de tempo comum entre nós sensores é importante identificar relações causais entre eventos no mundo físico, para apoiar a eliminação de dados redundantes de sensores, e para facilitar a operação da rede de sensores. Uma vez que cada nó em uma rede de sensores opera de forma independente e conta com o seu próprio relógio, as leituras do relógio de diferentes nós de sensores também será diferente. Além destas diferenças aleatórias (phaseshifts), a diferença entre os relógios de sensores diferentes vai aumentar ainda mais devido às taxas de escorregamento de diferentes osciladores. Portanto, o tempo (ou relógio) de sincronização é necessário para assegurar que os tempos de detecção podem ser comparados de uma forma significativa. 
+
+Embora as técnicas de Sincronização de tempo para redes com fios receberam uma quantidade significativa de atenção, estas técnicas não são adequadas para sensores sem fios, devido aos desafios colocados pelos ambientes sensores sem fio. Estes desafios incluem a potencialmente grande escala da redes de sensores, a necessidade de auto-configuração e robustez, o potencial de mobilidade sensor, e a necessidade de conservação de energia. 
+
+Sincronização de tempo é um serviço necessário para muitas aplicações e serviços em sistemas distribuídos em geral. Numerosos protocolos de sincronização de tempo têm sido propostos para ambos os sistemas com e sem fio, por exemplo, o Network Time Protocol (NTP) \cite{mills1991} é uma abordagem de sincronização escalável, robusto e auto-configurável amplamente implantado. Especialmente em combinação com o Sistema de Posicionamento Global (GPS), tem sido demonstrado para alcançar a precisão da ordem de alguns microssegundos. No entanto, abordagens como NTP não são adequados para RSSFs devido às características e restrições exclusivas dessas redes.
+
 %\section{Básico de Sincronização de Tempo}
 \subsection{Conceitos Básicos}
+A sincronização é normalmente baseada em algum tipo de troca de mensagens entre os nós sensores.
+
+\outline{
+     Efeitos do Ambiente.
+     Restrição energética.
+     Mobilidade e acesso ao meio sem fio.
+     Capacidade dos dispositivos.
+}
 
 \subsection{Mensagens de Sincronização}
 \outline{
