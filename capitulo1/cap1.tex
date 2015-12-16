@@ -41,14 +41,19 @@ Sincronização de tempo é um serviço necessário para muitas aplicações e serviços
 %\section{Básico de Sincronização de Tempo}
 \subsection{Conceitos Básicos}
 
-A sincronização é normalmente baseada em algum tipo de troca de mensagens entre os nós sensores.
-
 \outline{
      Efeitos do Ambiente.
      Restrição energética.
      Mobilidade e acesso ao meio sem fio.
      Capacidade dos dispositivos.
 }
+
+%A sincronização é normalmente baseada em algum tipo de troca de mensagens entre os nós sensores.
+
+Os relógios dos \textit{motes} nas RSSF são baseados em osciladores de quartzo, o tempo é mensurado nas oscilações do cristal em conjunto a um contador, este contador tem seu valor decrementado até atingir zero, então ele reinicia novamente para seu valor padrão e o processo continua indeterminadamente, toda vez que o contador chega a zero é gerado uma interrupção e essa interrupção é chamada de \textit{tick} ou \textit{clock tick}, ela incrementa outro contador o do relógio a nível de \textit{software} que é de onde vem tempo que utilizamos no sistema operacional. Com isso, esse relógio de \textit{software} fornece para o \textit{mote} um valor de tempo local (\textit{local time}).
+
+Supondo a existência de dois nós, cada um com o seu próprio relógio, onde $R(t)$ simboliza o valor do relógio no tempo $t$, sendo $t$ o tempo de referência. Se verificarmos $R(t)$ de ambos os nós podemos encontrar uma diferença entre os tempos, essa diferença é chamada de \textit{clock offset}. Para corrigir esta diferença é necessário realizar uma sincronização para que os tempos sejam iguais ou que a diferença seja tão pequena quanto possível. Ainda temos a frequência do relógio (\textit{clock rate}), que é 
+
 
 \subsection{Mensagens de Sincronização}
 \outline{
