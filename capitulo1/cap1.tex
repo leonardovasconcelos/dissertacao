@@ -30,7 +30,7 @@ Muitos protocolos de sincronização usam MAC timestamp: alguns têm menos precisão
 \end{itemize}
 }
 
-Em sistemas distribuídos como as redes de sensores sem fio, cada nó tem seu próprio relógio e sua própria percepção de tempo. No entanto, uma escala de tempo comum entre nós sensores é importante para identificar relações entre eventos que estejam sendo monitorados, para apoiar a eliminação de dados redundantes de sensores e para facilitar a operação da rede. Uma vez que cada nó em uma rede de sensores opera de forma independente e conta com o seu próprio relógio, as leituras do relógio de diferentes nós de sensores também será diferente. Além destas diferenças aleatórias, a diferença entre os relógios de sensores diferentes vai aumentar ainda mais devido às taxas de escorregamento de diferentes osciladores. Portanto, o relógio ou tempo de sincronização é necessário para assegurar que os tempos de detecção podem ser comparados de uma forma significativa. 
+Em sistemas distribuídos como as redes de sensores sem fio, cada nó tem seu próprio relógio e sua própria percepção de tempo. No entanto, uma escala de tempo comum entre nós sensores é importante para identificar relações entre eventos que estejam sendo monitorados, para apoiar a eliminação de dados redundantes de sensores e para facilitar a operação da rede. Uma vez que cada nó em uma rede de sensores opera de forma independente e conta com o seu próprio relógio, as leituras do relógio de diferentes nós de sensores também será divergente. Além destas diferenças aleatórias, a diferença entre os relógios de um conjunto de sensores vai aumentar ainda mais devido às taxas de escorregamento dos seus osciladores. Portanto, a sincronização dos relógios é necessário para assegurar que os tempos de detecção dos eventos que estejam sendo monitorados possam ser comparados e conseguinte significância. 
 
 Embora as técnicas de sincronização de tempo para redes com fios receberam uma quantidade significativa de atenção, esses métodos não são apropriados para uso em RSSF sem modificação, devido aos desafios colocados pelos ambientes sensores sem fio. Estes desafios incluem o tamanho das redes de sensores, a necessidade de auto-configuração e robustez, a mobilidade dos sensores além da necessidade primordial de conservação de energia \cite{Elson2001}.
 
@@ -42,6 +42,7 @@ Sincronização de tempo é um serviço necessário para muitas aplicações e serviços
 \subsection{Conceitos Básicos}
 
 \outline{
+     Terminologias.
      Efeitos do Ambiente.
      Restrição energética.
      Mobilidade e acesso ao meio sem fio.
@@ -52,13 +53,52 @@ Sincronização de tempo é um serviço necessário para muitas aplicações e serviços
 
 Os relógios dos \textit{motes} nas RSSF são baseados em osciladores de quartzo, o tempo é mensurado nas oscilações do cristal em conjunto a um contador, este contador tem seu valor decrementado até atingir zero, então ele reinicia novamente para seu valor padrão e o processo continua indeterminadamente, toda vez que o contador chega a zero é gerado uma interrupção e essa interrupção é chamada de \textit{tick} ou \textit{clock tick}, ela incrementa outro contador o do relógio a nível de \textit{software} que é de onde vem tempo que utilizamos no sistema operacional. Com isso, esse relógio de \textit{software} fornece para o \textit{mote} um valor de tempo local (\textit{local time}).
 
-Supondo a existência de dois nós, cada um com o seu próprio relógio, onde $R(t)$ simboliza o valor do relógio no tempo $t$, sendo $t$ o tempo de referência. Se verificarmos $R(t)$ de ambos os nós podemos encontrar uma diferença entre os tempos, essa diferença é chamada de \textit{clock offset}. Para corrigir esta diferença é necessário realizar uma sincronização para que os tempos sejam iguais ou que a diferença seja tão pequena quanto possível. Ainda temos a frequência do relógio (\textit{clock rate}), que é 
+Supondo a existência de dois nós, cada um com o seu próprio relógio $R_{a}$ e $R_{b}$, onde $R(t)$ simboliza o valor do relógio no tempo $t$, sendo $t$ o tempo de referência. Se verificarmos $R_{a}(t)$ e $R_{b}(t)$ podemos encontrar uma diferença entre os tempos, essa diferença é chamada de \textit{clock offset}. Para corrigir esta diferença é necessário realizar uma sincronização para que os tempos sejam iguais ou que a diferença seja tão pequena quanto possível. Podemos definir o \textit{clock rate} como a frequência que um relógio progride, assim a frequência do tempo $t$ de um relógio $R_{a}$ é $R^{'}_{a}(t)$, ainda temos o \textit{clock skew} que é a diferença em termo de frequência entre dois relógios \cite{sundararaman2005}. 
+
+\begin{figure}[!h]
+ \centering
+ \includegraphics{./figuras/figura_drift.png}
+ % figura_drift.png: 382x361 pixel, 96dpi, 10.11x9.55 cm, bb=0 0 286 271
+ \caption{Comportamento do relógio em relação ao tempo de referência}
+ \label{fig:drift}
+\end{figure}
 
 
-\subsection{Mensagens de Sincronização}
-\outline{
-    \textit{Pairwise synchronization, One-Way Message Exchange, Two-Way Message Exchange, Receiver-Receiver Synchronization}
-}
+Em um mundo perfeito $R_{p}(t) = t$ para qualquer instante de tempo $t$, o relógio perfeito deve ter a variação pelo tempo de referência iguais, como visto na equação \ref{eq:perf_clock}. Vários fatores influenciam o \textit{clock rate}, como por exemplo, temperatura e efeitos do ambiente, energia, limitação do hardware, impureza do crital entre outros. Esta imprecisão do \textit{clock} faz com que a taxa de alteração dos relógios os afaste do valor de referência, $dR/dt > 1$ resulta em um relógio rápido, já $dR/dt < 1$ apresenta um relógio lento, a Figura \ref{fig:drift} demonstra esse efeito. Este comportamento é responsavel pela instabilidade das leituras de tempo nos sensores, fazendo com que seja necessário realizar uma sincronização e mesmo após realizada o desvio irá continuar fazendo efeito sobre o relógio, trazendo a necessidade realização de sincronizações periódicas.
+
+
+\begin{equation}\label{eq:perf_clock}
+ \frac{dR}{dt} = 1
+\end{equation}
+
+
+A sincronização deve ocorrer de forma cíclica, pois os relógios sempre vão afastar-se dos valores de referência, mas o ajuste do tempo local deve ser realizado de forma gradativa e suave, ou seja, deve-se utilizar uma função para mudar o declive do tempo local ao invés de uma atribuição direta. Um problema de efetuar uma mudança corrigindo o valor do tempo diretamente seria o relógio pulando para frente e para trás, ocasionando problemas como por exemplo, uma tarefa agendada poderia nunca ocorrer devido o tempo de sua execução nunca ter existido por causa do salto dos \textit{ticks}, ou ainda o mesmo tempo pode ocorrer duas vezes em virtude de um salto para trás no relógio.
+
+Podemos utilizar duas formas para classificarmos os tipos de sincronização: externo e interno. No método externo os relógios de todos os nós são sincronizados utilizando uma referência de tempo (\textit{clock reference}) externa a rede, geralmente uma fonte de tempo UTC (Coordinated Universal Time), ou seja, o tempo do mundo real baseado em um relógio atômico. Por outro lado a sincronização interna todos os nós são sincronizados sem a ajuda de uma referencia de tempo externa, o 
+
+\textbf{Efeitos Ambientais: }
+
+\textbf{Limitações Energéticas: }
+
+\textbf{Wireless e Mobilidade: }
+
+\textbf{Limitação de \textit{Hardware}: }
+
+\begin{figure}[h]
+ \centering
+ \includegraphics{./figuras/esquema_sensor.png}
+ % esquema_sensor.png: 662x178 pixel, 96dpi, 17.51x4.71 cm, bb=0 0 496 133
+ \caption{Componentes de um mote para RSSF \cite{sundararaman2005,hill2004platforms} }
+ \label{fig:esquema_sensor}
+\end{figure}
+
+\begin{figure}[h]
+ \centering
+ \includegraphics{./figuras/overhead.png}
+ % overhead.png: 125x155 pixel, 96dpi, 3.31x4.10 cm, bb=0 0 94 116
+\end{figure}
+
+
 
 \subsection{Fontes de Imprecisão em Comunicação}
 
@@ -68,6 +108,12 @@ Supondo a existência de dois nós, cada um com o seu próprio relógio, onde $R(t)$
     Propagation delay:
     Receive delay:
 }
+
+\subsection{Mensagens de Sincronização}
+\outline{
+    \textit{Pairwise synchronization, One-Way Message Exchange, Two-Way Message Exchange, Receiver-Receiver Synchronization}
+}
+
 
 \section{Definição do Problema}
 
