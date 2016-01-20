@@ -15,7 +15,7 @@ As RSSF tem várias aplicações em diversos campos. A implantação de sensores em a
 
 Algumas dessas aplicações requerem mecanismos de sincronização de tempo com boa precisão e escalabilidade, tudo isso em conformidade com os seus baixos recursos computacionais e disponibilidade energética \cite{bruno2014,simon2004,yang2003}. Métodos de sincronização tradicionais, como NTP \cite{mills1991}, amplamente utilizado em servidores e clientes de rede não se aplicam em RSSF devido a fatores não determinístas relacionados com o acesso ao meio na transmissão sem fio dos sensores. O Flooding Time Synchronization Protocol (FTSP) é o algoritmo de sincronização de relógio mais popular para RSSF \cite{maroti2004}, ele é tolerante a falhas, consegue alta precisão ($\sim 1,5\mu{s}$ por salto) utilizando \textit{timestamps} em camadas baixas da pilha de rádio, usa a técnica de regressão linear para compensar o escorregamento do relógio usando poucas mensagens pela rede. Contudo, \textit{timestamps} na camada MAC não é um recurso padronizado, e portanto, não interoperáveis entre diferentes hardware e protocolos da camada física. Há um esforço do Google para padronizar \textit{timestamping} na camada MAC em RSSF \cite{Wang:Patent09}, mas até agora não há muita conformidade.
 
-Muitos protocolos de sincronização usam MAC timestamp: alguns têm menos precisão do que o FTSP, eles se concentram em outros problemas e fazem suposições mais restritivas \cite{Ganeriwal:Sensys03, vanGreunen:WSNA03}; outros podem conseguir uma melhor precisão entre os nós distantes \cite{Zhang:LNCS07,Lenzen:Sensys09,Sommer:IPSN09}. Elson et ai. propôs o Reference Broadcast Synchronization \cite{Elson:SIGOPS02} (RBS) para eliminar a incerteza do remetente sem MAC timestamp removendo o \textit{sender} do caminho crítico. A idéia é que um terceiro irá transmitir um \textit{beacon} para todos os receptores. O \textit{beacon} não contém qualquer informação de tempo; em vez disso os receptores irão comparar seus relógios um ao outro para calcular o escorregamento de seus relógios. Tem $\sim 30\mu{s}$ erro por salto e é independente da MAC timestamp. Ranganathan e Nygard oferecem uma boa visão geral desses protocolos \cite{Ranganathan:IJU10}.
+Muitos protocolos de sincronização usam MAC \textit{timestamp}: alguns têm menos precisão do que o FTSP, eles se concentram em outros problemas e fazem suposições mais restritivas \cite{Ganeriwal:Sensys03, vanGreunen:WSNA03}; outros podem conseguir uma melhor precisão entre os nós distantes \cite{Zhang:LNCS07,Lenzen:Sensys09,Sommer:IPSN09}. Elson et ai. propôs o Reference Broadcast Synchronization \cite{Elson:SIGOPS02} (RBS) para eliminar a incerteza do remetente sem MAC \textit{timestamp} removendo o \textit{sender} do caminho crítico. A idéia é que um terceiro irá transmitir um \textit{beacon} para todos os receptores. O \textit{beacon} não contém qualquer informação de tempo; em vez disso os receptores irão comparar seus relógios um ao outro para calcular o escorregamento de seus relógios. Tem $\sim 30\mu{s}$ erro por salto e é independente da MAC \textit{timestamp}. Ranganathan e Nygard oferecem uma boa visão geral desses protocolos \cite{Ranganathan:IJU10}.
 
 
 \section{Sincronização em Redes Sensores Sem Fio}
@@ -74,15 +74,20 @@ Em um mundo perfeito $R_{p}(t) = t$ para qualquer instante de tempo $t$, o relóg
 
 A sincronização deve ocorrer de forma cíclica, pois os relógios sempre vão afastar-se dos valores de referência, mas o ajuste do tempo local deve ser realizado de forma gradativa e suave, ou seja, deve-se utilizar uma função para mudar o declive do tempo local ao invés de uma atribuição direta. Um problema de efetuar uma mudança corrigindo o valor do tempo diretamente seria o relógio pulando para frente e para trás, ocasionando problemas como por exemplo, uma tarefa agendada poderia nunca ocorrer devido o tempo de sua execução nunca ter existido por causa do salto dos \textit{ticks}, ou ainda o mesmo tempo pode ocorrer duas vezes em virtude de um salto para trás no relógio.
 
-Podemos utilizar duas formas para classificarmos os tipos de sincronização: externo e interno. No método externo os relógios de todos os nós são sincronizados utilizando uma referência de tempo (\textit{clock reference}) externa a rede, geralmente uma fonte de tempo UTC (Coordinated Universal Time), ou seja, o tempo do mundo real baseado em um relógio atômico. Por outro lado a sincronização interna todos os nós são sincronizados sem a ajuda de uma referencia de tempo externa, o 
+Podemos utilizar duas formas para classificarmos os tipos de sincronização: externo e interno. No método externo os relógios de todos os nós são sincronizados utilizando uma referência de tempo (\textit{clock reference}) externa a rede, geralmente uma fonte de tempo UTC (Coordinated Universal Time), ou seja, o tempo do mundo real baseado em um relógio atômico. Por outro lado a sincronização interna todos os nós são sincronizados sem a ajuda de uma referencia de tempo externa, o objetivo é minimizar a diferença entre os relógios locais dos sensores tendo assim uma noção consistente do tempo entre todos os nós da rede \cite{kopetz2011real}.
 
-\textbf{Efeitos Ambientais: }
+Um conjunto de fatores podem influênciar o funcionamento de sistemas de sensores sem fio alterando seu desempenho, os principais componentes que devem ser observados são listados abaixo:
 
-\textbf{Limitações Energéticas: }
+\textbf{Efeitos Ambientais:} Pressão, temperatura, humidade são algumas das condições de ambiente que alteram o funcionamento normal dos osciladores. Muitas RSSF são criadas para implantação \textit{outdoor}, nestes cenários as condições são bem diferentes das apresentadas em um ambiente estável como um laboratório \cite{karl2007protocols}. Fenômenos climáticos como chuva, neblina e vento também tem influência na performance de sistemas de RSSF, podendo até mesmo impossibilitar seu funcionamento \cite{otero2001high}.
+%\cite{mills1998}
 
-\textbf{Wireless e Mobilidade: }
+\textbf{Limitações Energéticas:} Economizar energia é o maior interesse em RSSF, o tamanho pequeno dos nós sensores limita o tamanho de sua bateria, bem como a quantidade de energia que ele pode produzir usando placa solar \cite{elson2003romer}. A transmissão de mensagens é a base dos algoritmos de sincronização, a energia utilizada para a transmissão de 1Kb a uma distância de 100 metros é aproximadamente de 3 joules, o mesmo necessário para o processador executar 3 milhões de instruções \cite{pottie2000}. Transmitir é mais custoso energeticamente do que computar, assim os algoritmos de sincrozação devem minimizar a necessidade de troca de mensagens para serem mais eficientes energeticamente.
 
-\textbf{Limitação de \textit{Hardware}: }
+
+\textbf{Wireless e Mobilidade:} A comunicação sem fio apresenta grandes desafios nas redes de sensores, como vimos, é gasto mais energia transmitindo dados do que processando, fenômenos climáticos como chuva, neblina degradam a performance da rede. A característica de transmissão de dados por difusão nas RSSF requer a utilização de um protocolo MAC (Media Access Control) para ordenar o acesso ao meio, dependendo da densidade da rede, faixa de alcance dos nós (entre 20-100 metros) e o tráfego dos dispositivos podem incorrer em interferências na comunicação que levam a perdas de mensagens e conexão intermitente. Grande quantidade de redes sensores são móveis, os nós podem se mover, falar na comunicação ou esgotar a bateria e ficar inativo, causando constantes mudanças na topologia das redes. Por consequência destes problemas, os protocolos de sincronização devem ser projetados para respeitar todas essas propriedades.
+
+
+\textbf{Limitação de \textit{Hardware}:}
 
 \begin{figure}[h]
  \centering
@@ -96,6 +101,8 @@ Podemos utilizar duas formas para classificarmos os tipos de sincronização: exte
  \centering
  \includegraphics{./figuras/overhead.png}
  % overhead.png: 125x155 pixel, 96dpi, 3.31x4.10 cm, bb=0 0 94 116
+ \caption{Tradeoff custo-beneficio}
+ \label{fig:overhead}
 \end{figure}
 
 
