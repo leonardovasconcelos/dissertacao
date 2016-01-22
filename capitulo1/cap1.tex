@@ -84,30 +84,35 @@ Um conjunto de fatores podem influênciar o funcionamento de sistemas de sensores
 \textbf{Limitações Energéticas:} Economizar energia é o maior interesse em RSSF, o tamanho pequeno dos nós sensores limita o tamanho de sua bateria, bem como a quantidade de energia que ele pode produzir usando placa solar \cite{elson2003romer}. A transmissão de mensagens é a base dos algoritmos de sincronização, a energia utilizada para a transmissão de 1Kb a uma distância de 100 metros é aproximadamente de 3 joules, o mesmo necessário para o processador executar 3 milhões de instruções \cite{pottie2000}. Transmitir é mais custoso energeticamente do que computar, assim os algoritmos de sincrozação devem minimizar a necessidade de troca de mensagens para serem mais eficientes energeticamente.
 
 
-\textbf{Wireless e Mobilidade:} A comunicação sem fio apresenta grandes desafios nas redes de sensores, como vimos, é gasto mais energia transmitindo dados do que processando, fenômenos climáticos como chuva, neblina degradam a performance da rede. A característica de transmissão de dados por difusão nas RSSF requer a utilização de um protocolo MAC (Media Access Control) para ordenar o acesso ao meio, dependendo da densidade da rede, faixa de alcance dos nós (entre 20-100 metros) e o tráfego dos dispositivos podem incorrer em interferências na comunicação que levam a perdas de mensagens e conexão intermitente. Grande quantidade de redes sensores são móveis, os nós podem se mover, falar na comunicação ou esgotar a bateria e ficar inativo, causando constantes mudanças na topologia das redes. Por consequência destes problemas, os protocolos de sincronização devem ser projetados para respeitar todas essas propriedades.
-
-
-\textbf{Limitação de \textit{Hardware}:}
+\textbf{Wireless e Mobilidade:} A comunicação sem fio apresenta grandes desafios nas redes de sensores, como vimos, é gasto mais energia transmitindo dados do que processando, fenômenos climáticos como chuva, neblina degradam a performance da rede. A característica de transmissão de dados por difusão nas RSSF requer a utilização de um protocolo MAC (Media Access Control) para ordenar o acesso ao meio, dependendo da densidade da rede, faixa de alcance dos nós (entre 20-100 metros) e o tráfego dos dispositivos podem incorrer em interferências na comunicação que levam a perdas de mensagens e conexão intermitente. Grande quantidade de redes sensores são móveis, os nós podem se mover, podem ocorrer falhas na comunicação, a bateria pode esgotar e o nó ficar inativo, causando constantes mudanças na topologia das redes. Por consequência destes problemas, os protocolos de sincronização devem ser projetados para respeitar todas essas propriedades.
 
 \begin{figure}[h]
  \centering
  \includegraphics{./figuras/esquema_sensor.png}
  % esquema_sensor.png: 662x178 pixel, 96dpi, 17.51x4.71 cm, bb=0 0 496 133
- \caption{Componentes de um mote para RSSF \cite{sundararaman2005,hill2004platforms} }
+ \caption{Componentes de um mote para RSSF \cite{hill2004platforms} }
  \label{fig:esquema_sensor}
 \end{figure}
+
+\textbf{Limitação de \textit{Hardware}:} O tamanho e o preço dos sensores são algumas das razões pelas quais seu \textit{hardware} ser bastante limitado, aumentar o tamanho poderia elevar seu custo e consumo de energia, podendo tornar inviável as aplicações de redes sensores em larga escala \cite{kahn1999}. A capacidade computacional destes dispositivos é similar aos computadores pessoais do início da década de 80, a Figura \ref{fig:esquema_sensor} ilustra os componentes típicos de um nó sensor, transmissor fraco sujeito a perdas, memória limitada, processador de baixa capacidade aliado a fonte de energia restrita. Os algoritmos para RSSF devem respeitar esse conjunto de desafios e limitações com o objetivo de minimizar o uso dos recursos e manter seus resultados funcionais.
+
 
 \begin{figure}[h]
  \centering
  \includegraphics{./figuras/overhead.png}
  % overhead.png: 125x155 pixel, 96dpi, 3.31x4.10 cm, bb=0 0 94 116
- \caption{Tradeoff custo-beneficio}
+ \caption{Tradeoff custo-beneficio \cite{holtkamp2013}}
  \label{fig:overhead}
 \end{figure}
 
 
+Os novos avanços nos sistemas integrados nos permitiram desenvolver dispositivos sensores com baixos recursos de energia, rádio e processamento. Visto que uma rede de sensores consista de um bom número de sensores, o valor de um só nó afeta a implantação da rede toda. Alguns preveem que com a grande quantidade de sensores aplicados hoje em dia, seu valor possa chegar a ser menos de \$1 dolar \cite{cuevas2007, wang2007topology}. 
 
-\subsection{Fontes de Imprecisão em Comunicação}
+Os \textit{motes} são fabricados com materiais de baixo custo, como por exemplo o cristal de quartzo, o que os torna mais imprecisos. A Figura \ref{fig:overhead} apresenta o \textit{tradeoff} entre o  preço e a qualidade, o preço de produção determina a precisão do relógio, assim quanto menos preciso o relógio é mais compensação será necessária para corrigir seu tempo, compensação gera \textit{overhead} de comunicação que é gasto no uso de comunicação/energia.
+
+
+
+\subsection{Fontes de Imprecisão}% em Comunicação}
 
 \outline{
     Send delay:
