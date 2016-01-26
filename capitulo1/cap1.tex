@@ -112,7 +112,7 @@ Os \textit{motes} são fabricados com materiais de baixo custo e as vezes de meno
 
 
 
-\subsection{Fontes de Imprecisão}% em Comunicação}
+\subsection{Fontes de Imprecisão em Comunicação}
 
 \outline{
     Send delay:
@@ -120,6 +120,32 @@ Os \textit{motes} são fabricados com materiais de baixo custo e as vezes de meno
     Propagation delay:
     Receive delay:
 }
+
+
+A troca de mensagens de comunicação é a principal ferramenta dos protocolos de sincronização, o não determinismo causado pelas latências no processo de troca de mensagens interfere na precisão que pode ser alcançado pelo protocolo. A latência pode ser decomposta em variados componentes, descritos por \cite{kopetz2011real} e \cite{sundararaman2005} e listados a seguir:
+
+\begin{itemize}
+ 
+ \item Tempo no envio: É o tempo que o sistema leva para montar a mensagem e passar a requisição de transmissão para a camada de acesso ao meio. Fonte de atraso causado principalmente pelo sistema operacional e da carga de uso do CPU.
+ 
+ \item Tempo de acesso ao meio: Ocorre devido a janela de contenção do acesso ao meio, é o tempo que o nó leva para ter acesso físico para transmissão esperando o canal estar desocupado para então para usá-lo. Redes sem fio compartilham o mesmo meio de comunicação necessitando de uma forma de coordenar quem pode usar o canal e assim evitar colisões. O protocolo MAC do 802.11 serve como base para as variações utilizadas em RSSF, estes buscam atingir maior eficiência no consumo de energia, algumas opções destes protocolos são: BMAC (\textit{Versatile low power media access}) \cite{bmac}, S-MAC  (\textit{Sensor-MAC}) \cite{smac}, Box-MAC \cite{boxmac}, PAMAS (\textit{Power-Aware Multi-Access Protocol}) \cite{pamas} e ainda os \textit{surveys} \cite{suriyachai2012survey, huang2013evolution} tem referências mais atualisadas.
+ 
+ \item Tempo de transmissão: Tempo que leva para um nó transmitir uma mensagem para outro nó, varia dependendo do tamanho do pacote e da velocidade da banda.
+ 
+ \item Tempo de propagação: Tempo que a mensagem leva para chegar no receptor desde o momento que deixou o emissor. Este tempo é muito pequeno e geralmente insignificante para a análise geral do atraso.
+ 
+ \item Tempo no recebimento: É o mesmo tempo da transmissão
+
+\end{itemize}
+ 
+
+
+...figure...
+
+% \begin{enumerate}
+%   \setcounter{enumi}{5}
+%   \item fifth element
+% \end{enumerate}
 
 \subsection{Mensagens de Sincronização}
 \outline{

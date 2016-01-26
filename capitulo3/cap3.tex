@@ -20,26 +20,26 @@
       \multirow{2}{*}{ $\mathbf{Enviar~e~Receber}$ } 			&  \multirow{2}{*}{$0 - 100~ms$}	& Não determinístico,	\\
 		&& depende da carga do CPU \\
 		\hline
-      \multirow{2}{*}{$\mathbf{Acesso~ao~Meio}$}  			&  \multirow{2}{*}{$10ms - 500~ms$}	& Não determinístico,	\\
+      \multirow{2}{*}{$\mathbf{Acesso~ao~Meio}$}  			&  \multirow{2}{*}{$10~ms - 500~ms$}	& Não determinístico,	\\
 		&& depende da contenção do canal \\
 		\hline
-      \multirow{2}{*}{$\mathbf{Transmissão/Recepção}$} 			& \multirow{2}{*}{$10ms - 20~ms$}		& Determinístico,	\\
-		&& depende do tamanho da mensagem \\
+      $\mathbf{Transmissão~e}$ 			& \multirow{2}{*}{$10~ms - 20~ms$}	& Determinístico, depende	\\
+		$\mathbf{Recepção}$&& do tamanho da mensagem \\
 		\hline
       \multirow{2}{*}{$\mathbf{Propagação}$} 				& $< 1\mu s$ para 			& Determinístico,	\\
 		& distâncias acima de 300m & depende da distância\\
 		\hline
       \multirow{2}{*}{$\mathbf{Tratar~Interrupção}$} 			& $< 5\mu s$ na maioria dos casos, 	& Não determinístico,	\\
-		&mas pode chegar a $30\mu s$& depende das interrupções\\ 
+		&mas pode chegar a $30~\mu s$& depende das interrupções\\ 
 		\hline
-      \multirow{2}{*}{$\mathbf{Codificar/Decodificar}$} 		& $100\mu s - 200\mu s$,		& Determinístico,	\\
-		&$< 2\mu s$ de variância& depende o chip de rádio \\
+      $\mathbf{Codificar}$ 		& $100~\mu s - 200\mu s$,		& Determinístico,	\\
+		$\mathbf{Decodificar}$&$< 2\mu s$ de variância& depende o chip de rádio \\
 		\hline
-      \multirow{2}{*}{$\mathbf{Alinhamento~de~Bytes}$} 			& \multirow{2}{*}{$0 - 400\mu s$} 	& Determinístico,	\\
-		&& pode ser calculado
+      $\mathbf{Alinhamento~de}$ 			& \multirow{2}{*}{$0 - 400\mu s$} 	& Determinístico,	\\
+		$\mathbf{Bytes}$&& pode ser calculado
       
  \end{tabular}
- \caption{Fontes de atraso na transmissão de mensagens}
+ \caption{Fontes de atraso na transmissão de mensagens \cite{maroti2004}}
  \label{tab:mean_sd}
 \end{table}
  
