@@ -134,11 +134,20 @@ A troca de mensagens de comunicação é a principal ferramenta dos protocolos de s
  
  \item Tempo de propagação: Tempo que a mensagem leva para chegar no receptor desde o momento que deixou o emissor. Este tempo é muito pequeno e geralmente insignificante para a análise geral do atraso.
  
- \item Tempo no recebimento: É o mesmo tempo da transmissão
+ \item Tempo de recebimento: É o tempo que o receptor leva para receber a mensagem, sendo igual ao da transmissão.
+ 
+ \item Tempo de recepção: Similar ao tempo de envio, é o \textit{delay} de receber a mensagem e encaminha-la para o nível da aplicação.
 
 \end{itemize}
  
 
+\begin{figure}[h]
+ \centering
+ \includegraphics{./figuras/decomposicao_delay.png}
+ % decomposicao_delay.png: 461x99 pixel, 96dpi, 12.20x2.62 cm, bb=0 0 346 74
+ \caption{Decomposição das fontes de atraso na transmissão de uma mensagem}
+ \label{fig:dec_delay}
+\end{figure}
 
 ...figure...
 
@@ -151,6 +160,8 @@ A troca de mensagens de comunicação é a principal ferramenta dos protocolos de s
 \outline{
     \textit{Pairwise synchronization, One-Way Message Exchange, Two-Way Message Exchange, Receiver-Receiver Synchronization}
 }
+
+
 
 
 \section{Definição do Problema}
