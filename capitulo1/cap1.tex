@@ -57,7 +57,7 @@ Supondo a existência de dois nós, cada um com o seu próprio relógio $R_{a}$ e $R
 
 \begin{figure}[!h]
  \centering
- \includegraphics{./figuras/figura_drift.png}
+ \includegraphics{./figuras/figura_drift.eps}
  % figura_drift.png: 382x361 pixel, 96dpi, 10.11x9.55 cm, bb=0 0 286 271
  \caption{Comportamento do relógio em relação ao tempo de referência}
  \label{fig:drift}
@@ -84,11 +84,11 @@ Um conjunto de fatores podem influênciar o funcionamento de sistemas de sensores
 \textbf{Limitações Energéticas:} Economizar energia é o maior interesse em RSSF, o tamanho pequeno dos nós sensores limita o tamanho de sua bateria, bem como a quantidade de energia que ele pode produzir usando placa solar \cite{elson2003romer}. A transmissão de mensagens é a base dos algoritmos de sincronização, a energia utilizada para a transmissão de 1Kb a uma distância de 100 metros é aproximadamente de 3 joules, o mesmo necessário para o processador executar 3 milhões de instruções \cite{pottie2000}. Transmitir é mais custoso energeticamente do que computar, assim os algoritmos de sincrozação devem minimizar a necessidade de troca de mensagens para serem mais eficientes energeticamente.
 
 
-\textbf{Wireless e Mobilidade:} A comunicação sem fio apresenta grandes desafios nas redes de sensores, como vimos, é gasto mais energia transmitindo dados do que processando, fenômenos climáticos como chuva, neblina degradam a performance da rede. A característica de transmissão de dados por difusão nas RSSF requer a utilização de um protocolo MAC (Media Access Control) para ordenar o acesso ao meio, dependendo da densidade da rede, faixa de alcance dos nós (entre 20-100 metros) e o tráfego dos dispositivos podem incorrer em interferências na comunicação que levam a perdas de mensagens e conexão intermitente. Grande quantidade de redes sensores são móveis, os nós podem se mover, podem ocorrer falhas na comunicação, a bateria pode esgotar e o nó ficar inativo, causando constantes mudanças na topologia das redes. Por consequência destes problemas, os protocolos de sincronização devem ser projetados para respeitar todas essas propriedades.
+\textbf{Wireless e Mobilidade:} A comunicação sem fio apresenta grandes desafios nas redes de sensores, como vimos, é gasto mais energia transmitindo dados do que processando, fenômenos climáticos como chuva, neblina degradam a performance da rede. A característica de transmissão de dados por difusão nas RSSF requer a utilização de um protocolo MAC (Media Access Control) para ordenar o acesso ao meio, dependendo da densidade da rede, faixa de alcance dos nós (entre 20-100 metros) e o tráfego dos dispositivos podem incorrer em interferências na comunicação que levam a perdas de mensagens e conexão intermitente. Grande quantidade de redes sensores são móveis, os nós podem se mover, podem ocorrer falhas na comunicação, a bateria pode esgotar e o nó ficar inativo, causando constantes mudanças na topologia das redes. Por consequência destes problemas os protocolos de sincronização devem ser projetados para respeitar todas essas propriedades.
 
 \begin{figure}[h]
  \centering
- \includegraphics{./figuras/esquema_sensor.png}
+ \includegraphics{./figuras/esquema_sensor.eps}
  % esquema_sensor.png: 662x178 pixel, 96dpi, 17.51x4.71 cm, bb=0 0 496 133
  \caption{Componentes de um mote para RSSF \cite{hill2004platforms} }
  \label{fig:esquema_sensor}
@@ -99,7 +99,7 @@ Um conjunto de fatores podem influênciar o funcionamento de sistemas de sensores
 
 \begin{figure}[h]
  \centering
- \includegraphics{./figuras/overhead.png}
+ \includegraphics{./figuras/overhead.eps}
  % overhead.png: 125x155 pixel, 96dpi, 3.31x4.10 cm, bb=0 0 94 116
  \caption{Tradeoff custo-beneficio \cite{holtkamp2013}}
  \label{fig:overhead}
@@ -122,7 +122,7 @@ Os \textit{motes} são fabricados com materiais de baixo custo e as vezes de meno
 }
 
 
-A troca de mensagens de comunicação é a principal ferramenta dos protocolos de sincronização, o não determinismo causado pelas latências no processo de troca de mensagens interfere na precisão que pode ser alcançado pelo protocolo. A latência pode ser decomposta em variados componentes, descritos por \cite{kopetz2011real} e \cite{sundararaman2005} e listados a seguir:
+A troca de mensagem com \textit{timestamp} (marca de tempo) é a principal ferramenta dos protocolos de sincronização, porém o não determinismo causado pelas latências no processo de troca de mensagens interfere na precisão que pode ser obtida utilizando este método. Por exemplo, quando um nó envia uma mensagem com seu \textit{timestamp} para outro, os diversos procedimentos pelo qual essa informação vai percorrer até o destino apresentam um custo de computação e tempo para ser realizada, assim quando se dá a recepção do dado no destino já se passou uma quantidade determinada tempo, o relógio do nó origem continuou rodando e o \textit{timestamp} enviado está inconsistente com o valor atual da fonte. A latência deste procedimento pode ser decomposta em alguns componentes, descritos por Kopetz e Ochsenreiter \cite{kopetz1987} e classificados a seguir:
 
 \begin{itemize}
  
@@ -140,26 +140,81 @@ A troca de mensagens de comunicação é a principal ferramenta dos protocolos de s
 
 \end{itemize}
  
-
 \begin{figure}[h]
  \centering
- \includegraphics{./figuras/decomposicao_delay.png}
+ \includegraphics{./figuras/decomposicao_delay.eps}
  % decomposicao_delay.png: 461x99 pixel, 96dpi, 12.20x2.62 cm, bb=0 0 346 74
  \caption{Decomposição das fontes de atraso na transmissão de uma mensagem}
  \label{fig:dec_delay}
 \end{figure}
 
-...figure...
+A Figura \ref{fig:dec_delay} ilustra as tomadas de tempo que compõem as fontes de atraso na troca de mensagem, as principais técnicas de sincronização concentram-se em eliminar esses \textit{delays} ou ainda computar seus respectivos atrasos para usá-los mais a frente na forma de compensação. Outros trabalhos expandiram ainda mais a compreensão dos componentes de atraso \cite{maroti2004, horauer2002, ganeriwal2003}, esses componentes estão listados abaixo:
 
-% \begin{enumerate}
-%   \setcounter{enumi}{5}
-%   \item fifth element
-% \end{enumerate}
+
+\begin{itemize}
+ \item Tempo de tratamento de interrupções: O tempo que o microcontrolador demora para responder a solicitação do \textit{chip} de rádio.
+ 
+ \item Codificação e Decodificação: Codificação é o tempo que o transmissor tira para codificar os \textit{bits} nas ondas de rádio. E decodificação o tempo que o receptor demora até transformar as ondas eletromagnéticas em \textit{bits}. 
+ 
+ \item Alinhamento de Byte: Diferentes tipos de alinhamento entre o transmissor e receptor, causam a necessidade de reordenar os bytes.
+\end{itemize}
+
+
+% Nem todos os componentes são possíveis de se contabilizar, 
+% 
+% Ainda dentro dessa classificação, temos derivar
+
+
+\begin{table}[htb!]
+ \centering
+ \begin{tabular}{c|c|c}	
+ 	\multirow{2}{*}{\textbf{Tempo}}	& \multirow{2}{*}{\textbf{Magnitude}}	& \multirow{2}{*}{\textbf{Distibuição}} \\
+		&&\\
+		\hline
+      \multirow{2}{*}{ $\mathbf{Enviar~e~Receber}$ } 			&  \multirow{2}{*}{$0 - 100~ms$}	& Não determinístico,	\\
+		&& depende da carga do CPU \\
+		\hline
+      \multirow{2}{*}{$\mathbf{Acesso~ao~Meio}$}  			&  \multirow{2}{*}{$10~ms - 500~ms$}	& Não determinístico,	\\
+		&& depende da contenção do canal \\
+		\hline
+      $\mathbf{Transmissão~e}$ 			& \multirow{2}{*}{$10~ms - 20~ms$}	& Determinístico, depende	\\
+		$\mathbf{Recepção}$&& do tamanho da mensagem \\
+		\hline
+      \multirow{2}{*}{$\mathbf{Propagação}$} 				& $< 1\mu s$ para 			& Determinístico,	\\
+		& distâncias acima de 300m & depende da distância\\
+		\hline
+      \multirow{2}{*}{$\mathbf{Tratar~Interrupção}$} 			& $< 5\mu s$ na maioria dos casos, 	& Não determinístico,	\\
+		&mas pode chegar a $30~\mu s$& depende das interrupções\\ 
+		\hline
+      $\mathbf{Codificar}$ 		& $100~\mu s - 200\mu s$,		& Determinístico,	\\
+		$\mathbf{Decodificar}$&$< 2\mu s$ de variância& depende o chip de rádio \\
+		\hline
+      $\mathbf{Alinhamento~de}$ 			& \multirow{2}{*}{$0 - 400\mu s$} 	& Determinístico,	\\
+		$\mathbf{Bytes}$&& pode ser calculado
+      
+ \end{tabular}
+ \caption{Fontes de atraso na transmissão de mensagens \cite{maroti2004}}
+ \label{tab:decomp}
+\end{table}
+
+Alguns dos componentes de atraso são de origem não determinístico, outros podem ser calculados e estimados, a \ref{tab:decomp} sintetiza o tamanho e classificação dos componentes já listados.
+
+
+
+
+
 
 \subsection{Mensagens de Sincronização}
 \outline{
-    \textit{Pairwise synchronization, One-Way Message Exchange, Two-Way Message Exchange, Receiver-Receiver Synchronization}
+    \textit{Pairwise synchronization, Uniderecional One-Way Message Exchange, Two-Way Message Exchange, Receiver-Receiver Synchronization}
 }
+
+Os protocolos de sincronização essencialmente são construídos a partir de troca de mensagens entre os nós participantes da rede. O modelo mais simples de sincronização utiliza pelo menos uma mensagem, o modelo \textit{pairwise-synchronization} dois nós podem sincronizar apenas trocando uma mensagem, para uma rede maior repete-se a operação par-a-par até todos os pares estarem sincronizados.
+
+
+
+
+
 
 
 
@@ -167,6 +222,13 @@ A troca de mensagens de comunicação é a principal ferramenta dos protocolos de s
 \section{Definição do Problema}
 
 \outline{Dependência de hardware, padronização do recurso, esforço para que exista futuramente um padrão que esteja presente em todos os tipos de \textit{motes} e possibilite assim a interoperação de protocolos de MAC \textit{timestamp} em sistemas heterogênios.}
+
+
+
+
+
+
+
 
 \section{Motivação do Trabalho}
 
@@ -177,6 +239,10 @@ A troca de mensagens de comunicação é a principal ferramenta dos protocolos de s
 }
 
 
+
+
+
+
 \section{Contribuição da Dissertação}\label{sec:contrib}
 \outline{
 \begin{itemize}
@@ -185,6 +251,10 @@ A troca de mensagens de comunicação é a principal ferramenta dos protocolos de s
 }
  
 
+ 
+ 
+ 
+ 
 \section{Organização do Documento}\label{sec:org}
 
 

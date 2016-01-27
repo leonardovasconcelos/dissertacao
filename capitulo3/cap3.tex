@@ -11,37 +11,86 @@
 }
 
 
-\begin{table}[htb!]
- \centering
- \begin{tabular}{c|c|c}	
- 	\multirow{2}{*}{\textbf{Tempo}}	& \multirow{2}{*}{\textbf{Magnitude}}	& \multirow{2}{*}{\textbf{Distibuição}} \\
-		&&\\
-		\hline
-      \multirow{2}{*}{ $\mathbf{Enviar~e~Receber}$ } 			&  \multirow{2}{*}{$0 - 100~ms$}	& Não determinístico,	\\
-		&& depende da carga do CPU \\
-		\hline
-      \multirow{2}{*}{$\mathbf{Acesso~ao~Meio}$}  			&  \multirow{2}{*}{$10~ms - 500~ms$}	& Não determinístico,	\\
-		&& depende da contenção do canal \\
-		\hline
-      $\mathbf{Transmissão~e}$ 			& \multirow{2}{*}{$10~ms - 20~ms$}	& Determinístico, depende	\\
-		$\mathbf{Recepção}$&& do tamanho da mensagem \\
-		\hline
-      \multirow{2}{*}{$\mathbf{Propagação}$} 				& $< 1\mu s$ para 			& Determinístico,	\\
-		& distâncias acima de 300m & depende da distância\\
-		\hline
-      \multirow{2}{*}{$\mathbf{Tratar~Interrupção}$} 			& $< 5\mu s$ na maioria dos casos, 	& Não determinístico,	\\
-		&mas pode chegar a $30~\mu s$& depende das interrupções\\ 
-		\hline
-      $\mathbf{Codificar}$ 		& $100~\mu s - 200\mu s$,		& Determinístico,	\\
-		$\mathbf{Decodificar}$&$< 2\mu s$ de variância& depende o chip de rádio \\
-		\hline
-      $\mathbf{Alinhamento~de}$ 			& \multirow{2}{*}{$0 - 400\mu s$} 	& Determinístico,	\\
-		$\mathbf{Bytes}$&& pode ser calculado
-      
- \end{tabular}
- \caption{Fontes de atraso na transmissão de mensagens \cite{maroti2004}}
- \label{tab:mean_sd}
-\end{table}
+\section{Flooding Time Synchronization Protocol}
+\label{sec:ftsp}
+
+This section briefly describes the Flooding Time Synchronization Protocol (FTSP).
+For more detailed information, refer to \cite{maroti2004}.
+
+FTSP is a synchronization protocol for WSN that provides high accuracy, consumes few resources, uses little bandwidth and is fault-tolerant. It elects a node as root to provide the time reference for synchronization; if root failure is detected (using timeouts), another root is elected.
+Root and synchronized nodes send synchronization messages periodically, and receiving nodes use these messages to synchronize.
+Therefore, FTSP supports multi-hop networks.
+
+Synchronization messages comprise a \textit{sender timestamp} which is the estimated global time and \textit{rootID} which is the network identifier of the root (where the node with the lowest ID is the chosen root).
+\textit{seqNum} is a sequence counter that is incremented each synchronization round; this field is used to verify the redundancy of messages \cite{maroti2004}.
+
+All nodes think they are root when the network starts, so they broadcast synchronization messages to the network. 
+When they receive a synchronization message, they check who has the lowest ID: if the local ID is higher, this node gives up on being root and starts synchronizing.
+Another important check is the \textit{seqNum}.
+If it is greater than the local value \textit{highestSeqNum}, it means that this is a new synchronization message and starts the synchronization procedure.
+
+The synchronization procedure consists of computing a linear regression \cite{elson2003} that will provide the clock skew (used to estimate the global time) in relation to the reference node.
+The last step is to forward its local (synchronized) time to other nodes. 
+
+
+\begin{figure}[h]
+\begin{Verbatim}[numbers=left,numbersep=1pt,frame=single]
+event Radio.receive(TimeSyncMsg *msg){
+  if( msg->rootID < myRootID )
+      myRootID = msg->rootID;
+  else if( msg->rootID > myRootID
+    || msg->seqNum <= highestSeqNum )
+      return;
+  highestSeqNum = msg->seqNum;
+  if( myRootID < myID )
+      heartBeats = 0;
+  if( numEntries >= NUMENTRIES_LIMIT
+    && getError(msg) > TIME_ERROR_LIMIT )
+      clearRegressionTable();
+  else
+      addEntryAndEstimateDrift(msg);
+}
+\end{Verbatim} 
+ \caption{FTSP Receive Routine \cite{maroti2004} }%\vspace{0em}
+ \label{figure1}
+\end{figure}
+
+Figure 1 shows the routine of receiving synchronization messages.
+Lines 2 and 3 compare the \textit{rootID} of the synchronization message with the local \textit{rootID}.
+If the message has a lower \textit{rootID}, the node assumes this \textit{rootID} as root.
+Lines 4 to 7 ignore messages with higher  \textit{rootID} and lower \textit{seqNum}.
+If \textit{seqNum} is higher, local \textit{highestSeqNum} is updated.
+Lines 8 and 9 makes a root node give up on being root when it has a \textit{rootID} lower than its own ID.
+In case the \textit{rootID} is larger it is checked whether the \textit{seqNum} is greater or equal to the value of \textit{highestSeqNum}, this check prevents information redundancy because the message will only be used when the \textit{rootID} is less than or equal to \textit{myRootID} and the number greater than the value of \textit{highestSeqNum}.
+Lines 10 to 15 verify if the time of a message is in disagreement with the earlier estimates of global time, if applicable clear the regression table, if not, accumulate synchronization messages to calculate the linear regression and synchronize.
+
+%Lines 10 to 15 accumulate synchronization messages to calculate the linear regression and synchronize.
+
+\begin{figure}[h]
+   \begin{Verbatim}[numbers=left,numbersep=1pt,frame=single]
+event Timer.fired() {
+  ++heartBeats;
+  if( myRootID != myID
+    && heartBeats >= ROOT_TIMEOUT )
+      myRootID = myID;
+  if( numEntries >= NUMENTRIES_LIMIT
+    || myRootID == myID ){
+      msg.rootID = myRootID;
+      msg.seqNum = highestSeqNum;
+      Radio.send(msg);
+  if( myRootID == myID )
+      ++highestSeqNum;
+  }
+}
+  \end{Verbatim}
+  \caption{FTSP Send Routine \cite{maroti2004}}
+  \label{figure2}
+\end{figure}
+
+Figure \ref{figure2} shows the sending routine.
+A node decides to be root because has not received a synchronization message for ROOT\_TIMEOUT (lines 3 to 5).
+A node sends synchronization messages if it is root or has synchronized (lines 6 to 10).
+If a node is root, it also has to increment its \textit{highestSeqNum}.
  
  
 
