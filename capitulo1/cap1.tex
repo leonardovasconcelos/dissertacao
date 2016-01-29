@@ -64,7 +64,7 @@ Supondo a existência de dois nós, cada um com o seu próprio relógio $R_{a}$ e $R
 \end{figure}
 
 
-Em um mundo perfeito $R_{p}(t) = t$ para qualquer instante de tempo $t$, o relógio perfeito deve ter a variação pelo tempo de referência iguais, como visto na equação \ref{eq:perf_clock}. Vários fatores influenciam o \textit{clock rate}, como por exemplo, temperatura e efeitos do ambiente, energia, limitação do hardware, impureza do crital entre outros. Esta imprecisão do \textit{clock} faz com que a taxa de alteração dos relógios os afaste do valor de referência, $dR/dt > 1$ resulta em um relógio rápido, já $dR/dt < 1$ apresenta um relógio lento, a Figura \ref{fig:drift} demonstra esse efeito. Este comportamento é responsavel pela instabilidade das leituras de tempo nos sensores, fazendo com que seja necessário realizar uma sincronização e mesmo após realizada o desvio irá continuar fazendo efeito sobre o relógio, trazendo a necessidade realização de sincronizações periódicas.
+Em um mundo perfeito $R_{p}(t) = t$ para qualquer instante de tempo $t$, o relógio perfeito deve ter a variação pelo tempo de referência iguais, como visto na Equação (\ref{eq:perf_clock}). Vários fatores influenciam o \textit{clock rate}, como por exemplo, temperatura e efeitos do ambiente, energia, limitação do hardware, impureza do crital entre outros. Esta imprecisão do \textit{clock} faz com que a taxa de alteração dos relógios os afaste do valor de referência, $dR/dt > 1$ resulta em um relógio rápido, já $dR/dt < 1$ apresenta um relógio lento, a Figura \ref{fig:drift} demonstra esse efeito. Este comportamento é responsavel pela instabilidade das leituras de tempo nos sensores, fazendo com que seja necessário realizar uma sincronização e mesmo após realizada o desvio irá continuar fazendo efeito sobre o relógio, trazendo a necessidade realização de sincronizações periódicas.
 
 
 \begin{equation}\label{eq:perf_clock}
@@ -205,7 +205,7 @@ Alguns dos componentes de atraso são de origem não determinístico, outros podem 
     \textit{Pairwise synchronization, Uniderecional One-Way Message Exchange, Two-Way Message Exchange, Receiver-Receiver Synchronization}
 }
 
-Os protocolos de sincronização essencialmente são construídos a partir de troca de mensagens entre os nós participantes da rede. O modelo mais simples de sincronização utiliza pelo menos uma mensagem, o modelo \textit{pair-wise synchronization} dois nós podem sincronizar apenas trocando uma mensagem, para sincronizar uma rede inteira repete-se a operação entre parelhos até que todos os pares estarem sincronizados, quando isso ocorre damos o nome de \textit{network-wide synchronization}. A seguir vamos discorrer sobre métodos de sincronização.
+Os protocolos de sincronização essencialmente são construídos a partir de troca de mensagens entre os nós participantes da rede. O modelo mais simples de sincronização utiliza pelo menos uma mensagem, chamado de \textit{pair-wise synchronization} nele dois nós podem sincronizar apenas trocando uma mensagem, para sincronizar uma rede inteira repete-se a operação entre parelhos até que todos os pares estarem sincronizados, quando isso ocorre damos o nome de \textit{network-wide synchronization}. A seguir vamos discorrer sobre métodos de sincronização.
 
 \begin{figure}[h]
  \centering
@@ -215,17 +215,18 @@ Os protocolos de sincronização essencialmente são construídos a partir de troca 
  \label{fig:pairwise1}
 \end{figure}
 
-Sincronização unidirecional ou \textit{one-way} é a forma mais elementar de sincronização \textit{pair-wise}, temos a Figura \ref{fig:pairwise1} que demonstra o seu funcionamento, nela observamos que o nó $i$ no tempo $t_1$ envia seu \textit{timestamp} para $j$, quando o nó $j$ recebe a mensagem ele lê seu relógio local que esta marcando o tempo $t_2$, assim o valor de $t_2$ pode ser calculado como na equação \ref{eq:tempo_t2}:
+A sincronização unidirecional ou \textit{one-way} é a forma mais elementar de sincronização \textit{pair-wise}, temos a Figura \ref{fig:pairwise1} que demonstra o seu funcionamento, nela observamos que o nó $i$ no tempo $t_1$ envia seu \textit{timestamp} para $j$, quando o nó $j$ recebe a mensagem seu relógio local está marcando o tempo $t_2$, assim o valor de $t_2$ pode ser calculado como na Equação (\ref{eq:tempo_t2}):
 
 \begin{equation} \label{eq:tempo_t2}
   t_2 = t_1 + tp + \theta
 \end{equation}
 
-Onde $tp$ é o tempo de propagação, este tempo é muito pequeno podendo ser ignorado. O $\theta$ é a diferença entre os tempos de $i$ e $j$, ele indica o \textit{offset} dos relógios. Com essas informações o nó $j$ pode calcular o \textit{offset} e ajustar seu relógio com base no tempo de $i$, podemos calculá-lo com a Equação \ref{eq:tempo_teta}.
-
 \begin{equation}\label{eq:tempo_teta}
- |t_i - t_j| = \theta + tp 
+ t_j - t_i = \theta + tp 
 \end{equation}
+
+Onde $tp$ é o tempo de propagação, este tempo é muito pequeno podendo ser ignorado. O \textit{delay} de propagação para uma distância de 30 m é 10$^{-7}$s \cite{karl2007protocols}. O $\theta$ é a diferença entre os tempos de $i$ e $j$, ele indica o \textit{offset} dos relógios. Com essas informações o nó $j$ pode calcular o \textit{offset} e ajustar seu relógio com base no tempo de $i$, de acordo com a Equação (\ref{eq:tempo_teta}).
+
 
 
 \begin{figure}[h]
@@ -236,15 +237,30 @@ Onde $tp$ é o tempo de propagação, este tempo é muito pequeno podendo ser ignora
  \label{fig:pairwise2}
 \end{figure}
 
-Sincronização bidirecional ou \textit{tow-way} usa duas mensagens de sincronização. A Figura \ref{fig:pairwise2} mostra o comportamento desta técnica, o nó $i$ envia 
+A sincronização bidirecional, \textit{two-way} ou ainda \textit{sender-receiver} usa duas mensagens de sincronização. A Figura \ref{fig:pairwise2} mostra o comportamento desta técnica, primeiro o nó $i$ envia seu tempo $t_1$ para $j$, este recebe a mensagem no tempo $t_2$ e registra seu tempo local. Assim, o tempo $t_2$ já pode ser calculado como na Equação (\ref{eq:tempo_t2}). No próximo passo o nó $j$ no tempo $t_3$ envia uma mensagem para $i$ com os \textit{timestamps} $t_2$ e $t_3$, então no instante $t_4$ tanto o nó $i$ como o $j$ são capazes de calcular o \textit{offset} entre ambos, porém o nó $i$ é capaz de determinar mais precisamente tanto o \textit{offset} quanto o tempo de propagação, como segue:
 
-\begin{equation}
- tp = \frac{(t_2 - t_1) + (t_4 - t_3)}{2}
+\begin{equation}\label{eq:two_way_tp}
+ tp = \frac{[(t_2 - t_1) + (t_4 - t_3)]}{2}
 \end{equation}
 
-\begin{equation}
- \theta = \frac{(t_2 - t_1) - (t_4 - t_3)}{2}
+\begin{equation}\label{eq:two_way_theta}
+ \theta = \frac{[(t_2 - t_1) - (t_4 - t_3)]}{2}
 \end{equation}
+
+O nó $i$ com uma informação mais acurada, pode enviar uma nova mensagem para $j$ com o valor do $\theta$. A sincronização bidirecional tem a vantagem de moderar as incertezas na pilha de protocolos e no atraso de propagação usando troca de mensagens e a desvantagem de necessitar de um número adicional de troca de trafego.
+
+
+\begin{figure}[h]
+ \centering
+ \includegraphics{./figuras/pairwise_receiver_receiver.eps}
+ % pairwise_receiver_receiver.eps: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+ \caption{Sincronização \textit{Receiver-receiver}}
+ \label{fig:pairwise_recrec}
+\end{figure}
+
+A sincronização \textit{receiver-receiver} toma vantagem da natureza do \textit{broadcast} na comunicação sem fio, onde a difusão de uma mensagem tem o mesmo tempo de recepção em cada um dos receptores, seu tempo de chegada varia muito pouco sendo sensível apenas aos atrasos de propagação e recebimento. No cenário descrito na Figura \ref{fig:pairwise_recrec}, temos um nó que envia \textit{beacons} (não necessariamente \textit{timestamp}) periodicamente, todos nós que recebem a mensagem registram o tempo de recebimento com o seu relógio local. Então, os \textit{receivers} trocam entre si a informação registrada, o que os permite calcularem a diferença entre o tempo de chegada dos \textit{beacons}, ou seja, o \textit{offset}. Esse tratamento pode remover duas das maiores fontes de atraso na comunicação sem fios: o atraso de transmissão e o tempo acesso ao meio \cite{cho2011}.
+
+
 
 
 
@@ -267,6 +283,10 @@ Sincronização bidirecional ou \textit{tow-way} usa duas mensagens de sincronizaç
 
 
 
+
+
+
+
 \section{Motivação do Trabalho}
 
 \outline{
@@ -274,6 +294,11 @@ Sincronização bidirecional ou \textit{tow-way} usa duas mensagens de sincronizaç
    \item Devido a diversidade de dispositivos e o bom desempenho do FTSP, tona-lo um protocolo independente de recurso de hardware possibilitando o seu funcionamento em \textit{motes} sem o recurso de MAC timestamp.
 \end{itemize}
 }
+
+
+
+
+
 
 
 
