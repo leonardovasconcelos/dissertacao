@@ -18,36 +18,19 @@
 
 Falar sobre os protocolos abaixo: 
 
-\section{RBS}
-\outline{
-    É um método no qual o receptor usa as transmissões da camada física para comparar os relógios.
-    Usa o tempo de chegada do pacote como tempo de referência de sincronização.
-}
+\input{./capitulo2/rbs}
 
-\section{LTS}
-\outline{
-    Lightweight Tree-Based Synchronization.
-}
 
-\section{TPSN}
-\outline{
-    TPSN não elimina incerteza no sender, apenas minimiza o erro.
-    Ele tenta reduzir este não determinismo utilizando timestamping da mensagem na camada MAC.
-}
+\input{./capitulo2/lts}
+
+
+\input{./capitulo2/tpsn}
+
  
-\section{PulseSync}
+\input{./capitulo2/pulsesync}
 
- \outline{
 
-    No trabalho \cite{Lenzen:Sensys09} é realizado um estudo sobre o FTSP e é observado que o protocolo apresenta um crescimento do erro de sincronização baseado no diâmetro da rede.
-    Então propõe o protocolo PulseSync para melhorar esse cenário.
-    Também é dependente de MAC timestamping.
-}
+\input{./capitulo2/ftsp}
 
-\section{FTSP}
-
-\outline{
-    Descrição de alto nível sobre o FTSP.
-}
 
 
