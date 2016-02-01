@@ -279,7 +279,7 @@ A sincronização \textit{receiver-receiver} toma vantagem da natureza do \textit{
 Alguns tipos de rádios tem embutido \textit{chips} mais sofisticados capazes de coordenar a transmissão sem sobrecarga da CPU.
 Esses rádios tem a capacidade de acessar a fila de transmissão a qualquer momento, por exemplo, um dos \textit{chips} mais comuns aplicados a RSSF o \textit{Chipcon} CC2420 \cite{chipcon20032} que utiliza o padrão IEEE 802.15.4  tem essa característica, ele tem um recurso chamado SFD (Start of Frame Delimiter) que acessa a fila de transmissão e permite gerar interrupções durante o envio e recebimento dos dados, possibilitando o seu emprego em mensagens de sincronização mais refinadas realizadas na camada MAC. A marca de tempo na camada de acesso ao meio reduz o atraso relacionados as incertezas de comunicação, neste modelo é possível inserir o \textit{timestamp} na mensagem no momento da transmissão e imediatamente no recebimento, com o \textit{MAC timestamp} é possível eliminar as fontes de atraso na entrega da mensagem.
 
-O FTSP é o estado da arte dos protocolos de sincronização \textit{multi-hop} \cite{Sommer:IPSN09}, e um dos mais populares \cite{popular} e vem disponível por padrão no sistema operacional TinyOS. Uma de suas principais caracteristicas é o uso de timestamp na camada MAC. Se uma plataforma particular não suportar a mudança do conteúdo da mensagem depois de ocorrido o evento de sincronização, então o FTSP não pode ser implementado nessa plataforma. Assim o protocolo é fortemente dependente de recursos especificos no \textit{chip} de rádio.
+O FTSP é o estado da arte dos protocolos de sincronização \textit{multi-hop} \cite{Sommer:IPSN09}, e um dos mais populares \cite{popular} e vem disponível por padrão no sistema operacional TinyOS. Uma de suas principais características é o uso de timestamp na camada MAC. Se uma plataforma particular não suportar a mudança do conteúdo da mensagem depois de ocorrido o evento de sincronização, então o FTSP não pode ser implementado nessa plataforma. Assim o protocolo é fortemente dependente de recursos específicos no \textit{chip} de rádio.
 
 
 
@@ -298,9 +298,7 @@ O FTSP é o estado da arte dos protocolos de sincronização \textit{multi-hop} \ci
 \end{itemize}
 }
 
-
-
-
+Redes sensores são compostas de um largo número de nós, assim é fundamental que o preço de um único \textit{mote} não seja muito alto para não comprometer o valor da rede inteira, o que pode inviabilizar a implantação de um projeto. Neste sentido, os componentes do nó sensor podem se tornar cada vez mais simples ou menos especializados, como por exemplo o transmissor de rádio, este pode não contar com uma interface tão rica de recursos como MAC \textit{timestamp} e acesso randômico ao FIFO durante a transmissão. Uma abordagem independente de \textit{hardware} para o FTSP poderia torná-lo apropriado para uma maior quantidade de dispositivos.
 
 
 
@@ -323,7 +321,9 @@ O FTSP é o estado da arte dos protocolos de sincronização \textit{multi-hop} \ci
 \section{Organização do Documento}\label{sec:org}
 
 
-Esta dissertação é composta por seis capítulos. Descrever no final o que cada capítulo apresenta.
+Esta dissertação é composta por seis capítulos. 
+
+\textbf{Descrever no final o que cada capítulo apresenta.}	
 
 \begin{itemize}
  \item \textbf{Capítulo 2:} Descrever conteúdo aqui.

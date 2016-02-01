@@ -1,5 +1,46 @@
 \section{RBS}
-\outline{
-    É um método no qual o receptor usa as transmissões da camada física para comparar os relógios.
-    Usa o tempo de chegada do pacote como tempo de referência de sincronização.
-} 
+% \outline{
+%     É um método no qual o receptor usa as transmissões da camada física para comparar os relógios.
+%     Usa o tempo de chegada do pacote como tempo de referência de sincronização.
+% }
+
+Elson et al. \cite{Elson:SIGOPS02} propuseram o Reference Broadcast Synchronization (RBS) em 2002, sua principal inovação era a utilização de mensagens de referência por difusão para a eliminação do não determinismo de comunicação relacionado ao tempo de envio e acesso ao meio, baseando no fato de que as mensagens de \textit{broadcast} chegam nos receptores praticamente ao mesmo tempo. 
+
+
+O Algoritmo \ref{alg:rbs} exemplifica o funcionamento do RBS, usando um cenário com \textit{receivers} onde um nó é determinado como referência, ele irá enviar por difusão uma mensagem de requisição para os nós ao seu alcance. Cada nó que recebe a requisição irá guardar seu tempo local. Após, os pares de receptores trocam seus \textit{timestamps}, eles podem comparar seus tempos e calcular a diferença entre seus relógios (\textit{offset}). O escorregamento do relógio será é calculado utilizando o método dos mínimos quadrados para encontrar uma estimativa da inclinação ou escorregamento do \textit{clock} do outro nó.
+
+
+\begin{algorithm}[H]
+% \small
+\setstretch{1}
+\SetAlgoVlined
+\DontPrintSemicolon
+%\Inicio{
+Primeiro, o transmissor envia uma mensagem de referência por \textit{broadcast}.\;
+Cada \textit{receiver} registra seu tempo de quando recebeu a mensagem de referência.\;
+Pares de \textit{receivers} trocam os seus registros de tempo de recebimento da mensagem.\;
+O \textit{offset} entre um par de \textit{receivers} é a diferença entre seus relógios locais.\;
+\caption{\texttt{RBS Passos\label{alg:rbs}}}
+\end{algorithm}
+
+
+
+O RBS tem um alto nível de economia de energia, devido a ele realizar o processo de sincronização somente quando necessário. Este modelo de funcionamento é denominado sincronização \textit{post-facto}, nele os nós correm seu relógio naturalmente e os tempos dos desvios dos seus relógios só serão calculados na ocorrência de um evento importante, assim o \textit{timestamp} resultante é vinculado ao evento e não altera o relógio local. A correção do relógio é feita utilizando uma tabela com a informação dos valores de \textit{offset} e \textit{skew} de todos os pares ao seu alcance, e a cada mensagem recebida de outro \textit{receiver} o valor é convertido para uma escala de tempo local.
+
+A sincronização em cenários com multi-saltos é possível de ser implementada utilizando o RBS. Neste ambiente, apenas um nó como referência pode não ser o suficiente para cobrir todo o domínio de abrangência da rede, então múltiplos nós de referência podem ser utilizados, cada um com seu domínio de cobertura. Na verdade, a transmissão com vários saltos poderia acarretar um atraso na propagação de uma mensagem, neste caso para tratar este problema, a sincronização de dois nós em dois domínios diferentes é realizado por um terceiro nó localizado na intersecção dos domínios.
+
+
+Vantagens do RBS são:
+\begin{itemize}
+ \item Remove as duas maiores fontes de atraso, tempo de envio e tempo de acesso.
+ \item Sincronização \textit{post-facto} realiza ajustes somente quando necessário, diminuindo o custo de energia.
+\end{itemize}
+
+
+E as desvantagens são:
+\begin{itemize}
+ \item Nó que envia o \textit{beacon} nunca é sincronizado. Impossibilita a utilização em aplicações que necessitem sincronização do nó raiz.
+ \item Em redes de um salto com $n$ nós, este protocolo precisa trocar $O(n^2)$ mensagens. Em caso de redes com grandes vizinhanças pode ter alto custo de computação.
+ \item Alto número de troca de mensagens do protocolo pode aumentar o seu tempo de convergência.
+ \item Não é escalável, com o aumento do número de nós o seu desempenho cai de forma significativa.
+\end{itemize}
