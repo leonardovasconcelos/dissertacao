@@ -4,7 +4,7 @@
 %     Usa o tempo de chegada do pacote como tempo de referência de sincronização.
 % }
 
-Elson et al. \cite{Elson:SIGOPS02} propuseram o Reference Broadcast Synchronization (RBS) em 2002, sua principal inovação era a utilização de mensagens de referência por difusão para a eliminação do não determinismo de comunicação relacionado ao tempo de envio e acesso ao meio, baseando no fato de que as mensagens de \textit{broadcast} chegam nos receptores praticamente ao mesmo tempo. 
+Elson et al. \cite{Elson:SIGOPS02} propuseram o \textit{Reference Broadcast Synchronization} (RBS) em 2002, baseado no modelo bidirecional (\textit{receiver-receiver}), sua principal inovação era a utilização de mensagens de referência por difusão para a eliminação do não determinismo de comunicação relacionado ao tempo de envio e acesso ao meio, baseando no fato de que as mensagens de \textit{broadcast} chegam nos receptores praticamente ao mesmo tempo. 
 
 
 O Algoritmo \ref{alg:rbs} exemplifica o funcionamento do RBS, usando um cenário com \textit{receivers} onde um nó é determinado como referência, ele irá enviar por difusão uma mensagem de requisição para os nós ao seu alcance. Cada nó que recebe a requisição irá guardar seu tempo local. Após, os pares de receptores trocam seus \textit{timestamps}, eles podem comparar seus tempos e calcular a diferença entre seus relógios (\textit{offset}). O escorregamento do relógio será é calculado utilizando o método dos mínimos quadrados para encontrar uma estimativa da inclinação ou escorregamento do \textit{clock} do outro nó.

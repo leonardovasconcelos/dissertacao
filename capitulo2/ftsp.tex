@@ -4,3 +4,9 @@
 \outline{
     Descrição de alto nível sobre o FTSP.
 }
+
+
+The goals of the Flooding Time Synchronization Protocol (FTSP) (Maróti et al. 2004) are to achieve network-wide synchronization with errors in the microsecond range, scalability up to hundreds of nodes, and robustness to changes in network topology including link and node failures. FTSP differs from other solutions in that it uses a single broadcast to establish synchronization points between sender and receivers while eliminating most sources of synchronization error. 
+
+Toward this end, FTSP expands on the delay analysis described in Section XX and decomposes the end-to-end delay into the components shown in Figure X. In this analysis, the wireless radio of the sensor node informs the CPU using an interrupt at time $t_1$ that it is ready to receive the next piece of the message to be transmitted. After the interrupt handling time d 1 , the CPU generates a time stamp at time $t_2$ . The time needed by the radio to encode and transform the piece of the message into electromagnetic waves is described as encoding time $d_2$ (between $t_1$ and $t_3$ ). The propagation delay (between $t_3$ on node j's clock and $t_4$ on node k's clock) is followed by the decoding time $d_4$ (between $t_4$ and $t_5$ ). This is the time the radio requires to decode the message from electromagnetic waves back into binary data. The byte alignment time $d_5$ is a delay caused by the different byte alignments (bit offsets) of nodes j and k, that is, the receiving radio has to determine the offset from a known synchronization byte and then shift the incoming message accordingly. Finally, the radio on node k issues an interrupt
+at time $t_6$ , which allows the CPU to obtain a final time stamp at time $t_7$ .

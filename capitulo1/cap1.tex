@@ -205,7 +205,7 @@ Alguns dos componentes de atraso são de origem não determinístico, outros podem 
     \textit{Pairwise synchronization, Uniderecional One-Way Message Exchange, Two-Way Message Exchange, Receiver-Receiver Synchronization}
 }
 
-Os protocolos de sincronização essencialmente são construídos a partir de troca de mensagens entre os nós participantes da rede. O modelo mais simples de sincronização utiliza pelo menos uma mensagem, chamado de \textit{pair-wise synchronization} nele dois nós podem sincronizar apenas trocando uma mensagem, para sincronizar uma rede inteira repete-se a operação entre parelhos até que todos os pares estarem sincronizados, quando isso ocorre damos o nome de \textit{network-wide synchronization}. A seguir vamos discorrer sobre métodos de sincronização.
+Os protocolos de sincronização essencialmente são construídos a partir de troca de mensagens entre os nós participantes da rede. O modelo mais simples de sincronização utiliza pelo menos uma mensagem, chamado de \textit{pairwise synchronization} nele dois nós podem sincronizar apenas trocando uma mensagem, para sincronizar uma rede inteira repete-se a operação entre parelhos até que todos os pares estarem sincronizados, quando isso ocorre damos o nome de \textit{network-wide synchronization}. A seguir vamos discorrer sobre métodos de sincronização.
 
 \begin{figure}[h]
  \centering
@@ -215,7 +215,7 @@ Os protocolos de sincronização essencialmente são construídos a partir de troca 
  \label{fig:pairwise1}
 \end{figure}
 
-A sincronização unidirecional ou \textit{one-way} é a forma mais elementar de sincronização \textit{pair-wise}, temos a Figura \ref{fig:pairwise1} que demonstra o seu funcionamento, nela observamos que o nó $i$ no tempo $t_1$ envia seu \textit{timestamp} para $j$, quando o nó $j$ recebe a mensagem seu relógio local está marcando o tempo $t_2$, assim o valor de $t_2$ pode ser calculado como na Equação (\ref{eq:tempo_t2}):
+A sincronização unidirecional ou \textit{one-way} é a forma mais elementar de sincronização \textit{pairwise}, temos a Figura \ref{fig:pairwise1} que demonstra o seu funcionamento, nela observamos que o nó $i$ no tempo $t_1$ envia seu \textit{timestamp} para $j$, quando o nó $j$ recebe a mensagem seu relógio local está marcando o tempo $t_2$, assim o valor de $t_2$ pode ser calculado como na Equação (\ref{eq:tempo_t2}):
 
 \begin{equation} \label{eq:tempo_t2}
   t_2 = t_1 + tp + \theta
@@ -233,7 +233,7 @@ Onde $tp$ é o tempo de propagação, este tempo é muito pequeno podendo ser ignora
  \centering
  \includegraphics{./figuras/pairwise_sync2.eps}
  % pairwise_sync2.eps: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
- \caption{Bidirecional \textit{pair-wise syncronization}}
+ \caption{Bidirecional \textit{pairwise syncronization}}
  \label{fig:pairwise2}
 \end{figure}
 
@@ -258,7 +258,7 @@ O nó $i$ com uma informação mais acurada, pode enviar uma nova mensagem para $j$
  \label{fig:pairwise_recrec}
 \end{figure}
 
-A sincronização \textit{receiver-receiver} toma vantagem da natureza do \textit{broadcast} na comunicação sem fio, onde a difusão de uma mensagem tem o mesmo tempo de recepção em cada um dos receptores, seu tempo de chegada varia muito pouco sendo sensível apenas aos atrasos de propagação e recebimento. No cenário descrito na Figura \ref{fig:pairwise_recrec}, temos um nó que envia \textit{beacons} (não necessariamente contendo um \textit{timestamp}) periodicamente, todos nós que recebem a mensagem registram o tempo de recebimento com o seu relógio local. Então, os \textit{receivers} ($j$ e $k$) trocam entre si a informação registrada, o que os permite calcularem a diferença entre o tempo de chegada dos \textit{beacons}, ou seja, o \textit{offset}. Esse tratamento pode remover duas das maiores fontes de atraso na comunicação sem fios: o atraso de transmissão e o tempo acesso ao meio \cite{cho2011}.
+A sincronização \textit{receiver-receiver} toma vantagem da natureza do \textit{broadcast} na comunicação sem fio, onde a difusão de uma mensagem tem o mesmo tempo de recepção em cada um dos receptores, seu tempo de chegada varia muito pouco sendo sensível apenas aos atrasos de propagação e recebimento. No cenário descrito na Figura \ref{fig:pairwise_recrec}, temos um nó que envia \textit{beacons} (não necessariamente contendo um \textit{timestamp}) periodicamente, todos nós que recebem a mensagem registram o tempo de recebimento com o seu relógio local. Então, os \textit{receivers} ($j$ e $k$) trocam entre si a informação registrada, o que os permite calcularem a diferença entre o tempo de chegada dos \textit{beacons}, ou seja, o \textit{offset}. Esse tratamento pode remover duas das maiores fontes de atraso na comunicação sem fios: o atraso de envio e o tempo de acesso ao meio \cite{cho2011}.
 
 
 
@@ -272,7 +272,7 @@ A sincronização \textit{receiver-receiver} toma vantagem da natureza do \textit{
 
 
 
-\section{Definição do Problema}
+\section{Definição do Problema}\label{sec:problema}
 
 \outline{Dependência de hardware, padronização do recurso, esforço para que exista futuramente um padrão que esteja presente em todos os tipos de \textit{motes} e possibilite assim a interoperação de protocolos de MAC \textit{timestamp} em sistemas heterogêneos.}
 
@@ -290,7 +290,7 @@ O FTSP é o estado da arte dos protocolos de sincronização \textit{multi-hop} \ci
 
 
 
-\section{Motivação do Trabalho}
+\section{Motivação do Trabalho}\label{sec:motivacao}
 
 \outline{
 \begin{itemize}
@@ -313,7 +313,7 @@ Redes sensores são compostas de um largo número de nós, assim é fundamental que 
 \end{itemize}
 }
  
-
+Baseado no problema descrito na Seção \ref{sec:problema}, este trabalho propõe a extensão do FTSP para funcionamento independente de \textit{hardware}, o FTSP+. Ele fornece uma extensão para o funcionamento do FTSP em plataformas que não suportam a implementação do \textit{timestamp} na camada MAC, visto que ainda é possível fornecer a funcionalidade de sincronização a nível de pacote, com um baixo custo de \textit{overhead} de comunicação. A implementação do FTPS+ ainda etá de acordo com o padrão de sincronização formalizado pelo sistema TinyOS na sua TEP:133 \cite{tinyos133}.
  
  
  

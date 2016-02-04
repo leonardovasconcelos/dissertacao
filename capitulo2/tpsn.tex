@@ -2,4 +2,53 @@
 \outline{
     TPSN não elimina incerteza no sender, apenas minimiza o erro.
     Ele tenta reduzir este não determinismo utilizando timestamping da mensagem na camada MAC.
-} 
+}
+
+O TPSN (Timing-sync Protocol for Sensor Networks) introduzido por Ganeriwal et. al. em 2003 \cite{ganeriwal2003}, usa o modelo \textit{sender-receiver} e organiza a rede na estrutura de uma árvore, um único nó sincroniza toda a rede, para reduzir incertezas relativas a acesso ao meio TPSN utiliza \textit{timestamp} na camada MAC. É dividido em duas fases descritas a seguir:
+
+\textbf{Fase de Descoberta de Nível:} Esta fase é responsável por criar uma topologia hierárquica da rede, inicia no momento que a rede é ligada definindo um nó como $root$ e atribuindo seu nível como 0. O nó $root$ envia uma mensagem de descoberta chamada \texttt{level\_discovery} que contém seu nível e identificador, todos os nós vizinhos  que recebem este pacote usam ele para identificar seu nível, somando 1 ao nível do pacote recebido. Então estes vizinhos imediatos ao $root$ reenviam a mensagem de descoberta com seu próprio identificador e nível, este processo repete até que eventualmente todos os nós tenham identificado seu próprio nível. Caso um nó não tenha identificado seu nível, seja por problema de erro na troca de mensagem ou por ter ingressado na rede após a fase de descoberta ter sido concluída, este nó pode enviar uma mensagem de \texttt{level\_request} e seus vizinhos irão responder com seus respectivos níveis. Então ele atribui seu nível como sendo 1 a mais do que o menor nível dentre os recebidos. Uma falha importante que dever ser mencionada é o caso da reeleição do nó $root$, caso este venha a cair, nesta hipótese um dos nós do nível 1 é eleito e dá início a uma nova fase de descoberta.
+
+
+
+\textbf{Fase de Sincronização:} Com a estrutura hierárquica da rede criada na fase anterior, temos o início da sincronização propriamente dita, onde o TPSN usa sincronização \textit{pairwise} entre as arestas e funciona de forma similar ao LTS, iniciando a partir do $root$ e avançando até os níveis mais externos da rede.
+
+
+
+
+
+
+
+%There are many existing protocols [40-42,6] which follow the hierarchical structure to spread the reference clock value. Due to the hierarchical nature of the protocol, the synchronization error of a node with respect to the root node depends on its hop distance from the root node [43]. The synchronization time for the whole network increases as the number of levels in the hierarchy increases. As a result, it takes more time to reestablish the network hierarchy and synchronization over the whole network after any failure of the root node.
+
+
+
+
+
+
+
+
+
+
+
+
+Vantagens do TPSN
+
+\begin{itemize}
+ \item in order to save energy, the protocol also supports \textit{post-facto}
+ \item Any synchronization packet has the four delays discussed earlier: send time, access time, propagation time, and receive time. Eliminating any of these would be a plus. Although TPSN does not eliminate the uncertainty of the sender it does, however, minimize it. Also, TPSN is designed to be a multi-hop protocol; so transmission range is not an issue.
+
+ \item Unlike RBS, TPSN has uncertainty in the sender. They attempt to reduce this non-determinism by time stamping packets in the MAC layer. It is claimed that the sender's uncertainty contributes very little to the total synchronization error. By reducing the uncertainty with low level time stamping, it is claimed that TPSN has a 2 to 1 better precision than RBS and that the sender to receiver synchronization is superior to the receiver to receiver synchronization. [Ganeriwal2003]
+
+ \item RBS also is limited by the transmission range. It was stated that RBS can ignore the propagation time if the range of transmission was relatively small. If it is a large multi-hop network, this is not the case. RBS would have to send more reference beacons for the node to synchronize. TPSN on the other hand was designed for multi-hop networks. Their protocol uses the tree based scheme so the timing information can accurately propagate through the network.
+
+ \item The sender to receiver synchronization method is claimed to be more precise than the receiver to receiver synchronization. Also TPSN is designed for multi-hop networks, where RBS works best on single hop networks. So, the transmission range is not a factor with TPSN.
+\end{itemize}
+
+Desvantagem do TPSN
+
+\begin{itemize}
+ \item ...
+\end{itemize}
+
+
+
