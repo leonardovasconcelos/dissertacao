@@ -8,3 +8,68 @@
     Também é dependente de MAC timestamping.
 }
 
+Lenzen \textit{et al.} em \cite{Lenzen:Sensys09} introduziram o PulseSync, e expandiram em \cite{lenzen2015pulsesync}. A ideia básica do PulseSync é distribuir a informação dos valores dos relógios da forma mais rápida possível usando o menor número de mensagem. Na inicialização da rede os nós escutam o canal esperando por mensagens de sincronização, no em tando, passado um certo período de tempo se não houver nenhum recebimento ou se ele tem o ID menor o nó se declara como \textit{root} e começa a enviar periodicamente mensagens que são chamadas de pulsos. Esses pulsos são mensagens de \textit{broadcast} com as seguintes informações: \textit{timestamp}, número de sequencia e o ID do \textit{root}.
+
+Depois de passar da fase inicial, onde é definido o \textit{root}, os nós vizinhos a ele começarão a receber mensagens de sincronização. Os relógios dos nós são sincronizados através da rede utilizando \textit{root} como nó de referência, uma vez que um nó adjacente tenha recebido uma mensagem de sincronização ele encaminha essa mensagem adiante. 
+
+Em uma topologia em que determinado nó tenha muitos vizinhos, ele deve receber mensagens de sincronização repetidas, então ele só irá utilizar e encaminhar a que chegou primeira, pois essa provavelmente tem o menor caminho até o \textit{root}, logo sofreu menos com o atraso introduzido pelo percurso da mensagem. Como forma de manter o menor número de saltos o Pulsesync utiliza busca em largura (Breadth-First Search - BFS).
+
+
+Como forma de diminuir os atrasos referentes a comunicação, o Pulsesync utiliza \textit{timestamp} na camada MAC. Para transmitir rapidamente os pulsos através da rede, os nós começam a retransmitir as mensagens tão logo elas cheguem, o que pode causar colisões devido as interferências do meio sem fio, existem algumas técnicas que trabalham em como melhorar a difusão de mensagens por inundação evitando a interferência \cite{levis2003trickle, stann2006rbp, zhu2010exploring}, o Pulsesync não implementa essas soluções apenas define o intervalo de separação dos pulsos para evitar a colisões. Para correção do escorregamento do relógio é utilizado regressão linear para corrigir o declive do crescimento do relógio. O pseudocódigo código do nó \textit{root} e do nó cliente é descrito pelos Algoritmos \ref{alg:pulseroot} e \ref{alg:pulsenonroot}, respectivamente.
+
+
+\begin{algorithm}[H]
+% \small
+\KwData{R(t) = relógio local}
+\setstretch{1}
+\SetAlgoVlined
+\DontPrintSemicolon
+%\Inicio{
+% \While{R(t) mod(B) \equal 0 }{
+ \Se{Root}{
+   Aguarda intervalo de sincronização\;
+   Envia(R(t), $seqNum$)\;
+   $seqNum \leftarrow seqNum$ + 1 \;
+ }
+% }
+\caption{\texttt{Rotina periódica sempre no intervalo do \textit{Beacon} B\label{alg:pulseroot}}}
+\end{algorithm}
+
+
+
+\begin{algorithm}[H]
+% \small
+\setstretch{1}
+\SetAlgoVlined
+\DontPrintSemicolon
+%\Inicio{
+ \Se{Não Root}{
+    Recebe pulso\;
+    Armazena(pulso)\;
+    Delete(entradas velhas)\;
+    Aguarda \textit{backoff} para reencaminhar pulso\;
+    Envia(R(t))\;
+    $seqNum \leftarrow seqNum + 1 $
+  }
+\caption{\texttt{Nó não \textit{root}\label{alg:pulsenonroot}}}
+\end{algorithm}
+
+
+
+
+Suas vantagens são:
+
+\begin{itemize}
+ \item Algoritmos assintoticamente ótimo, tem convergência rápida.
+ \item Apresenta bom custo benefício entre escalabilidade e eficiência energética.
+ \item Diminuiu a propagação de erro em redes multi-saltos.
+\end{itemize}
+
+
+
+Suas desvantagens são:
+
+\begin{itemize}
+ \item Dependente de \textit{hardware} específico para \textit{timestamp} na camada MAC.
+ \item Nó \textit{root} é um ponto único de falha.
+\end{itemize}

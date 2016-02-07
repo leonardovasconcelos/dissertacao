@@ -10,11 +10,7 @@ O TPSN (Timing-sync Protocol for Sensor Networks) introduzido por Ganeriwal et. 
 
 
 
-\textbf{Fase de Sincronização:} Com a estrutura hierárquica da rede criada na fase anterior, temos o início da sincronização propriamente dita, onde o TPSN usa sincronização \textit{pairwise} entre as arestas e funciona de forma similar ao LTS, iniciando a partir do $root$ e avançando até os níveis mais externos da rede.
-
-
-
-
+\textbf{Fase de Sincronização:} Com a estrutura hierárquica da rede criada na fase anterior, temos o início da sincronização propriamente dita, onde o TPSN usa sincronização \textit{pairwise} entre as arestas e funciona de forma similar ao LTS, iniciando a partir do $root$ e avançando até os níveis mais externos da rede. Primeiramente o nó $root$ envia uma mensagem \texttt{time\_sync}, quando o nó no nível 1 recebe a mensagem eles iniciam uma sincronização bidirecional, ao final ele será capaz de calcular seu escorregamento, \textit{offset} e o tempo de propagação e assim ajustar o seu relógio. Os nós no nível 2 são capazes de escutar a comunicação realizada pelo nível 1, assim aguardam um tempo de \textit{backoff} para iniciar o mesmo processo de sincronização, este tempo é necessário para que os nós terminem de ajustar seus relógios. Este processo continua nos níveis subsequentes até que toda estrutura esteja sincronizada.
 
 
 
@@ -23,31 +19,22 @@ O TPSN (Timing-sync Protocol for Sensor Networks) introduzido por Ganeriwal et. 
 
 
 
-
-
-
-
-
-
-
-
-Vantagens do TPSN
+Vantagens do TPSN:
 
 \begin{itemize}
- \item in order to save energy, the protocol also supports \textit{post-facto}
- \item Any synchronization packet has the four delays discussed earlier: send time, access time, propagation time, and receive time. Eliminating any of these would be a plus. Although TPSN does not eliminate the uncertainty of the sender it does, however, minimize it. Also, TPSN is designed to be a multi-hop protocol; so transmission range is not an issue.
-
- \item Unlike RBS, TPSN has uncertainty in the sender. They attempt to reduce this non-determinism by time stamping packets in the MAC layer. It is claimed that the sender's uncertainty contributes very little to the total synchronization error. By reducing the uncertainty with low level time stamping, it is claimed that TPSN has a 2 to 1 better precision than RBS and that the sender to receiver synchronization is superior to the receiver to receiver synchronization. [Ganeriwal2003]
-
- \item RBS also is limited by the transmission range. It was stated that RBS can ignore the propagation time if the range of transmission was relatively small. If it is a large multi-hop network, this is not the case. RBS would have to send more reference beacons for the node to synchronize. TPSN on the other hand was designed for multi-hop networks. Their protocol uses the tree based scheme so the timing information can accurately propagate through the network.
-
- \item The sender to receiver synchronization method is claimed to be more precise than the receiver to receiver synchronization. Also TPSN is designed for multi-hop networks, where RBS works best on single hop networks. So, the transmission range is not a factor with TPSN.
+ \item O protocolo suporta sincronização \textit{post-facto}, como forma de economia de energia.
+ \item O TPSN foi desenvolvido para ser um protocolo multi-salto, assim teoricamente o tamanho da faixa de transmissão não causa problema.
+ \item Tem incerteza no tempo de envio, ele tenta reduzir este indeterminismo usando \textit{timestamp} na camada mac
 \end{itemize}
 
-Desvantagem do TPSN
+Desvantagem do TPSN:
 
 \begin{itemize}
- \item ...
+ \item Autores não explicaram como o protocolo poderia suportar \textit{sleep mode} sem quebrar a estrutura da árvore.
+ \item Autores concluem que TPSN tem performance 2 vezes superior ao RBS, porém nos testes é apresentado o \textit{offset} máximo do TPSN foi de 17 $\mu s$, maior que os 3 $\mu s$ do RBS.
+ \item Mobilidade pode causar a necessidade de reconstrução da árvore.
+ \item Depende de \textit{hardware} específico para o funcionamento do \textit{timestamp} na camada MAC.
+ \item O Tempo de sincronização aumenta com o com o crescimento do número de níveis. 
 \end{itemize}
 
 
