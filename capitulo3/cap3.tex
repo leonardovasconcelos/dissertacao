@@ -32,6 +32,14 @@ If it is greater than the local value \textit{highestSeqNum}, it means that this
 The synchronization procedure consists of computing a linear regression \cite{elson2003} that will provide the clock skew (used to estimate the global time) in relation to the reference node.
 The last step is to forward its local (synchronized) time to other nodes. 
 
+\begin{figure}[h]
+ \centering
+ \includegraphics{./figuras/exemplo_ftps1.eps}
+ % exemplo_ftps1.eps: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=0 0 330 180
+ \caption{Exemplo do fluxo da rede com FTSP}
+ \label{fig:exemplo_ftsp1}
+\end{figure}
+
 
 \begin{figure}[h]
 \begin{Verbatim}[numbers=left,numbersep=1pt,frame=single]
@@ -63,9 +71,12 @@ If \textit{seqNum} is higher, local \textit{highestSeqNum} is updated.
 Lines 8 and 9 makes a root node give up on being root when it has a \textit{rootID} lower than its own ID.
 In case the \textit{rootID} is larger it is checked whether the \textit{seqNum} is greater or equal to the value of \textit{highestSeqNum}, this check prevents information redundancy because the message will only be used when the \textit{rootID} is less than or equal to \textit{myRootID} and the number greater than the value of \textit{highestSeqNum}.
 Lines 10 to 15 verify if the time of a message is in disagreement with the earlier estimates of global time, if applicable clear the regression table, if not, accumulate synchronization messages to calculate the linear regression and synchronize.
-
-%Lines 10 to 15 accumulate synchronization messages to calculate the linear regression and synchronize.
-
+
+
+%Lines 10 to 15 accumulate synchronization messages to calculate the linear regression and synchronize.
+
+
+
 \begin{figure}[h]
    \begin{Verbatim}[numbers=left,numbersep=1pt,frame=single]
 event Timer.fired() {

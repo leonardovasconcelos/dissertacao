@@ -5,29 +5,21 @@
     Descrição de alto nível sobre o FTSP.
 }
 
-mestrado de pt:
+O Flooding Time Synchronization Protocol (FTSP) \cite{maroti2004} é um protocolo desenvolvido para ser uma solução de sincronização de RSSF que atenda as necessidades de escalabilidade, robustez a mudanças na topologia da rede relacionadas a falhas de nós, enlace e mobilidade. O FTSP combinou os progressos observados no RBS e TPSN, trazendo um protocolo mais dinâmico, \textit{timestamp} no nível MAC aprimorado e correção de relógio.
+
+Primeiro, no processo de inicialização da rede o nó com o menor ID é eleito como \textit{root}, o FTSP cria uma estrutura \textit{ad hoc} com o nó \textit{root} propagando periodicamente informação de tempo. Começando do nó \textit{root}, a mensagem de sincronização é transmitida para todos os seus vizinhos contendo o tempo do seu relógio local. Elimina parte das incertezas na transmissão fim-a-fim usando \textit{timestamp} na camada MAC. Do lado do receptor, são armazenados os tempos de chegada usando seu relógio local. Após armazenar uma quantidade predefinida de mensagens de sincronização, os nós usam regressão linear para calcular o seu \textit{offset} e o escorregamento do seu relógio com base nas mensagens do nó de referência. Desta forma o nó pode mudar o declive do crescimento do seu relógio e mantê-lo atualizado. 
 
 
-O Flooding Time Synchronization Protocol (FTSP) \cite{maroti2004} é um protocolo desenvolvido para ser uma solução de sincronização de RSSF que atenda as necessidades de escalabilidade, robustez a mudanças na topologia da rede relacionadas a falhas de nós, enlace e mobilidade.  
-
-The goals of the Flooding Time Synchronization Protocol (FTSP) (Maróti et al. 2004) are to achieve network-wide synchronization with errors in the microsecond range, scalability up to hundreds of nodes, and robustness to changes in network topology including link and node failures. FTSP differs from other solutions in that it uses a single broadcast to establish synchronization points between sender and receivers while eliminating most sources of synchronization error. 
-
-Toward this end, FTSP expands on the delay analysis described in Section XX and decomposes the end-to-end delay into the components shown in Figure X. In this analysis, the wireless radio of the sensor node informs the CPU using an interrupt at time $t_1$ that it is ready to receive the next piece of the message to be transmitted. After the interrupt handling time d 1 , the CPU generates a time stamp at time $t_2$ . The time needed by the radio to encode and transform the piece of the message into electromagnetic waves is described as encoding time $d_2$ (between $t_1$ and $t_3$ ). The propagation delay (between $t_3$ on node j's clock and $t_4$ on node k's clock) is followed by the decoding time $d_4$ (between $t_4$ and $t_5$ ). This is the time the radio requires to decode the message from electromagnetic waves back into binary data. The byte alignment time $d_5$ is a delay caused by the different byte alignments (bit offsets) of nodes j and k, that is, the receiving radio has to determine the offset from a known synchronization byte and then shift the incoming message accordingly. Finally, the radio on node k issues an interrupt
-at time $t_6$ , which allows the CPU to obtain a final time stamp at time $t_7$ .
-
-
-\begin{figure}[h]
- \centering
- \includegraphics{./figuras/exemplo_ftps1.eps}
- % exemplo_ftps1.eps: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=0 0 330 180
- \caption{Exemplo do fluxo da rede com FTSP}
- \label{fig:exemplo_ftsp1}
-\end{figure}
+Os nós recebem sincronização direto do nó \textit{root}, porém nem todos estão no seu raio de alcance. Assim, a sincronização multi-saltos é realizada por outros nós que já tenham sido sincronizados, estes encaminham mensagens até todos estarem sincronizados. Em redes densas e com saltos, temos o problema de que determinado nó receba mensagens de sincronização repetidas, neste caso o FTSP incorpora na mensagem além do \textit{timestamp}, um número de sequência e o ID do \textit{root}, assim uma mensagem pode ser filtrada sabendo que é mais antiga ela é descartada.
 
 
 
-philipe aqui:
-This shortcoming is tackled by the Flooding-Time Synchronization Protocol (FTSP) [19]. FTSP elects a root node based on the smallest node identifier and forms an ad-hoc tree structure by flooding the current time information of the root node into the network. Each node uses a linear regression table to convert between the local hardware clock and the clock of the reference node. 
+
+
+
+
+
+
 
 
 
@@ -42,6 +34,6 @@ As suas vantagens são:
 
 As suas desvantagens são:
 \begin{itemize}
- \item Exibe crescimento de erros baseado no tamanho da rede em saltos.
+ \item Exibe crescimento de erros baseado no tamanho de saltos da rede.
  \item Dependente de \textit{hardware} específico para funcionamento do seu \textit{timestamp}.
 \end{itemize}
