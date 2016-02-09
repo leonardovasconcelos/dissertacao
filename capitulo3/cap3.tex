@@ -1,5 +1,5 @@
 \chapter{Revisão detalhada do FTSP} \label{cap:cap3}
-\outlineon=1
+\outlineon=0
 
 \outline{
 \begin{itemize}
@@ -11,26 +11,95 @@
 }
 
 
-\section{Flooding Time Synchronization Protocol}
-\label{sec:ftsp}
+Neste capítulo iremos descrever o funcionamento do FTSP, principalmente os esquemas de sincronização com o nó \textit{root}, fase de eleição e reeleição do líder, envio periódico de \textit{beacons}, marcação de tempo na camada de acesso ao meio e o uso de regressão linear para corrigir o escorregamento do relógio. 
 
-This section briefly describes the Flooding Time Synchronization Protocol (FTSP).
-For more detailed information, refer to \cite{maroti2004}.
 
-FTSP is a synchronization protocol for WSN that provides high accuracy, consumes few resources, uses little bandwidth and is fault-tolerant. It elects a node as root to provide the time reference for synchronization; if root failure is detected (using timeouts), another root is elected.
-Root and synchronized nodes send synchronization messages periodically, and receiving nodes use these messages to synchronize.
-Therefore, FTSP supports multi-hop networks.
+\section{Flooding Time Synchronization Protocol}\label{sec:ftsp}
 
-Synchronization messages comprise a \textit{sender timestamp} which is the estimated global time and \textit{rootID} which is the network identifier of the root (where the node with the lowest ID is the chosen root).
-\textit{seqNum} is a sequence counter that is incremented each synchronization round; this field is used to verify the redundancy of messages \cite{maroti2004}.
 
-All nodes think they are root when the network starts, so they broadcast synchronization messages to the network. 
-When they receive a synchronization message, they check who has the lowest ID: if the local ID is higher, this node gives up on being root and starts synchronizing.
-Another important check is the \textit{seqNum}.
-If it is greater than the local value \textit{highestSeqNum}, it means that this is a new synchronization message and starts the synchronization procedure.
+O FTSP surgiu em 2004 \cite{maroti2004} com sua principal meta, efetuar a sincronização dos relógios de todos os participantes de uma rede com boa performance, simplicidade e baixo \textit{overhead}. Assim, tendo que atender as restrições que os componentes das RSSF possuem, onde todo nó tem um erro relativo a impureza do cristal, bem como, erros inerentes ao enlace de comunicação sem fio não confiável.
 
-The synchronization procedure consists of computing a linear regression \cite{elson2003} that will provide the clock skew (used to estimate the global time) in relation to the reference node.
-The last step is to forward its local (synchronized) time to other nodes. 
+Usando uma única mensagem o FTSP sincroniza múltiplos receptores, a mensagem com a marca de tempo é gravada no instante em que está sendo enviada, que também é praticamente o mesmo momento em que esta sendo marcada como recebida pelo receptor. Este mecanismo de \textit{timestamp} na camada MAC elimina a maior parte das fontes de erros na etapa de comunicação sumarizados na Seção \ref{subsec:fontes_imp} e é empregado em muitos outros mecanismos \cite{Ganeriwal:Sensys03, Lenzen:Sensys09}. O trabalho \cite{elson2002} trata do uso de regressão linear para a correção do escorregamento do relógio, que é o usado pelo FTSP para compensar o seu relógio e assim manter um alto nível de acurácia.
+
+O nó \textit{root} é o responsável por disseminar o tempo global pela rede, porém há redes em que os nós não estão ao alcance da faixa de cobertura do seu sinal, o FTSP tem o recurso de rede multi-saltos, ele constrói uma estrutura \textit{ad hoc}, onde, os nós diretamente sincronizados com o \textit{root}, ficam atualizando os nós subsequentes com sua informação de tempo global.
+
+
+
+
+\section{\textit{Timestamp}}
+
+\outline{
+  Explicar como funciona a marcação de tempo no FTSP
+}
+
+
+\section{Escorregamento do Relógio}
+
+\outline{
+  Descrever os problemas relacionados ao clock drift.
+  Como o FTSP corrige essa fonte de imprecisão.
+}
+
+
+\begin{figure}[h]
+ \centering
+ \includegraphics{./figuras/grafico_regressao.eps}
+ % grafico_regressao.eps: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+ \caption{Regressão linear aplicada a \textit{timestamps}}
+ \label{fig:regressao}
+\end{figure}
+
+
+
+
+\section{Sincronização Multi-saltos}
+
+\outline{
+\begin{itemize}
+ \item Formato da mensagem de sincronização.
+ \item Gerenciamento de informação redundante.
+ \item Eleição do nó raiz.
+ \item Evento: enviar/receber mensagem de sincronia. 
+\end{itemize}
+
+}
+
+
+
+
+\begin{figure}[h]
+ \begin{Verbatim}[numbersep=1pt,frame=single]
+typedef nx_struct TimeSyncMsg
+{
+ nx_uint16_t rootID;
+ nx_uint16_t nodeID; 
+ nx_uint8_t  seqNum;
+ nx_uint32_t globalTime;
+ nx_uint32_t localTime;
+} TimeSyncMsg;
+\end{Verbatim}
+\caption{Formato da mensagem de sincronização}
+\end{figure}
+
+
+
+
+%This section briefly describes the Flooding Time Synchronization Protocol (FTSP). For more detailed information, refer to \cite{maroti2004}.
+
+% FTSP is a synchronization protocol for WSN that provides high accuracy, consumes few resources, uses little bandwidth and is fault-tolerant. It elects a node as root to provide the time reference for synchronization; if root failure is detected (using timeouts), another root is elected.
+% Root and synchronized nodes send synchronization messages periodically, and receiving nodes use these messages to synchronize.
+% Therefore, FTSP supports multi-hop networks.
+% 
+% Synchronization messages comprise a \textit{sender timestamp} which is the estimated global time and \textit{rootID} which is the network identifier of the root (where the node with the lowest ID is the chosen root).
+% \textit{seqNum} is a sequence counter that is incremented each synchronization round; this field is used to verify the redundancy of messages \cite{maroti2004}.
+% 
+% All nodes think they are root when the network starts, so they broadcast synchronization messages to the network. 
+% When they receive a synchronization message, they check who has the lowest ID: if the local ID is higher, this node gives up on being root and starts synchronizing.
+% Another important check is the \textit{seqNum}.
+% If it is greater than the local value \textit{highestSeqNum}, it means that this is a new synchronization message and starts the synchronization procedure.
+% 
+% The synchronization procedure consists of computing a linear regression \cite{elson2003} that will provide the clock skew (used to estimate the global time) in relation to the reference node.
+% The last step is to forward its local (synchronized) time to other nodes. 
 
 \begin{figure}[h]
  \centering
@@ -63,14 +132,14 @@ event Radio.receive(TimeSyncMsg *msg){
  \label{figure1}
 \end{figure}
 
-Figure 1 shows the routine of receiving synchronization messages.
-Lines 2 and 3 compare the \textit{rootID} of the synchronization message with the local \textit{rootID}.
-If the message has a lower \textit{rootID}, the node assumes this \textit{rootID} as root.
-Lines 4 to 7 ignore messages with higher  \textit{rootID} and lower \textit{seqNum}.
-If \textit{seqNum} is higher, local \textit{highestSeqNum} is updated.
-Lines 8 and 9 makes a root node give up on being root when it has a \textit{rootID} lower than its own ID.
-In case the \textit{rootID} is larger it is checked whether the \textit{seqNum} is greater or equal to the value of \textit{highestSeqNum}, this check prevents information redundancy because the message will only be used when the \textit{rootID} is less than or equal to \textit{myRootID} and the number greater than the value of \textit{highestSeqNum}.
-Lines 10 to 15 verify if the time of a message is in disagreement with the earlier estimates of global time, if applicable clear the regression table, if not, accumulate synchronization messages to calculate the linear regression and synchronize.
+% Figure 1 shows the routine of receiving synchronization messages.
+% Lines 2 and 3 compare the \textit{rootID} of the synchronization message with the local \textit{rootID}.
+% If the message has a lower \textit{rootID}, the node assumes this \textit{rootID} as root.
+% Lines 4 to 7 ignore messages with higher  \textit{rootID} and lower \textit{seqNum}.
+% If \textit{seqNum} is higher, local \textit{highestSeqNum} is updated.
+% Lines 8 and 9 makes a root node give up on being root when it has a \textit{rootID} lower than its own ID.
+% In case the \textit{rootID} is larger it is checked whether the \textit{seqNum} is greater or equal to the value of \textit{highestSeqNum}, this check prevents information redundancy because the message will only be used when the \textit{rootID} is less than or equal to \textit{myRootID} and the number greater than the value of \textit{highestSeqNum}.
+% Lines 10 to 15 verify if the time of a message is in disagreement with the earlier estimates of global time, if applicable clear the regression table, if not, accumulate synchronization messages to calculate the linear regression and synchronize.
 
 
 %Lines 10 to 15 accumulate synchronization messages to calculate the linear regression and synchronize.
@@ -98,36 +167,9 @@ event Timer.fired() {
   \label{figure2}
 \end{figure}
 
-Figure \ref{figure2} shows the sending routine.
-A node decides to be root because has not received a synchronization message for ROOT\_TIMEOUT (lines 3 to 5).
-A node sends synchronization messages if it is root or has synchronized (lines 6 to 10).
-If a node is root, it also has to increment its \textit{highestSeqNum}.
+% Figure \ref{figure2} shows the sending routine.
+% A node decides to be root because has not received a synchronization message for ROOT\_TIMEOUT (lines 3 to 5).
+% A node sends synchronization messages if it is root or has synchronized (lines 6 to 10).
+% If a node is root, it also has to increment its \textit{highestSeqNum}.
  
  
-
-\section{\textit{Timestamp}}
-
-\outline{
-  Explicar como funciona a marcação de tempo no FTSP
-}
-
-
-\section{Escorregamento do Relógio}
-
-\outline{
-  Descrever os problemas relacionados ao clock drift.
-  Como o FTSP corrige essa fonte de imprecisão.
-}
-
-
-\section{Sincronização Multi-saltos}
-
-\outline{
-\begin{itemize}
- \item Formato da mensagem de sincronização.
- \item Gerenciamento de informação redundante.
- \item Eleição do nó raiz.
- \item Evento: enviar/receber mensagem de sincronia. 
-\end{itemize}
-
-}
