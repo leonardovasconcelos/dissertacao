@@ -24,13 +24,12 @@ O \textit{offset} entre um par de \textit{receivers} é a diferença entre seus re
 \end{algorithm}
 
 
+O RBS tem um alto nível de economia de energia, devido a forma com que o mesmo implementa o processo de sincronização somente quando necessário. Este modelo de funcionamento é denominado sincronização \textit{post-facto}, nele os nós correm seu relógio naturalmente e os tempos dos desvios dos seus relógios só serão calculados na ocorrência de um evento importante, assim o \textit{timestamp} resultante é vinculado ao evento e não altera o relógio local. A correção do relógio é feita utilizando uma tabela com a informação dos valores de \textit{offset} e \textit{skew} de todos os pares ao seu alcance, e a cada mensagem recebida de outro \textit{receiver} o valor é convertido para uma escala de tempo local.
 
-O RBS tem um alto nível de economia de energia, devido a ele realizar o processo de sincronização somente quando necessário. Este modelo de funcionamento é denominado sincronização \textit{post-facto}, nele os nós correm seu relógio naturalmente e os tempos dos desvios dos seus relógios só serão calculados na ocorrência de um evento importante, assim o \textit{timestamp} resultante é vinculado ao evento e não altera o relógio local. A correção do relógio é feita utilizando uma tabela com a informação dos valores de \textit{offset} e \textit{skew} de todos os pares ao seu alcance, e a cada mensagem recebida de outro \textit{receiver} o valor é convertido para uma escala de tempo local.
-
-A sincronização em cenários com multi-saltos é possível de ser implementada utilizando o RBS. Neste ambiente, apenas um nó como referência pode não ser o suficiente para cobrir todo o domínio de abrangência da rede, então múltiplos nós de referência podem ser utilizados, cada um com seu domínio de cobertura. Na verdade, a transmissão com vários saltos poderia acarretar um atraso na propagação de uma mensagem, neste caso para tratar este problema, a sincronização de dois nós em dois domínios diferentes é realizado por um terceiro nó localizado na intersecção dos domínios.
+A sincronização em cenários com multi-saltos é possível de ser implementada utilizando o RBS. Neste ambiente, apenas um nó como referência pode não ser o suficiente para cobrir todo o domínio de abrangência da rede, então múltiplos nós de referência podem ser utilizados, cada um com seu domínio de cobertura. Na verdade, a transmissão com vários saltos poderia acarretar um atraso na propagação de uma mensagem. Neste caso, para tratar este problema, a sincronização de dois nós em dois domínios diferentes é realizado por um terceiro nó localizado na intersecção dos domínios.
 
 
-Vantagens do RBS são:
+As principais vantagens do RBS podem ser definidas como:
 \begin{itemize}
  \item Remove as duas maiores fontes de atraso, tempo de envio e tempo de acesso.
  \item Sincronização \textit{post-facto} realiza ajustes somente quando necessário, diminuindo o custo de energia.
