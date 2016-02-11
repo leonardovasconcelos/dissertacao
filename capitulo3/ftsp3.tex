@@ -1,0 +1,8 @@
+\section{Flooding Time Synchronization Protocol}\label{sec:ftsp}
+
+
+O FTSP surgiu em 2004 \cite{maroti2004} com sua principal meta, efetuar a sincronização dos relógios de todos os participantes de uma rede com boa performance, simplicidade e baixo \textit{overhead}. Assim, tendo que atender as restrições que os componentes das RSSF possuem, onde todo nó tem um erro relativo a impureza do cristal, bem como, erros inerentes ao enlace de comunicação sem fio não confiável.
+
+Usando uma única mensagem o FTSP sincroniza múltiplos receptores, a mensagem com a marca de tempo é gravada no instante em que está sendo enviada, que também é praticamente o mesmo momento em que esta sendo marcada como recebida pelo receptor. Este mecanismo de \textit{timestamp} na camada MAC elimina a maior parte das fontes de erros na etapa de comunicação sumarizados na Seção \ref{subsec:fontes_imp} e é empregado em muitos outros mecanismos \cite{Ganeriwal:Sensys03, Lenzen:Sensys09}. O trabalho \cite{elson2002} trata do uso de regressão linear para a correção do escorregamento do relógio, que é o usado pelo FTSP para compensar o seu relógio e assim manter um alto nível de acurácia.
+
+O nó \textit{root} é o responsável por disseminar o tempo global pela rede, porém há redes em que os nós não estão ao alcance da faixa de cobertura do seu sinal. O FTSP cobre esse problema, pois tem o recurso de rede multi-saltos, ele constrói uma estrutura \textit{ad hoc}, onde, os nós diretamente sincronizados com o \textit{root} assim que ficam atualizados passam a sincronizar os nós subsequentes com sua informação de tempo global. 

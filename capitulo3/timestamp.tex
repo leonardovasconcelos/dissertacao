@@ -1,0 +1,54 @@
+\section{\textit{Timestamp}}
+
+\outline{
+  Explicar como funciona a marcação de tempo no FTSP
+}
+
+%O \textit{timestamp} na camada de acesso ao meio é utilizado para reduzir o atraso gerado na etapa de comunicação do processo de sincronização.
+
+O FTSP usa \textit{broadcast} para sincronizar seus nós, essa mensagem contém um \textit{timestamp} com o valor estimado do tempo global no momento em que a transmissão é realizada. No instante do recebimento os nó obtém o valor do tempo do seu relógio local, assim com a diferença entre o tempo global e o local o nó pode estimar o seu \textit{offset}. 
+
+Caso a leitura do tempo seja armazenada na etapa de envio ainda no nível de aplicação, vários componentes de atrasos serão acumulados até que a mensagem seja lida pelos receptores, a Seção \ref{subsec:fontes_imp} lista esses componentes de atraso e a Tabela \ref{tab:decomp} quantifica a magnitude dessas fontes. A Figura \ref{fig:comp_apptimestamp} ilustra esse procedimento como segue, no tempo $t_0$ é iniciado o processo de envio da mensagem de sincronização a partir do nó $i$, logo em seguida é criado o pacote que armazena o \textit{timestamp} $t_1$ e comanda o envio para o sistema operacional, este encaminha a mensagem para a pilha de protocolos. O tempo de acesso ao meio é variável e depende da janela de contenção da rede. Quando $i$ ganha o direito de enviar a mensagem, dá-se inicio a transmissão em $t_2$, $t_3$ o nó $j$ termina de receber a transmissão, mas somente algum tempo depois o no $j$ gera uma interrupção e o SO irá armazenar o \textit{timestamp} da recepção em $t_5$. Neste momento $j$ tem como calcular seu \textit{offset}, porém esse valor não é representativo devido aos atrasos que as marcas de tempo sofreram em relação de seus valores ideais.
+
+%Para fazer isso o FTSP conta com o uso do \textit{timestamp} na camada MAC, que funciona da seguinte forma 
+
+\begin{figure}[h]
+ \centering
+ \includegraphics{./figuras/comparacao_mactime.eps}
+ % comparacao_mactime.eps: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+ \caption{Procedimento de leitura do \textit{timestamp} em nível de aplicação}
+ \label{fig:comp_apptimestamp}
+\end{figure}
+
+Como forma de corrigir esse problema a leitura dos tempos podem ser efetuadas 
+
+
+
+Quando um comando de transmissão é emitido, a mensagem de sincronização está devidamente estabelecida e em fila para transmissão. No entanto, quando - na camada física - a transmissão do primeiro bit é iniciado, "último minuto" tempo de estampagem é executada. Em um local previamente reservados dentro da mensagem um valor de tempo é inserido enquanto o início da mensagem já está a ser transmitido. Isto é feito na memória do chip de rádio. O registro de tempo permite gravar informações adicionais na mensagem, sobre quanto tempo a criação e o processamento da mensagem levou o transmissor. Por sua vez, isso permite que todos os receptores desta mensagem para calcular quando o comando de envio foi emitido e elimina os atrasos de remetente, que de outra forma representam o limite de precisão.
+
+
+% Several transceivers allow for modifying the contents of a packet after packet transmission is started. Packet-level time synchronization can be implemented very efficiently on such platforms.
+% 
+% Transmitter's story
+% 
+% When the communications stack services a TimeSyncAMSend.send command called with event timestamp t\_e, it stores t\_e (e.g. in a map with the pointer of the message\_t as key) and sets the designated timestamp field in the packet payload to 0x80000000.
+% When the packet starts being transmitted over the communication medium, a corresponding hardware event is timestamped (e.g. an SFD interrupt). Let us denote this transmission timestamp with t\_tx. The difference of event timestamp t\_e and transmit timestamp t\_tx is written into the designated timestamp field in the payload of the packet (typically into the footer, since the first few bytes might have been transmitted by this time). That is, the information the packet contains at the instance when being sent over the communications medium is the age of the event (i.e. how much time ago the event had occurred).
+% If an error occurs with timestamping the transmission or with writing the package payload after transmission has started, then the designated timestamp field in the packet payload will contain 0x80000000, indicating the error to the receiver.
+% Receiver's story
+% 
+% The packet is timestamped with the receiver node's local clock at reception (e.g. with the timestamp of the SFD interrupt). Let us denote the time of reception with t\_rx. The reception timestamp is stored in the metadata structure of the message\_t [5].
+% When the event time is queried via the TimeSyncPacket interface, the eventTime command returns the sum of the value stored in the designated timestamp field in packet payload and the reception timestamp, i.e. e\_t- e\_tx+e\_rx. This value corresponds to the time of the event in the receiver's local clock.
+% The TimeSyncPacket.isValid command returns FALSE if the time value stored in the payload equals 0x80000000 or if the communications stack failed to timestamp the reception of the packet. Otherwise TRUE is returned, which indicates that the value returned by TimeSyncPacket.eventTime can be trusted.
+
+
+
+
+
+
+\begin{figure}[h]
+ \centering
+ \includegraphics{./figuras/comparacao_mactime2.eps}
+ % comparacao_mactime2.eps: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+ \caption{Procedimento de leitura do \textit{timestamp} na camada MAC}
+ \label{fig:comp_mactimestamp}
+\end{figure} 
