@@ -47,6 +47,8 @@ O formato da mensagem do FTSP segue o modelo da Figura \ref{fig:pacote}, ele com
 
 A forma como o \textit{timestamp} é realizado depende tanto do \textit{chip} de rádio, divididos em orientados a \textit{byte} e a pacote. Nos \textit{chips} orientados a \textit{byte} como o CC1000 \cite{cc1000} (Mica2 e Mica2dot), geram interrupção por cada \textit{byte} transmitido, essa interrupção armazena no metadado da mensagem o \textit{timestamp} do momento em que o \textit{byte} foi transmitido ou recebido. Ao final da transmissão é possível determinar um \textit{timestamp} único, calculando a taxa de transmissão e a média dos \textit{timestamps}. Os \textit{chips} CC2420 \cite{chipcon20032} (MicaZ, TelosA, TelosB, TmoteSky) e RF230 (Iris) \cite{iris2006crossbow} são orientados a pacote, nesses rádios ao invés de marcarem os tempos em cada \textit{byte} transmitido, é gerado apenas uma única interrupção SFD.
 
+
+% Texto da tep 133:
 % Several transceivers allow for modifying the contents of a packet after packet transmission is started. Packet-level time synchronization can be implemented very efficiently on such platforms.
 % 
 % Transmitter's story

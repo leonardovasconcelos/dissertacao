@@ -10,17 +10,22 @@
 
 \outline{
 \begin{itemize}
- \item Gerencia de memória.
- \item Gerenciamento energético.
- \item Redes.
- \item Linguagem.
- \item Manipulação de interrupções.
- \item Programação baseada em eventos.
+ \item Gerencia de memória. Gerenciamento energético. Redes. Linguagem. Manipulação de interrupções. Programação baseada em eventos.
 \end{itemize}
 
 Tinyos
     
 }
+
+\cite{levis2004tinyos}
+\cite{gay2003nesc}
+%We present nesC, a programming language for networked embedded systems that represent a new design space for application developers. An example of a networked embedded system is a sensor network, which consists of (potentially) thousands of tiny, low-power "motes," each of which execute concurrent, reactive programs that must operate with severe memory and power constraints.nesC's contribution is to support the special needs of this domain by exposing a programming model that incorporates event-driven execution, a flexible concurrency model, and component-oriented application design. Restrictions on the programming model allow the nesC compiler to perform whole-program analyses, including data-race detection (which improves reliability) and aggressive function inlining (which reduces resource consumption).nesC has been used to implement TinyOS, a small operating system for sensor networks, as well as several significant sensor applications. nesC and TinyOS have been adopted by a large number of sensor network research groups, and our experience and evaluation of the language shows that it is effective at supporting the complex, concurrent programming style demanded by this new class of deeply networked systems.
+
+
+O TinyOS é o sistema operacional mais conhecido e o mais utilizado nas pesquisas sobre RSSF [4], desenvolvido na Universidade de Berkeley [5]. O TinyOS leva em conta a baixa capacidade computacional dos sensores: possui de 4 a 10 kilobytes de RAM, 4 a 8Mhz de capacidade de processamento e de 8 a 16 bit de barramento de dados, e baixo consumo de rádio com uma largura de banda de 20 a 259kps.
+O TinyOS é baseado em componentes e eventos que não são preemptivos, diferentes ao procedimento de chamadas. Seu sheduler tem uma longitude fixa e é processada por uma fila da ordem FIFO (First In First Out).
+Os componentes do TinyOS são escritos em NesC, linguagem de programação que é uma extensão do C contendo certas estruturas para gerência de rede e processamento voltado para RSSF. O compilador NesC converte a aplicação em código C, que é então submetido a um compilador C, que gera o arquivo objeto, sendo link-editado e preparado para a síntese em hardware [6].
+
 
 
 \section{Diagramas e Componentes}

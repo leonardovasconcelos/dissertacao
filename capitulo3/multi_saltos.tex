@@ -12,7 +12,6 @@
 
 
 
-
 \begin{figure}[h]
  \begin{Verbatim}[numbersep=1pt,frame=single]
 typedef nx_struct TimeSyncMsg
@@ -78,7 +77,7 @@ event Radio.receive(TimeSyncMsg *msg){
  \label{figure1}
 \end{figure}
 
-% Figure 1 shows the routine of receiving synchronization messages.
+% Figure \ref{figure1} shows the routine of receiving synchronization messages.
 % Lines 2 and 3 compare the \textit{rootID} of the synchronization message with the local \textit{rootID}.
 % If the message has a lower \textit{rootID}, the node assumes this \textit{rootID} as root.
 % Lines 4 to 7 ignore messages with higher  \textit{rootID} and lower \textit{seqNum}.
@@ -87,6 +86,9 @@ event Radio.receive(TimeSyncMsg *msg){
 % In case the \textit{rootID} is larger it is checked whether the \textit{seqNum} is greater or equal to the value of \textit{highestSeqNum}, this check prevents information redundancy because the message will only be used when the \textit{rootID} is less than or equal to \textit{myRootID} and the number greater than the value of \textit{highestSeqNum}.
 % Lines 10 to 15 verify if the time of a message is in disagreement with the earlier estimates of global time, if applicable clear the regression table, if not, accumulate synchronization messages to calculate the linear regression and synchronize.
 
+
+A Figura \ref{figure1} mostra o pseudocódigo do processo de recebimento de uma mensagem de sincronização. As linhas 2 e 3 comparam o \texttt{rootID} contido na mensagem com o valor \texttt{rootID} local.
+Se a mensagem tem um \texttt{rootID} menor
 
 %Lines 10 to 15 accumulate synchronization messages to calculate the linear regression and synchronize.
 

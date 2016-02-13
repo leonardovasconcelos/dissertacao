@@ -5,6 +5,7 @@
   Como o FTSP corrige essa fonte de imprecisão.
 }
 
+Como apresentado na Seção \ref{subsec:conceitos}, os sensores de baixo custo apresentam relógios muito imprecisos. Cristais de diferentes nós podem oscilar de forma ligeiramente diferente. Por exemplo, dado um \textit{mote} Mica que tem em sua especificação de fábrica a frequência de $7,3828~MHz$, porém na verdade ele pode funcionar a $7,3827~MHz$ já um outro \textit{mote} pode apresentar $7,3829~MHz$, isso gera 20 \textit{ticks} de erro por segundo, este erro acumulado pode atrapalhar a precisão que se pretende oferecer em uma dada aplicação. Esse comportamento causa a necessidade de ressincronização em períodos mais curtos. 
 
 \begin{figure}[h]
  \centering
@@ -13,3 +14,11 @@
  \caption{Regressão linear aplicada a \textit{timestamps}}
  \label{fig:regressao}
 \end{figure} 
+
+Regressão linear é o método mais utilizado para estimar o desvio do relógio de um nó para com o relógio da raiz \cite{maroti2004}. No processo de sincronização um nó de referência ou \textit{root}, envia seu uma mensagem com seu próprio tempo, os receptores usam esse tempo para iniciar seu relógio local. Então o \textit{root} passa a enviar periodicamente seu \textit{timestamp}, cada um dos receptores armazenam em uma tabela os tempos recebidos junto com o tempo de recebimento baseado no seu relógio local. A predição de erro é a diferença entre o tempo de referência do nó \textit{root} e a estimativa de tempo do nó receptor.
+
+De acordo com \cite{capriglione2016}, usando regressão linear é possível predizer um padrão pelo calculo dos pares de \textit{timestamps} recebidos, e utilizá-los para compensar os erros. Uma linha de regressão linear fornece a inclinação necessária para estimar o tempo do nó \textit{root} no futuro, a Figura \ref{fig:regressao} ilustra esse processo. Assim, é possível ajustar de forma mais suave a taxa de crescimento do relógio para algo mais próximo na noção global de tempo. No FTSP devido as limitações de memória dos dispositivos o tamanho padrão das tabelas é 8 pares de \textit{timestamps}, os autores comprovaram em experimentos que a taxa de erro utilizando essa técnica é de $1.48\mu s$ em média, quando desligado o recurso o erro passa a ser crescente e acumula com o tempo.
+
+
+
+
