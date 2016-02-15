@@ -6,35 +6,47 @@
   Descrever o processo de Implementação no tinyos (libs, organização do código e TEPs).
   
 }
+
+Este capítulo trata sobre o sistema operacional TinyOS e da linguagem nesC. Aspectos importantes de sua arquitetura para a implementação de um protocolo de sincronização.
+
+
+
 \section{Sistema Operacional}
 
 \outline{
 \begin{itemize}
  \item Gerencia de memória. Gerenciamento energético. Redes. Linguagem. Manipulação de interrupções. Programação baseada em eventos.
-\end{itemize}
-
-Tinyos
-    
+\end{itemize}    
 }
+
 
 %\cite{levis2004tinyos}
 %\cite{gay2003nesc}
 %We present nesC, a programming language for networked embedded systems that represent a new design space for application developers. An example of a networked embedded system is a sensor network, which consists of (potentially) thousands of tiny, low-power "motes," each of which execute concurrent, reactive programs that must operate with severe memory and power constraints.nesC's contribution is to support the special needs of this domain by exposing a programming model that incorporates event-driven execution, a flexible concurrency model, and component-oriented application design. Restrictions on the programming model allow the nesC compiler to perform whole-program analyses, including data-race detection (which improves reliability) and aggressive function inlining (which reduces resource consumption).nesC has been used to implement TinyOS, a small operating system for sensor networks, as well as several significant sensor applications. nesC and TinyOS have been adopted by a large number of sensor network research groups, and our experience and evaluation of the language shows that it is effective at supporting the complex, concurrent programming style demanded by this new class of deeply networked systems.
 
 
-O desenvolvimento do FTSP+ foi realizado utilizando o sistema operacional TinyOS, que é um SO bem difundido na área de redes sensores sem fio \cite{levis2004tinyos}. O TinyOS não é um sistema operacional convencional, em que se instala completamente no sensor, ele se apresenta como um arcabouço de um conjunto de componentes reutilizáveis que permitem o desenvolvimento de aplicações para sistemas embarcados em conjunto com o SO. Esses componentes são separados por funções características, no momento de construir a aplicação somente os componentes especificados serão integrados no final, mantendo o uso minimal de recursos. 
+O desenvolvimento do FTSP+ foi realizado utilizando o sistema operacional TinyOS, que é um SO bem difundido na área de redes sensores sem fio \cite{levis2004tinyos}. O TinyOS não é um sistema operacional convencional, em que se instala completamente no sensor, ele se apresenta como um arcabouço de um conjunto de componentes reutilizáveis que permitem o desenvolvimento de aplicações para sistemas embarcados em conjunto com o SO. Esses componentes são separados por funções características, no momento de construir a aplicação somente os componentes especificados serão integrados na aplicação final, mantendo o uso minimal de recursos. 
 
 Com a limitação de recursos nos dispositivos sensores o TinyOS conta com pouco menos de 400 \textit{bytes} de tamanho, é um sistema baseado em eventos, com suporte a concorrência, eventos assíncronos e comandos. Um programa em TinyOS possui a abstração dos componentes em um modelo de grafo, como vemos na Figura \ref{fig:diagrama_componentes},
 
 
-Os programas são escritos em nesC (\textit{networked systems C}) \cite{gay2003nesc} um dialeto da linguagem C, que dá o suporte a arquitetura de componentes e orientação a eventos. No desenvolvimento existe a separação da organização dos componentes e programação das interfaces, os componentes são conectados (\textit{wired}) juntos em um arquivo de aplicação, já o código dos eventos e tarefas são feitos em um arquivo de construção.
+As aplicações e o próprio sistema operacional são escritos em nesC (\textit{networked systems C}) \cite{gay2003nesc} um dialeto da linguagem C, que dá o suporte a arquitetura de componentes e orientação a eventos, além de ser otimizada para reduzir o consumo de memória e ter primitivas que previnam problemas de baixo nível como condição de corrida. No desenvolvimento existe a separação da organização dos componentes e programação das interfaces, os componentes são conectados (\textit{wired}) juntos em um arquivo de aplicação, já o código dos eventos e tarefas são feitos em um arquivo de construção.
 
 
-Como o TinyOS tem o código aberto, é possível alterá-lo e criar ou estender suas funcionalidades.
+%Como o TinyOS tem o código aberto, é possível alterá-lo e criar ou estender suas funcionalidades.
 
-% O TinyOS é o sistema operacional mais conhecido e o mais utilizado nas pesquisas sobre RSSF [4], desenvolvido na Universidade de Berkeley [5]. O TinyOS leva em conta a baixa capacidade computacional dos sensores: possui de 4 a 10 kilobytes de RAM, 4 a 8Mhz de capacidade de processamento e de 8 a 16 bit de barramento de dados, e baixo consumo de rádio com uma largura de banda de 20 a 259kps.
-% O TinyOS é baseado em componentes e eventos que não são preemptivos, diferentes ao procedimento de chamadas. Seu scheduler tem uma longitude fixa e é processada por uma fila da ordem FIFO (First In First Out).
-% Os componentes do TinyOS são escritos em NesC, linguagem de programação que é uma extensão do C contendo certas estruturas para gerência de rede e processamento voltado para RSSF. O compilador NesC converte a aplicação em código C, que é então submetido a um compilador C, que gera o arquivo objeto, sendo link-editado e preparado para a síntese em hardware [6].
+Programas em nesC são construídos por itens definidos separadamente e então conectados de forma explicita para juntar todos em uma unidade \cite{levis2009tinyos}. A seguir definições importantes sobre essas características:
+
+\begin{itemize}
+ \item Componentes e interfaces: Um programa em nesC é um conjunto de componentes ligados entre si. O componente fornece interfaces que são responsáveis pela comunicação bidirecional entre os componentes, as interfaces fornecem comando e eventos.
+ 
+ \item Implementação: A implementação pode ser dividida em duas partes no nesC, uma chamada \textit{modules} e outra \textit{configuration}. Em \textit{modules} é implementado as interfaces, já em \textit{configuration} é usado para juntar os componentes conectando suas interfaces.
+ 
+ \item Modelo de concorrência: Define como os componentes interagem entre suas execuções. Temos dois tipos de tarefa, que são a tarefa (ou \textit{task}) propriamente dita e eventos de dispositivos. Quando uma tarefa é enviada para execução ela roda até completar, não fazendo preempção. Os eventos de dispositivos são como as tarefas, só que são geradas como respostas a eventos.
+\end{itemize}
+
+
+
 
 
 
@@ -45,6 +57,11 @@ Como o TinyOS tem o código aberto, é possível alterá-lo e criar ou estender suas
   O Tinyos tem o recurso de componentes para disponibilizar seus mais diversos recursos, descrever os componentes relevantes para o trabalho e os componentes resultantes das alterações.
 }
 
+O TinyOS foi desenvolvido seguindo um conjunto de diretrizes, chamado de TEP (TinyOS Enhancement Proposals) que orientam as modificações no núcleo do seu código, também é utilizado para guiar a criação de novas funcionalidades.
+
+
+
+
 \begin{figure}[h]
  \centering
  \includegraphics[width=16cm]{./figuras/time.png}
@@ -53,7 +70,7 @@ Como o TinyOS tem o código aberto, é possível alterá-lo e criar ou estender suas
  \label{fig:diagrama_componentes}
 \end{figure}
 
-\begin{table}[]
+\begin{table}[h]
 \centering
 \begin{tabular}{lccc}
 Nome & MilliC & 32kHz & MicroC \\
