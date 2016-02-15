@@ -12,19 +12,19 @@
 
 
 
-\begin{figure}[h]
- \begin{Verbatim}[numbersep=1pt,frame=single]
-typedef nx_struct TimeSyncMsg
-{
- nx_uint16_t rootID;
- nx_uint16_t nodeID; 
- nx_uint8_t  seqNum;
- nx_uint32_t globalTime;
- nx_uint32_t localTime;
-} TimeSyncMsg;
-\end{Verbatim}
-\caption{Formato da mensagem de sincronização}
-\end{figure}
+% \begin{figure}[h]
+%  \begin{Verbatim}[numbersep=1pt,frame=single]
+% typedef nx_struct TimeSyncMsg
+% {
+%  nx_uint16_t rootID;
+%  nx_uint16_t nodeID; 
+%  nx_uint8_t  seqNum;
+%  nx_uint32_t globalTime;
+%  nx_uint32_t localTime;
+% } TimeSyncMsg;
+% \end{Verbatim}
+% \caption{Formato da mensagem de sincronização}
+% \end{figure}
 
 
 
@@ -46,13 +46,17 @@ typedef nx_struct TimeSyncMsg
 % The synchronization procedure consists of computing a linear regression \cite{elson2003} that will provide the clock skew (used to estimate the global time) in relation to the reference node.
 % The last step is to forward its local (synchronized) time to other nodes. 
 
-\begin{figure}[h]
- \centering
- \includegraphics{./figuras/exemplo_ftps1.eps}
- % exemplo_ftps1.eps: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=0 0 330 180
- \caption{Exemplo do fluxo da rede com FTSP}
- \label{fig:exemplo_ftsp1}
-\end{figure}
+
+%%A mensagem de sincronização compreende um \textit{timestamp} do emissor, que é estimativa de tempo global e \texttt{rootID} que é 
+
+
+% \begin{figure}[h]
+%  \centering
+%  \includegraphics{./figuras/exemplo_ftps1.eps}
+%  % exemplo_ftps1.eps: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=0 0 330 180
+%  \caption{Exemplo do fluxo da rede com FTSP}
+%  \label{fig:exemplo_ftsp1}
+% \end{figure}
 
 
 \begin{figure}[h]
@@ -77,6 +81,17 @@ event Radio.receive(TimeSyncMsg *msg){
  \label{figure1}
 \end{figure}
 
+
+A Figura \ref{figure1} mostra a rotina de recebimento de mensagens de sincronização. 
+As linhas 2 e 3 comparam o \texttt{rootID} da mensagem de sincronização recebida com a informação local que o nó tem sobre que é o \textit{root} \texttt{myRootID}.
+Se a mensagem recebida tem o \texttt{rootID} menor, o nó assume \texttt{rootID} como seu root.
+As linhas de 4 a 7 ignoram as mensagens que tenham um \texttt{rootID} e \texttt{seqNum} menores, pois possuem informação irrelevante.
+Se \texttt{seqNum} é maior, o valor de \texttt{highestSeqNum} é atualizado.
+Linhas 8 e 9 fazem o nó \textit{root} desistir de ser a \textit{root} da rede quando existe um \texttt{rootID} menor que seu próprio ID.
+No caso de \texttt{rootID} ser maior que o verificado se o \texttt{seqNum} é maior ou igual ao valor do \texttt{highestSeqNum}, esta checagem previne informações redundantes por que a mensagem será apenas usada quando o \texttt{rootID} for menor ou igual a \texttt{myRootID} e o numero maior que o valor de \texttt{highestSeqNum}.
+Linhas 10 e 15 verificam se o tempo da mensagem está em discordância com a estimativa de tempo global mais recente, se é aplicável limpa a tabela de regressão, se não, acumula a mensagem para calcular a regressão linear e sincronizar.
+As linhas 10 a 15 armazenam mensagens de sincronização para calcular a regressão linear e realizar a sincronização.
+
 % Figure \ref{figure1} shows the routine of receiving synchronization messages.
 % Lines 2 and 3 compare the \textit{rootID} of the synchronization message with the local \textit{rootID}.
 % If the message has a lower \textit{rootID}, the node assumes this \textit{rootID} as root.
@@ -85,11 +100,6 @@ event Radio.receive(TimeSyncMsg *msg){
 % Lines 8 and 9 makes a root node give up on being root when it has a \textit{rootID} lower than its own ID.
 % In case the \textit{rootID} is larger it is checked whether the \textit{seqNum} is greater or equal to the value of \textit{highestSeqNum}, this check prevents information redundancy because the message will only be used when the \textit{rootID} is less than or equal to \textit{myRootID} and the number greater than the value of \textit{highestSeqNum}.
 % Lines 10 to 15 verify if the time of a message is in disagreement with the earlier estimates of global time, if applicable clear the regression table, if not, accumulate synchronization messages to calculate the linear regression and synchronize.
-
-
-A Figura \ref{figure1} mostra o pseudocódigo do processo de recebimento de uma mensagem de sincronização. As linhas 2 e 3 comparam o \texttt{rootID} contido na mensagem com o valor \texttt{rootID} local.
-Se a mensagem tem um \texttt{rootID} menor
-
 %Lines 10 to 15 accumulate synchronization messages to calculate the linear regression and synchronize.
 
 
@@ -115,6 +125,10 @@ event Timer.fired() {
   \label{figure2}
 \end{figure}
 
+A Figura \ref{figure2} mostra a rotina de envio de mensagem. 
+Um nó decide tornar-se \textit{root} por que está sem receber mensagens de sincronização por \texttt{ROOT\_TIMEOUT} (linhas 3 a 5).
+Um nó envia mensagens de sincronização se ele é o \textit{root} ou se está sincronizado (linhas 6 a 10).
+Se um nó é o \textit{root}, ele também tem que incrementar seu \textit{highestSeqNum}.
 % Figure \ref{figure2} shows the sending routine.
 % A node decides to be root because has not received a synchronization message for ROOT\_TIMEOUT (lines 3 to 5).
 % A node sends synchronization messages if it is root or has synchronized (lines 6 to 10).
