@@ -12,11 +12,164 @@ Listar o experimentos de maneira numérica 1,2 e 3. Em cada item explicar os exp 
 
 }
 
+Neste capítulo nos descrevemos nossos experimentos a respeito da precisão do FTSP+.
+Nós implementamos o FTSP+ sobre TinyOS 2.1.2 \cite{levis2004tinyos} e executamos os testes em \textit{motes} Micaz \cite{Micaz}.
+% In this section, we describe our experiments to assess FTSP+'s accuracy.
+% We have implemented FTSP+ on TinyOS 2.1.2 \cite{levis2005tinyos} and ran our tests on Micaz motes \cite{micaz}.
+
+
 \section{Experimento 1}\label{exp:1}
 
 \outline{
     Descrever o ambiente, tipo de sensor, tempo de duração e demais caracteristicas do cenário testado.
 }
+
+Os \textit{motes} Micaz suportam o \textit{timestamp} na camada MAC, mas nós precisamos desta informação para medir a acurácia da nossas precisão.
+Para a sincronização, nó reescrevemos o recurso de MAC \textit{timestamp} com o nosso \textit{timestamp} na camada de aplicação.
+% Micaz motes do support MAC layer timestamping, but we need this information to measure our correction accuracy.
+% For synchronization, we overwrite MAC timestamp with our application layer timestamp.
+
+
+Nós usamos \textit{jiffys} como unidade de tempo por que esta é base de tempo do TinyOS e representa o tempo entre 2 \textit{ticks} do relógio.
+Nossos experimentos são resultados de uma rede com os nós trocando mensagens de sincronização a cada 3 segundos durante 10 minutos.
+% We use \textit{jiffys} as time unit because this is the time basis of TinyOS and represents the time between 2 clock ticks.
+% Our experiments results correspond to 10 minutes experiments with synchronization messages being sent every 3 seconds.
+
+
+\begin{figure}[htb!]
+	\centering
+		\includegraphics[width=\linewidth]{./figuras/correction_distribution.eps}
+	%\caption{Histogram and P.D.F. of correction times.}
+	\caption{Histogramda e P.D.F. dos tempos de correção.}
+	\label{fig:correction_hist}
+\end{figure}
+
+\begin{figure}[htb!]
+	\centering
+		\includegraphics[width=\linewidth]{./figuras/correction_cdf.eps}
+	%\caption{C.D.F. of correction times.}
+	\caption{F.D.A. dos tempos de correção.}
+	\label{fig:correction_cdf}
+\end{figure}
+
+
+ \begin{table}[htb!]
+ \centering
+ \begin{tabular}{c|c|c}
+ 		& \multirow{2}{*}{\textbf{mean ($\mu{s}$)}}	& \multirow{2}{*}{\textbf{std. deviation}} \\
+		&&\\
+ $\mathbf{processing~time}$ 	&  $0.87 \pm 0.0095$ 	& $0.33$\\
+ $\mathbf{\delta}$  	&  $0.88 \pm 0.0093$ 	& $0.33$\\
+ $\mathbf{correction~time}$ 	& $9.01 \pm 0.093$	& $3.32$\\
+ $\mathbf{medium~access}$ 	& $8.13 \pm 0.093$	& $3.31$\\
+ $\mathbf{t4' - \bar{t4'}}$ 	& $-0.0047 \pm 0.013$ 	& $0.47$ \\
+ \end{tabular}
+ %\caption{Mean and standard deviation}
+ \caption{Média e desvio padrão.}
+ \label{tab:mean_sd}
+ \end{table}
+
+Nosso primeiro mediu a distribuição de probabilidade dos tempos de correção (relembrando da Seção \ref{sec:mod} que é $t_2-t_1+\delta$).
+Como podemos ver na Figura \ref{fig:correction_hist}, os tempos de correção variam na maioria de 5 até 13 \textit{jiffys} com uma distribuição uniforme.
+Nós podemos ver na Figura \ref{fig:correction_cdf}, que mostra a função distribuição acumulada da correção dos tempos, que está em cerca de 80\% dos casos de correção de tempo acima de 5 \textit{jiffys}.
+Isto é um \textit{overhead} significante e uma fonde de imprecisão que o FTSP+ é capaz de medir e fazer uma compensação.
+Para nosso cenário a média de correção de tempo de atraso é $9.01$\footnote{Este valor é dependente de cenário enquanto depende da janela de contenção da rede.} \textit{jiffys} como vemos na Tabela \ref{tab:mean_sd} onde podemos ver que temos a média com intervalo de confiança de $95\%$ e desvio padrão.
+
+% Our first experiment measures the probability distribution of correction times (recall from Section \ref{sec:mod} that it is $t2-t1+\delta$).
+% As can be seen in Figure \ref{fig:correction_hist}, correction time varies mostly from 5 to 13 jiffys with an uniform distribution.
+% We can see in Figure \ref{fig:correction_cdf}, which plots the cumulative density function of the correction times, that in about 80\% of cases correction time is above 5 jiffys.
+% This is a significant overhead and source of inaccuracy that FTSP+ is able to measure and compensate for. 
+% For our scenario the average correction time delay is $9.01$\footnote{This value is scenario-dependent while it depends upon the scenario contention level.} jiffys as we can see in Table \ref{tab:mean_sd} where we have the mean with confidence interval of $95\%$ and the standard deviation.
+
+
+
+\begin{table}[htb!]
+\centering
+\begin{tabular}{l|c|c|c|c|c|c}
+\textbf{Delay in jiffys} 			& 0 		& 1 			& 2 & 3 & 4 & 5 \\
+\textbf{Frequency} 	& 606 	& 4271  & 0 & 1 & 1 & 1 \\
+\end{tabular}
+%\caption{Delay frequency of receiver \textit{processing time}.}
+\caption{Frequência de atraso do receptor \textit{tempo de processamento}.}
+\label{tab:processing_time}
+\end{table}
+
+\begin{table}[htb!]
+\centering
+\begin{tabular}{l|c|c|c|c|c|c}
+\textbf{Delay in jiffys} 			& 0 		& 1 			& 2 & 3 & 4 & 5 \\
+\textbf{Frequency} 	& 581 	& 4297  & 0 & 0 & 1 & 1 \\
+\end{tabular}
+%\caption{Delay frequency for $\delta$.}
+\caption{Frequência de atraso para o $\delta$.}
+\label{tab:delta}
+\end{table}
+
+Nosso segundo experimento mede a distribuição de probabilidade do $\delta$ e \textit{tempo de processamento}.
+Relembrando da Seção \ref{seq:mod} que eles são o tempo de processamento da interrupção do rádio no emissor e no receptor.
+Nó podemos ver na Tabela \ref{tab:processing_time} e \ref{tab:delta} que seus valores são na maioria na faixa entre 0 e 1 \textit{jiffy}, com casos extremamente raros que em nossos experimentos não chegam a 5 \textit{jiffys}.
+Suas médias são $0.87$ e $0.88$ \textit{jiffys}, que podem ser consideradas iguais.
+Portanto, estes atrasos, que o FTSP+ não é capaz de calcular e compensar, são muito pequenas e não comprometem significativamente a precisão da sincronização.
+
+% Our second experiment measures the probability distribution of $\delta$ and \textit{processing time}.
+% Recall from Section \ref{sec:mod} that they are the radio interrupt processing time in the sender and the receiver, respectively.
+% We can see in Table \ref{tab:processing_time} and \ref{tab:delta} that their values mostly range between 0 and 1 jiffy, with extremely rare cases that do not go beyond 5 jiffys in our experiments.
+% % Their averages are both $0.88$ jiffys.
+% Their averages are $0.87$ and $0.88$ jiffys, which can be considered equal.
+% Therefore, those delays, that FSTP+ is not able to calculate and compensate for, are very small and do not compromise synchronization accuracy significantly.
+
+
+Nós calculamos uma estimativa de erros e comparamos nossos resultados com outros protocolos (alguns usam MAC \textit{timestamp}, outros não) e sumarizamos os resultados na Tabela \ref{tab:comparison}.
+Sabendo que o MAC \textit{timestamp} tem uma variação inerente de 1 \textit{jiffy} de precisão e o FTSP tem um erro de $1.5\mu{s}$ por salto, nós utilizamos uma simples regra de três para estimar o erro de sincronização do FTSP+ por salto.
+O FTSP e o FTSP+ são diferentes apenas quanto a técnica de estimar o \textit{timestamp}, e como podemos ver na Tabela \ref{tab:mean_sd} o \textit{timestamp} do FTSP+  está em média de $0.0047$ \textit{jiffys} maior que o MAC \textit{timestamp} (${t_4}' - \bar{{t_4}'}$). 
+Portanto, a nossa regra de três é dada na Equação \eqref{eq:sync_error_estimation_ftspplus}.
+
+% We calculate an estimation of the error and compare our results with other protocols (some use MAC timestamp, some do not) and summarize the results in Table \ref{tab:comparison}.
+% Knowing MAC timestamping has an inherent 1 jiffy variation in accuracy and that FTSP has $1.5\mu{s}$ error per hop, we use a simple rule of three to estimate FTSP+ synchronization error per hop.
+% FTSP and FSTP+ differ only for their timestamping technique, and as can be seen in Table \ref{tab:mean_sd} FTSP+ timestamping is on average $0.0047$ jiffy higher than MAC timestamping ($t4' - \bar{t4'}$).
+% Therefore, our rule of three is given in Equation \eqref{eq:sync_error_estimation_ftspplus}.
+
+\begin{equation}
+\label{eq:sync_error_estimation_ftspplus}
+\frac{1.5\mu{s}}{\text{FTSP+ sync error}} = \frac{1 \text{\textit{jiffys}}}{(0.0047+1) \text{\textit{jiffys}}}
+\end{equation}
+
+Nós também estimamos o que poderia ser o erro do FTSP sem o MAC \textit{timestamp} (nós o chamamos na tabela de mFTSP), no caso em que \textit{timestamping} é em média $9$ \textit{jiffys} maior que o MAC \textit{timestamp} ($tempo~de~acesso~ao~meio + tempo~de~processamento = 8.13 + 0,87 = 9$).
+A Equação \eqref{eq:sync_error_estimation_mftsp} mostra que a regra de três para esta estimativa.
+Como podemos ver, o RBS tem um erro de sincronização aproximadamente $10\times$ maior que o FTSP+.
+
+% We also estimate what would be the error of FTSP without MAC timestamping (we call it mFTSP in the table), in which case timestamping is on average $9$ jiffys higher than MAC timestamping ($medium~access~delay + processing~delay = 8.13 + 0,87 = 9$).
+% Equation \eqref{eq:sync_error_estimation_mftsp} shows the rule of three for this estimation.
+% As can be seen, RBS has a synchronization error about $10\times$ bigger than FTSP+.
+
+\begin{equation}
+\label{eq:sync_error_estimation_mftsp}
+\frac{1.5\mu{s}}{\text{mFTSP+ sync error}} = \frac{1 \text{\textit{jiffys}}}{(9+1) \text{\textit{jiffys}}}
+\end{equation}
+
+
+\begin{table}[htb!]
+\centering
+\begin{tabular}{c|c|c|c|c}
+\multicolumn{2}{c|}{\multirow{2}{*}{\textbf{MAC Timestamping}}} & \multicolumn{3}{c}{\multirow{2}{*}{\textbf{App Timestamping}}}\\
+\multicolumn{2}{c|}{}&\multicolumn{3}{c}{}\\
+\textbf{FTSP} 												& \textbf{PulseSync} 											& \textbf{FTSP+} 					& \textbf{mFTSP} 														& \textbf{RBS} \\
+$1.5\mu{s}$ 	\cite{Ranganathan:IJU10} & $1.5\mu{s}$	\cite{Ranganathan:IJU10}	& $1.508\mu{s}$ \footnotemark	& $15\mu{s}$ \footnotemark[1] \footnotemark[2]	& $29\mu{s}$ \cite{Ranganathan:IJU10}
+\end{tabular}
+%\caption{Average synchronization error per hop.}
+\caption{Média de erro de sincronização por salto.}
+\label{tab:comparison}
+\end{table}
+%\footnotetext{Values estimated based on average error in jiffys.}
+\footnotetext{Valores estimados baseados na média de erros em \textit{jiffys}.}
+
+No TinyOS 1.x, onde o FTSP foi primeiramente implementado e testado \cite{maroti2004}, \textit{jiffys} estão por padrão na resolução de microsegundos. Um \textit{jiffy} no TinyOS 2.1.2 é de aproximadamente $1ms$, mas existe uma opção de compilação com \textit{TMilli} que permite uma resolução em microsegundos.
+
+%In TinyOS 1.x, where FTSP was first implemented and tested \cite{maroti2004}, jiffys are in microsecond resolution by default. A jiffy in TinyOS 2.1.2 is approximately $1ms$, but there are compiler \textit{TMilli} options to  allow microsecond resolution.
+
+
+%In future work, we want to use jiffys with microsecond resolution and measure the synchronization error per hop using a setup with GPIO pins for tracking events in an external and stable accuracy clock that record every exchanged messages.
+
 
 \section{Experimento 2}
 \outline{
