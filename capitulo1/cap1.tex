@@ -1,5 +1,5 @@
 \chapter{Introdução} \label{cap:cap1}
-\outlineon=1
+\outlineon=0
 
 \outline{
 \begin{itemize}
@@ -63,7 +63,8 @@ Supondo a existência de dois nós, cada um com o seu próprio relógio $R_{a}$ e $R
 \end{figure}
 
 
-Em um mundo perfeito $R_{p}(t) = t$ para qualquer instante de tempo $t$, o relógio perfeito deve ter a variação pelo tempo de referência iguais, como visto na Equação (\ref{eq:perf_clock}). Vários fatores influenciam o \textit{clock rate}, como por exemplo, temperatura e efeitos do ambiente, energia, limitação do hardware, impureza do cristal entre outros. Esta imprecisão do \textit{clock} faz com que a taxa de alteração dos relógios os afaste do valor de referência, $dR/dt > 1$ resulta em um relógio rápido, já $dR/dt < 1$ apresenta um relógio lento, a Figura \ref{fig:drift} demonstra esse efeito. Este comportamento é responsável pela instabilidade das leituras de tempo nos sensores, fazendo com que seja necessário realizar uma sincronização e mesmo após realizada o desvio irá continuar fazendo efeito sobre o relógio, trazendo a necessidade realização de sincronizações periódicas.
+Em um mundo perfeito $R_{p}(t) = t$ para qualquer instante de tempo $t$, o relógio perfeito deve ter a variação pelo tempo de referência iguais, como visto na Equação (\ref{eq:perf_clock}), onde os tempos não variam entre si. Vários fatores influenciam o \textit{clock rate}, como por exemplo, temperatura e efeitos do ambiente, energia, limitação do hardware, impureza do cristal entre outros. Esta imprecisão do \textit{clock} faz com que a taxa de alteração dos relógios os afaste do valor de referência, $dR/dt > 1$ resulta em um relógio rápido, já $dR/dt < 1$ apresenta um relógio lento, a Figura \ref{fig:drift} ilustra esse efeito. Note que este comportamento é responsável pela instabilidade das leituras de tempo nos sensores, fazendo com que seja necessário realizar uma sincronização para corrigi-lo. Mesmo após a sincronização o relógio continuará se desviando, trazendo a necessidade realização de sincronizações periódicas.
+
 
 
 \begin{equation}\label{eq:perf_clock}
@@ -71,11 +72,11 @@ Em um mundo perfeito $R_{p}(t) = t$ para qualquer instante de tempo $t$, o relóg
 \end{equation}
 
 
-A sincronização deve ocorrer de forma cíclica, pois os relógios sempre vão afastar-se dos valores de referência, mas o ajuste do tempo local deve ser realizado de forma gradativa e suave, ou seja, deve-se utilizar uma função para mudar o declive do tempo local ao invés de uma atribuição direta. Um problema de efetuar uma mudança corrigindo o valor do tempo diretamente seria o relógio pulando para frente e para trás, ocasionando problemas como por exemplo, uma tarefa agendada poderia nunca ocorrer devido o tempo de sua execução nunca ter existido por causa do salto dos \textit{ticks}, ou ainda o mesmo tempo pode ocorrer duas vezes em virtude de um salto para trás no relógio.
+A sincronização deve ocorrer de forma cíclica, pois os relógios sempre vão afastar-se dos valores de referência, mas o ajuste do tempo local deve ser realizado de forma gradativa e suave, ou seja, deve-se utilizar uma função para suavizar o declive do tempo local ao invés de uma atribuição direta que poderia voltar ou adiantar várias unidades de tempo. Um dos problemas de efetuar uma mudança corrigindo o valor do tempo diretamente seria o relógio pulando para frente e para trás, ocasionando problemas como por exemplo, uma tarefa agendada poderia nunca ocorrer devido o tempo de sua execução nunca ter existido por causa do salto dos \textit{ticks}, ou ainda o mesmo tempo poder ocorrer duas vezes em virtude de um salto para trás no relógio.
 
-Podemos utilizar duas formas para classificarmos os tipos de sincronização: externo e interno. No método externo os relógios de todos os nós são sincronizados utilizando uma referência de tempo (\textit{clock reference}) externa a rede, geralmente uma fonte de tempo UTC (Coordinated Universal Time), ou seja, o tempo do mundo real baseado em um relógio atômico. Por outro lado, na sincronização interna todos os nós são sincronizados sem a ajuda de uma referencia de tempo externa, o objetivo é minimizar a diferença entre os relógios locais dos sensores tendo assim uma noção consistente do tempo entre todos os nós da rede \cite{kopetz2011real}.
+Podemos utilizar duas formas para classificarmos os tipos de sincronização: externo e interno. No método externo os relógios de todos os nós são sincronizados utilizando uma referência de tempo (\textit{clock reference}) externa a rede, geralmente uma fonte de tempo UTC (\textit{Coordinated Universal Time}), ou seja, o tempo do mundo real baseado em um relógio atômico. Por outro lado, na sincronização interna todos os nós são sincronizados sem a ajuda de uma referencia de tempo externa, o objetivo é minimizar a diferença entre os relógios locais dos sensores tendo assim uma noção consistente do tempo entre todos os nós da rede \cite{kopetz2011real}.
 
-Um conjunto de fatores podem influenciar o funcionamento de sistemas de sensores sem fio alterando seu desempenho, os principais componentes que devem ser observados são listados abaixo:
+Um conjunto de fatores podem influenciar o funcionamento dos sistemas de sensores sem fio, ocasionando alterações no seu desempenho. Os principais componentes que devem ser observados são listados abaixo:
 
 \textbf{Efeitos Ambientais:} Pressão, temperatura, umidade são algumas das condições de ambiente que alteram o funcionamento normal dos osciladores. Muitas RSSF são criadas para implantação \textit{outdoor}, nestes cenários as condições são bem diferentes das apresentadas em um ambiente estável como um laboratório \cite{karl2007protocols}. Fenômenos climáticos como chuva, neblina e vento também tem influência na performance de sistemas de RSSF, podendo até mesmo impossibilitar seu funcionamento \cite{otero2001high}.
 %\cite{mills1998}
@@ -105,9 +106,9 @@ Um conjunto de fatores podem influenciar o funcionamento de sistemas de sensores
 \end{figure}
 
 
-Os novos avanços nos sistemas integrados nos permitiram desenvolver dispositivos sensores com baixos recursos de energia, rádio e processamento. Visto que uma rede de sensores consista de um bom número de sensores, o valor de um só nó afeta a implantação da rede toda. Existe uma tendência defendida por pesquisadores de que com a grande quantidade de sensores aplicados hoje em dia, a produção em larga escala faça com que seu valor possa chegar a ser menos de \$1 dólar \cite{cuevas2007, wang2007topology} por unidade. 
+Os avanços recentes nos sistemas integrados nos permitem desenvolver dispositivos sensores com baixos recursos de energia, rádio e processamento. Considerando que uma rede de sensores consista de um bom número de sensores, o valor de um só nó afeta a implantação da rede toda. Existe uma tendência defendida por pesquisadores de que com a grande quantidade de sensores aplicados hoje em dia, a produção em larga escala faça com que seu valor possa chegar a ser menor que \$1 dólar \cite{cuevas2007, wang2007topology} por unidade. 
 
-Os \textit{motes} são fabricados com materiais de baixo custo e as vezes de menor qualidade, como por exemplo, um cristal de quartzo de baixa qualidade pode ser um dos fatores que tornam o relógios mais imprecisos. A Figura \ref{fig:overhead} apresenta o \textit{tradeoff} entre o  preço e a qualidade, o preço de produção do dispositivo determina a precisão do seu relógio, assim quanto menos preciso o relógio é mais compensação será necessária para corrigir seu tempo, a compensação gera maior \textit{overhead} de comunicação que é gasto no uso de comunicação/energia.
+De maneira geral, os \textit{motes} são fabricados com materiais de baixo custo e as vezes de menor qualidade, como por exemplo, um cristal de quartzo de baixa qualidade pode ser um dos fatores que tornam o relógios mais imprecisos. A Figura \ref{fig:overhead} apresenta o \textit{tradeoff} entre o  preço e a qualidade. Observe que o preço de produção do dispositivo determina a precisão do seu relógio, assim, quanto menos preciso o relógio é maior compensação será necessária para corrigir seu tempo, a compensação gera maior \textit{overhead} de comunicação que é gasto no uso de comunicação/energia.
 
 
 
@@ -121,7 +122,7 @@ Os \textit{motes} são fabricados com materiais de baixo custo e as vezes de meno
 }
 
 
-A troca de mensagem com \textit{timestamp} (marca de tempo) é a principal ferramenta dos protocolos de sincronização, porém o não determinismo causado pelas latências no processo de troca de mensagens interfere na precisão que pode ser obtida utilizando este método. Por exemplo, quando um nó envia uma mensagem com seu \textit{timestamp} para outro, os diversos procedimentos pelo qual essa informação vai percorrer até o destino apresentam um custo de computação e tempo para ser realizada, assim quando se dá a recepção do dado no destino já se passou uma quantidade determinada tempo, o relógio do nó origem continuou rodando e o \textit{timestamp} enviado está inconsistente com o valor atual da fonte. A latência deste procedimento pode ser decomposta em alguns componentes, descritos por Kopetz e Ochsenreiter \cite{kopetz1987} e classificados a seguir:
+A troca de mensagem baseada em \textit{timestamp} (marca de tempo) é a principal ferramenta dos protocolos de sincronização, porém o não determinismo causado pelas latências no processo de troca de mensagens interfere na precisão que pode ser obtida utilizando este método. Por exemplo, quando um nó envia uma mensagem com seu \textit{timestamp} para outro, os diversos procedimentos pelo qual essa informação vai percorrer até o destino apresentam um custo de computação e tempo para ser realizada, assim quando se dá a recepção do dado no destino já se passou uma quantidade determinada tempo, o relógio do nó origem continuou rodando e o \textit{timestamp} enviado está inconsistente com o valor atual da fonte. A latência deste procedimento pode ser decomposta em alguns componentes, descritos por Kopetz e Ochsenreiter \cite{kopetz1987} e classificados a seguir:
 
 \begin{itemize}
  
@@ -148,7 +149,7 @@ A troca de mensagem com \textit{timestamp} (marca de tempo) é a principal ferram
  \label{fig:dec_delay}
 \end{figure}
 
-A Figura \ref{fig:dec_delay} ilustra as tomadas de tempo que compõem as fontes de atraso na troca de mensagem, as principais técnicas de sincronização concentram-se em eliminar esses \textit{delays} ou ainda computar seus respectivos atrasos para usá-los mais a frente na forma de compensação. Outros trabalhos expandiram ainda mais a compreensão dos componentes de atraso \cite{maroti2004, horauer2002, ganeriwal2003}, esses componentes estão listados abaixo:
+A Figura \ref{fig:dec_delay} ilustra as tomadas de tempo que compõem as fontes de atraso na troca de mensagem. As principais técnicas de sincronização concentram-se em eliminar esses \textit{delays} ou ainda computar seus respectivos atrasos para usá-los mais a frente na forma de compensação. Parte desses trabalhos expandiram ainda mais a compreensão dos componentes de atraso \cite{maroti2004, horauer2002, ganeriwal2003}. Tais componentes estão listados abaixo:
 
 
 \begin{itemize}
@@ -193,7 +194,7 @@ A Figura \ref{fig:dec_delay} ilustra as tomadas de tempo que compõem as fontes d
  \label{tab:decomp}
 \end{table}
 
-Alguns dos componentes de atraso são de origem não determinístico, outros podem ser calculados e estimados, a \ref{tab:decomp} sintetiza o tamanho e classificação dos componentes já listados. Note que nem todos os transmissores são afetados por todas essas fontes de erro.
+Alguns dos componentes de atraso são de origem não determinístico, outros podem ser calculados e estimados, a Tabela \ref{tab:decomp} sintetiza o tamanho e classificação dos componentes já comentados. Note que nem todos os transmissores são afetados por todas essas fontes de erro. %lembrar de onde tirei isso?
 
 
 
@@ -205,17 +206,17 @@ Alguns dos componentes de atraso são de origem não determinístico, outros podem 
     \textit{Pairwise synchronization, Uniderecional One-Way Message Exchange, Two-Way Message Exchange, Receiver-Receiver Synchronization}
 }
 
-Os protocolos de sincronização essencialmente são construídos a partir de troca de mensagens entre os nós participantes da rede. O modelo mais simples de sincronização utiliza pelo menos uma mensagem, chamado de \textit{pairwise synchronization} nele dois nós podem sincronizar apenas trocando uma mensagem, para sincronizar uma rede inteira repete-se a operação entre parelhos até que todos os pares estarem sincronizados, quando isso ocorre damos o nome de \textit{network-wide synchronization}. A seguir vamos discorrer sobre métodos de sincronização.
+Os protocolos de sincronização são essencialmente construídos a partir de troca de mensagens entre os nós participantes da rede. O modelo mais simples de sincronização utiliza pelo menos uma mensagem, chamado de \textit{pairwise synchronization} nele dois nós podem sincronizar apenas trocando uma mensagem, sendo que para sincronizar uma rede inteira repete-se a operação entre parelhos até que todos os pares estarem sincronizados, quando esse processo é concluído, têm-se o modelo \textit{network-wide synchronization}. A seguir detalha-se os métodos de sincronização.
 
 \begin{figure}[h]
  \centering
  \includegraphics{./figuras/pairwise_sync1.eps}
  % pairwise_sync1.eps: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
- \caption{Unidirecional \textit{pairwise syncronization}}
+ \caption{Unidirecional \textit{pairwise synchronization}}
  \label{fig:pairwise1}
 \end{figure}
 
-A sincronização unidirecional ou \textit{one-way} é a forma mais elementar de sincronização \textit{pairwise}, temos a Figura \ref{fig:pairwise1} que demonstra o seu funcionamento. Observe que o nó $i$ no tempo $t_1$ envia seu \textit{timestamp} para $j$, quando o nó $j$ recebe a mensagem seu relógio local está marcando o tempo $t_2$, assim o valor de $t_2$ pode ser calculado como na Equação (\ref{eq:tempo_t2}):
+A sincronização unidirecional ou \textit{one-way} é a forma mais elementar de sincronização \textit{pairwise}, esse procedimento é ilustrado na Figura \ref{fig:pairwise1}. Observe que o nó $i$ no tempo $t_1$ envia seu \textit{timestamp} para $j$, quando o nó $j$ recebe a mensagem seu relógio local está marcando o tempo $t_2$, assim o valor de $t_2$ pode ser calculado como na Equação (\ref{eq:tempo_t2}):
 
 \begin{equation} \label{eq:tempo_t2}
   t_2 = t_1 + tp + \theta
@@ -233,11 +234,11 @@ Onde $tp$ é o tempo de propagação, este tempo é muito pequeno podendo ser ignora
  \centering
  \includegraphics{./figuras/pairwise_sync2.eps}
  % pairwise_sync2.eps: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
- \caption{Bidirecional \textit{pairwise syncronization}}
+ \caption{Bidirecional \textit{pairwise synchronization}}
  \label{fig:pairwise2}
 \end{figure}
 
-A sincronização bidirecional, \textit{two-way} ou ainda \textit{sender-receiver} usa duas mensagens de sincronização. A Figura \ref{fig:pairwise2} ilustra o comportamento desta técnica, primeiro o nó $i$ envia seu tempo $t_1$ para $j$, este recebe a mensagem no tempo $t_2$ e registra seu tempo local. Assim, o tempo $t_2$ já pode ser calculado como na Equação (\ref{eq:tempo_t2}). No próximo passo o nó $j$ no tempo $t_3$ envia uma mensagem para $i$ com os \textit{timestamps} $t_2$ e $t_3$, então no instante $t_4$ tanto o nó $i$ como o $j$ são capazes de calcular o \textit{offset} entre ambos, porém o nó $i$ é capaz de determinar mais precisamente tanto o \textit{offset} quanto o tempo de propagação, como segue:
+A sincronização bidirecional, \textit{two-way} ou ainda denominada \textit{sender-receiver} usa duas mensagens de sincronização. A Figura \ref{fig:pairwise2} apresenta o comportamento desta técnica. Note que primeiro o nó $i$ envia seu tempo $t_1$ para $j$, este recebe a mensagem no tempo $t_2$ e registra seu tempo local. Assim, o tempo $t_2$ já pode ser calculado como na Equação (\ref{eq:tempo_t2}). No próximo passo o nó $j$ no tempo $t_3$ envia uma mensagem para $i$ com os \textit{timestamps} $t_2$ e $t_3$, então no instante $t_4$ tanto o nó $i$ como o $j$ são capazes de calcular o \textit{offset} entre ambos, porém o nó $i$ é capaz de determinar mais precisamente tanto o \textit{offset} quanto o tempo de propagação, como segue:
 
 \begin{equation}\label{eq:two_way_tp}
  tp = \frac{[(t_2 - t_1) + (t_4 - t_3)]}{2}
@@ -247,7 +248,7 @@ A sincronização bidirecional, \textit{two-way} ou ainda \textit{sender-receiver}
  \theta = \frac{[(t_2 - t_1) - (t_4 - t_3)]}{2}
 \end{equation}
 
-O nó $i$ com uma informação mais acurada, pode enviar uma nova mensagem para $j$ com o valor do $\theta$. A sincronização bidirecional tem a vantagem de moderar as incertezas na pilha de protocolos e no atraso de propagação usando troca de mensagens e a desvantagem de necessitar de um número adicional de troca de trafego.
+O nó $i$ com uma informação mais acurada, pode enviar uma nova mensagem para $j$ com o valor do $\theta$. A sincronização bidirecional tem a vantagem de moderar as incertezas na pilha de protocolos e no atraso de propagação usando troca de mensagens e a desvantagem de necessitar de um número adicional de troca de tráfego.
 
 
 \begin{figure}[h]
@@ -258,7 +259,7 @@ O nó $i$ com uma informação mais acurada, pode enviar uma nova mensagem para $j$
  \label{fig:pairwise_recrec}
 \end{figure}
 
-A sincronização \textit{receiver-receiver} utiliza das características do \textit{broadcast} na comunicação sem fio, onde a difusão de uma mensagem tem o mesmo tempo de recepção em cada um dos receptores, seu tempo de chegada varia muito pouco sendo sensível apenas aos atrasos de propagação e recebimento. No cenário descrito na Figura \ref{fig:pairwise_recrec}, temos um nó que envia \textit{beacons} (não necessariamente contendo um \textit{timestamp}) periodicamente, todos nós que recebem a mensagem registram o tempo de recebimento com o seu relógio local. Então, os \textit{receivers} ($j$ e $k$) trocam entre si a informação registrada, o que os permite calcularem a diferença entre o tempo de chegada dos \textit{beacons}, ou seja, o \textit{offset}. Esse tratamento pode remover duas das maiores fontes de atraso na comunicação sem fios: o atraso de envio e o tempo de acesso ao meio \cite{cho2011}.
+A sincronização \textit{receiver-receiver} utiliza das características inerentes ao \textit{broadcast} na comunicação sem fio, onde a difusão de uma mensagem tem o mesmo tempo de recepção em cada um dos receptores, seu tempo de chegada varia muito pouco sendo sensível apenas aos atrasos de propagação e recebimento. No cenário descrito na Figura \ref{fig:pairwise_recrec}, têm-se um nó que envia \textit{beacons} (não necessariamente contendo um \textit{timestamp}) periodicamente, todos nós que recebem a mensagem registram o tempo de recebimento com o seu relógio local. Então, os \textit{receivers} ($j$ e $k$) trocam entre si a informação registrada, o que os permite calcularem a diferença entre o tempo de chegada dos \textit{beacons}, ou seja, o \textit{offset}. Esse tratamento pode remover duas das maiores fontes de atraso na comunicação sem fios: o atraso de envio e o tempo de acesso ao meio \cite{cho2011}.
 
 
 
@@ -277,9 +278,11 @@ A sincronização \textit{receiver-receiver} utiliza das características do \texti
 \outline{Dependência de hardware, padronização do recurso, esforço para que exista futuramente um padrão que esteja presente em todos os tipos de \textit{motes} e possibilite assim a interoperação de protocolos de MAC \textit{timestamp} em sistemas heterogêneos.}
 
 Alguns tipos de rádios tem embutido \textit{chips} mais sofisticados capazes de coordenar a transmissão sem sobrecarga da CPU.
-Esses rádios tem a capacidade de acessar a fila de transmissão a qualquer momento, por exemplo, um dos \textit{chips} mais comuns aplicados a RSSF o \textit{Chipcon} CC2420 \cite{chipcon20032} que utiliza o padrão IEEE 802.15.4  tem essa característica, ele tem um recurso chamado SFD (Start of Frame Delimiter) que acessa a fila de transmissão e permite gerar interrupções durante o envio e recebimento dos dados, possibilitando o seu emprego em mensagens de sincronização mais refinadas realizadas na camada MAC. A marca de tempo na camada de acesso ao meio reduz o atraso relacionados as incertezas de comunicação, neste modelo é possível inserir o \textit{timestamp} na mensagem no momento da transmissão e imediatamente no recebimento, com o \textit{MAC timestamp} é possível eliminar as fontes de atraso na entrega da mensagem.
+Esses rádios tem a capacidade de acessar a fila de transmissão a qualquer momento, por exemplo, um dos \textit{chips} mais comuns aplicados a RSSF o \textit{Chipcon} CC2420 \cite{chipcon20032} que utiliza o padrão IEEE 802.15.4  tem essa característica, ele tem um recurso chamado SFD (Start of Frame Delimiter) que acessa a fila de transmissão e permite gerar interrupções durante o envio e recebimento dos dados, possibilitando o seu emprego em mensagens de sincronização mais refinadas realizadas na camada MAC. 
 
-O FTSP é o estado da arte dos protocolos de sincronização \textit{multi-hop} \cite{Sommer:IPSN09}, e um dos mais populares \cite{popular} e vem disponível por padrão no sistema operacional TinyOS. Uma de suas principais características é o uso de timestamp na camada MAC. Se uma plataforma particular não suportar a mudança do conteúdo da mensagem depois de ocorrido o evento de sincronização, então o FTSP não pode ser implementado nessa plataforma. Assim o protocolo é fortemente dependente de recursos específicos no \textit{chip} de rádio.
+A marca de tempo das mensagens na camada de acesso ao meio reduz o atraso relacionados as incertezas de comunicação, neste modelo é possível inserir o \textit{timestamp} na mensagem no momento da transmissão e imediatamente no recebimento, com o \textit{MAC timestamp} é possível eliminar as fontes de atraso na entrega da mensagem.
+
+O FTSP é o estado da arte dos protocolos de sincronização \textit{multi-hop} \cite{Sommer:IPSN09}, e um dos mais populares \cite{lenzen2015pulsesync,holtkamp2013,shannon2012dynamic} e vem disponível por padrão no sistema operacional TinyOS. Uma de suas principais características é o uso de timestamp na camada MAC. Se uma plataforma particular não suportar a mudança do conteúdo da mensagem depois de ocorrido o evento de sincronização, então o FTSP não pode ser implementado nessa plataforma. Assim o protocolo é fortemente dependente de recursos específicos no \textit{chip} de rádio.
 
 
 
@@ -298,9 +301,9 @@ O FTSP é o estado da arte dos protocolos de sincronização \textit{multi-hop} \ci
 \end{itemize}
 }
 
-Redes sensores são compostas de um grande número de nós. Assim, torna-se fundamental que o preço de um único \textit{mote} não seja muito alto para não comprometer o valor da rede inteira, o que pode inviabilizar a implantação de um projeto. Neste sentido, os componentes do nó sensor podem se tornar cada vez mais simples ou menos especializados, como por exemplo o transmissor de rádio, este pode não contar com uma interface tão rica de recursos como MAC \textit{timestamp} e acesso randômico ao FIFO durante a transmissão. Uma abordagem independente de \textit{hardware} para o FTSP poderia torná-lo apropriado para uma maior quantidade de dispositivos.
-
-
+Redes sensores são compostas de um grande número de nós. Assim, torna-se fundamental que o preço de um único \textit{mote} não seja muito alto para não comprometer o valor da rede inteira, o que pode inviabilizar a implantação de um projeto. Neste sentido, os componentes do nó sensor podem se tornar cada vez mais simples ou menos especializados, como por exemplo o transmissor de rádio, este pode não contar com uma interface tão rica de recursos como MAC \textit{timestamp} e acesso randômico ao FIFO durante a transmissão.
+Diante das restrições originais apresentadas pela implementação padrão do protocolo FTSP, no que tange a exigências específicas de \textit{hardware}, além da imposição de modelos restritivos de sincronização inerente as RSSF, buscou-se uma abordagem que pudesse ser livre de requisitos específicos e simples de acoplar ao sistema.
+Uma abordagem independente de \textit{hardware} para o FTSP poderia torná-lo apropriado para uma maior quantidade de dispositivos.
 
 
 
@@ -325,12 +328,15 @@ Esta dissertação é composta por sete capítulos, os assuntos discutidos neste tra
 
 
 \begin{itemize}
- \item \textbf{Capítulo 2:} Descreve os principais protocolos de sincronização, explicando seu funcionamento principalmente quanto a seus mecanismos de mensagens e correção de relógio, suas vantagens e desvantagens. No final traz uma classificação dos protocolos os agrupando de acordo com seus modelos de troca de mensagens.
+ \item \textbf{Capítulo 2:} Apresenta e descreve os principais protocolos de sincronização, detalhando seu funcionamento principalmente ao que tange os seus mecanismos de mensagens e correção de relógio, suas vantagens e desvantagens. No final traz uma classificação dos protocolos os agrupando de acordo com seus modelos de troca de mensagens.
  
- \item \textbf{Capítulo 3:} Traz o detalhamento do protocolo FTSP, que serviu de base para a construção deste trabalho. Ilustra seus principais componentes com o foco de posteriormente mostrar as modificações.
+ \item \textbf{Capítulo 3:} É realizado o detalhamento do protocolo FTSP, que serviu de base para a implementação da proposta apresentada nesta dissertação. Detalha-se ainda seus principais componentes com o foco de posteriormente mostrar as modificações.
  
- \item \textbf{Capítulo 4:} Descrever conteúdo aqui.
- \item \textbf{Capítulo 5:} Descrever conteúdo aqui.
- \item \textbf{Capítulo 6:} Descrever conteúdo aqui.
- \item \textbf{Capítulo 7:} Descrever conteúdo aqui.
+ \item \textbf{Capítulo 4:} Descreve o conceito da técnica que faz a estimativa de atraso que possibilita a substituição do MAC \textit{timestamp}, por um a nível de aplicação.
+ 
+ \item \textbf{Capítulo 5:} Neste capítulo apresentamos as ferramentas de software e os conceitos por traz do desenvolvimento do FTSP+.
+ 
+ \item \textbf{Capítulo 6:} Lista e descreve os experimentos seus valores, métricas, ambientes e resultados.
+ 
+ \item \textbf{Capítulo 7:} Conclusão da dissertação e sugestões de trabalhos futuros.
 \end{itemize}

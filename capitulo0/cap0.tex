@@ -5,7 +5,7 @@
 % --- -----------------------------------------------------------------
 \autor{HEDER DORNELES SOARES} % deve ser escrito em maiusculo
 
-\titulo{FTSP+: UMA ABORDAGEM INDEPENDENTE DE HARDWARE PARA O FLOODING TIME SYNCHRONIZATION PROTOCOL}
+\titulo{FTSP+: UMA ABORDAGEM INDEPENDENTE DE HARDWARE PARA SINCRONIZAÇÃO EM REDES DE SENSORES SEM FIO}
 
 \instituicao{UNIVERSIDADE FEDERAL FLUMINENSE}
 
@@ -47,7 +47,7 @@
    {\large HEDER DORNELES SOARES}\\
    \vspace{7mm}
 
-   FTSP+: UMA ABORDAGEM INDEPENDENTE DE HARDWARE PARA O FLOODING TIME SYNCHRONIZATION PROTOCOL\\
+   FTSP+: UMA ABORDAGEM INDEPENDENTE DE HARDWARE PARA SINCRONIZAÇÃO EM REDES DE SENSORES SEM FIO\\
   \vspace{10mm}
 \end{center}
 
@@ -75,10 +75,10 @@ Aprovada em Janeiro de 2016. \\
     Prof. Raphael Pereira de Oliveira Guerra, Coorientador, UFF\\
     \vspace{6mm}
   \rule{11cm}{.1mm} \\
-    Prof. <NOME DO AVALIADOR>, <INSTITUI\c{C}\~AO>\\
+    Prof. José Viterbo Filho, UFF\\
   \vspace{4mm}
   \rule{11cm}{.1mm} \\
-    Prof. <NOME DO AVALIADOR>, <INSTITUI\c{C}\~AO>\\
+    Prof. Alexandre Sztajnberg, UERJ\\
     \vspace{6mm}
 %   \rule{11cm}{.1mm} \\
 %     Prof. <NOME DO AVALIADOR>, <INSTITUI\c{C}\~AO>\\
@@ -103,7 +103,7 @@ Aprovada em Janeiro de 2016. \\
 
 \begin{flushright}
 {\em 
-Dedicatória(s): Elemento opcional onde o autor presta homenagem ou dedica seu trabalho (ABNT, 2005).
+Dedico este trabalho aos meus pais Tim e Lia.
 }
 \end{flushright}
 \newpage
@@ -114,16 +114,31 @@ Dedicatória(s): Elemento opcional onde o autor presta homenagem ou dedica seu tr
 % --- -----------------------------------------------------------------
 \pretextualchapter{Agradecimentos}
 \hspace{5mm}
-Elemento opcional, colocado após a dedicatória (ABNT, 2005). 
+Agradeço primeiramente aos meus pais Euripedes Dorneles Costa (Tim) e Maria do Carmo Soares (Lia), pelo eterno orgulho, apoio, compreensão, ajuda, e, em especial, por todo carinho ao longo deste percurso. A minha irmã Ludmila Dorneles Soares, pelo carinho, compreensão.
+
+Aos meus orientadores, Célio Albuquerque e Raphael Guerra, não somente pela orientação ou pelo suporte, mas também pelos ensinamentos e a dedicação ao meio acadêmico.
+
+Aos amigos da \textit{OptHouse}: Igor, João, Marcos, Matheus, Pablo, Edcarllos e Alan. Agradeço não somente pelo incrível acolhimento e aprendizado que adquiri durante todos esses anos, mas também pela convivência e pelos momentos de descontração.
+
+Aos muitos amigos que fiz durante essa etapa: Diego, Eyder, Pedro, Priscilla, Rafael, Renatha, Uéverton, Gilberto, Glaubos, Igor, Gleice, Marques, Sávio, Ítalo, Leonardo, Jean, Alberto, Eduardo, Edhelmira, Paulo. Se me senti bem acolhido nesse lugar com certeza foi por causa de cada um de vocês.
+
+Aos demais professores e funcionários do IC/UFF que direto ou indiretamente contribuíram para tornar possível a concretização deste trabalho.
+
+A CAPES pelo apoio financeiro, sem o qual seria difícil o andamento dos estudos.
+
+Muito obrigado a todos!
+
+
 
 % --- -----------------------------------------------------------------
 % --- Resumo em portugues.(Obrigatorio)
 % --- -----------------------------------------------------------------
 \begin{resumo}
 
-Elemento obrigatório, constituído de uma sequência de frases concisas e objetivas e não de uma simples enumeração de tópicos, não ultrapassando 500 palavras (ABNT, 2005).
+Redes sensores sem fio são sistemas distribuídos compostos de nós com bateria acoplada e baixos recursos computacionais. Assim como em muitos sistemas distribuídos, algumas aplicações de RSSF requerem sincronização entre seus nós. Para as RSSF em particular, os algoritmos de sincronização precisam respeitar as limitações computacionais. O protocolo FTSP, bem conhecido por conseguir precisão de nanosegundos com baixa sobrecarga. Contudo, ele depende de MAC \textit{Timestamp}, um recurso não disponível em todos os dispositivos. Neste trabalho, nós propomos uma versão do FTSP independente de MAC \textit{timestamp}, que estende o seu funcionamento para \textit{hardware} que não tenha MAC \textit{timestamp} enquanto mantém a baixa carga e alta precisão da sincronização, nossos resultados indicam uma média de erro de sincronização de 3$\mu{s}$ por salto, enquanto adiciona uma mensagem de correção a mais no processo.
 
-{\hspace{-8mm} \bf{Palavras-chave}}: Palavras representativas do conteúdo do trabalho, isto é, palavras-chave e/ou descritores, conforme a ABNT NBR 6028 (ABNT, 2005).
+
+{\hspace{-8mm} \bf{Palavras-chave}}: RSSF, Sincronização de Relógios, FTSP, MAC \textit{Timestamp}.
 
 \end{resumo}
 
@@ -132,7 +147,7 @@ Elemento obrigatório, constituído de uma sequência de frases concisas e objetiva
 % --- -----------------------------------------------------------------
 \begin{abstract}
 
-Wireless sensors networks are distributed system composed of battery-powered nodes with low computational resources. Like in many distributed systems, some applications of WSN require time synchronization among their nodes. In the particular case of WSN, synchronization algorithms must respect the nodes computational constraints. The well known FTSP protocol is famous for achieving nanosecond precision with low overhead. However, it relies on MAC timestamp, a feature not available in all hardware. In this work, we propose MAC timestamp independent version in order to extend and adapt FTSP to work on hardware that do not have MAC timestamp while keeping the low overhead and high synchronization precision our results indicate an average synchronization error of 3$\mu{s}$ per hop, while adding a corretion message every three seconds.
+Wireless sensors networks are distributed system composed of battery-powered nodes with low computational resources. Like in many distributed systems, some applications of WSN require time synchronization among their nodes. In the particular case of WSN, synchronization algorithms must respect the nodes computational constraints. The well known FTSP protocol is famous for achieving nanosecond precision with low overhead. However, it relies on MAC timestamp, a feature not available in all hardware. In this work, we propose MAC timestamp independent version in order to extend and adapt FTSP to work on hardware that do not have MAC timestamp while keeping the low overhead and high synchronization precision our results indicate an average synchronization error of 3$\mu{s}$ per hop, while adding a corretion message.
 
 {\hspace{-8mm} \bf{Keywords}}: WSN, Time Synchronization, FTSP, MAC Timestamp.
 

@@ -1,5 +1,5 @@
 \chapter{Experimentos} \label{cap:cap5}
-\outlineon=1
+\outlineon=0
 Listar o experimentos de maneira numérica 1,2 e 3. Em cada item explicar os exp em si.
 \outline{
 \begin{itemize}
@@ -12,13 +12,12 @@ Listar o experimentos de maneira numérica 1,2 e 3. Em cada item explicar os exp 
 
 }
 
-Neste capítulo nos descrevemos nossos experimentos a respeito da precisão do FTSP+.
-Nós implementamos o FTSP+ sobre TinyOS 2.1.2 \cite{levis2004tinyos} e executamos os testes em \textit{motes} Micaz \cite{Micaz}.
+Neste capítulo nos descrevemos nossos experimentos a respeito da precisão do FTSP+. Nós implementamos o FTSP+ sobre TinyOS 2.1.2 \cite{levis2004tinyos} e executamos os testes em \textit{motes} Micaz \cite{Micaz}.
 % In this section, we describe our experiments to assess FTSP+'s accuracy.
 % We have implemented FTSP+ on TinyOS 2.1.2 \cite{levis2005tinyos} and ran our tests on Micaz motes \cite{micaz}.
 
 
-\section{Experimento 1}\label{exp:1}
+%\section{Experimento 1}\label{exp:1}
 
 \outline{
     Descrever o ambiente, tipo de sensor, tempo de duração e demais caracteristicas do cenário testado.
@@ -56,12 +55,12 @@ Nossos experimentos são resultados de uma rede com os nós trocando mensagens de 
  \begin{table}[htb!]
  \centering
  \begin{tabular}{c|c|c}
- 		& \multirow{2}{*}{\textbf{mean ($\mu{s}$)}}	& \multirow{2}{*}{\textbf{std. deviation}} \\
+ 		& \multirow{2}{*}{\textbf{Média ($\mu{s}$)}}	& \multirow{2}{*}{\textbf{Desvio padrão}} \\
 		&&\\
- $\mathbf{processing~time}$ 	&  $0.87 \pm 0.0095$ 	& $0.33$\\
+ $\mathbf{tempo~de~processamento}$ 	&  $0.87 \pm 0.0095$ 	& $0.33$\\
  $\mathbf{\delta}$  	&  $0.88 \pm 0.0093$ 	& $0.33$\\
- $\mathbf{correction~time}$ 	& $9.01 \pm 0.093$	& $3.32$\\
- $\mathbf{medium~access}$ 	& $8.13 \pm 0.093$	& $3.31$\\
+ $\mathbf{tempo~de~correção}$ 	& $9.01 \pm 0.093$	& $3.32$\\
+ $\mathbf{acesso~ao~meio}$ 	& $8.13 \pm 0.093$	& $3.31$\\
  $\mathbf{t4' - \bar{t4'}}$ 	& $-0.0047 \pm 0.013$ 	& $0.47$ \\
  \end{tabular}
  %\caption{Mean and standard deviation}
@@ -86,8 +85,8 @@ Para nosso cenário a média de correção de tempo de atraso é $9.01$\footnote{Este
 \begin{table}[htb!]
 \centering
 \begin{tabular}{l|c|c|c|c|c|c}
-\textbf{Delay in jiffys} 			& 0 		& 1 			& 2 & 3 & 4 & 5 \\
-\textbf{Frequency} 	& 606 	& 4271  & 0 & 1 & 1 & 1 \\
+\textbf{Atraso em jiffys} 			& 0 		& 1 			& 2 & 3 & 4 & 5 \\
+\textbf{Frequência} 	& 606 	& 4271  & 0 & 1 & 1 & 1 \\
 \end{tabular}
 %\caption{Delay frequency of receiver \textit{processing time}.}
 \caption{Frequência de atraso do receptor \textit{tempo de processamento}.}
@@ -97,8 +96,8 @@ Para nosso cenário a média de correção de tempo de atraso é $9.01$\footnote{Este
 \begin{table}[htb!]
 \centering
 \begin{tabular}{l|c|c|c|c|c|c}
-\textbf{Delay in jiffys} 			& 0 		& 1 			& 2 & 3 & 4 & 5 \\
-\textbf{Frequency} 	& 581 	& 4297  & 0 & 0 & 1 & 1 \\
+\textbf{Atraso em jiffys} 			& 0 		& 1 			& 2 & 3 & 4 & 5 \\
+\textbf{Frequência} 	& 581 	& 4297  & 0 & 0 & 1 & 1 \\
 \end{tabular}
 %\caption{Delay frequency for $\delta$.}
 \caption{Frequência de atraso para o $\delta$.}
@@ -106,7 +105,7 @@ Para nosso cenário a média de correção de tempo de atraso é $9.01$\footnote{Este
 \end{table}
 
 Nosso segundo experimento mede a distribuição de probabilidade do $\delta$ e \textit{tempo de processamento}.
-Relembrando da Seção \ref{seq:mod} que eles são o tempo de processamento da interrupção do rádio no emissor e no receptor.
+Relembrando da Seção \ref{sec:mod} que eles são o tempo de processamento da interrupção do rádio no emissor e no receptor.
 Nó podemos ver na Tabela \ref{tab:processing_time} e \ref{tab:delta} que seus valores são na maioria na faixa entre 0 e 1 \textit{jiffy}, com casos extremamente raros que em nossos experimentos não chegam a 5 \textit{jiffys}.
 Suas médias são $0.87$ e $0.88$ \textit{jiffys}, que podem ser consideradas iguais.
 Portanto, estes atrasos, que o FTSP+ não é capaz de calcular e compensar, são muito pequenas e não comprometem significativamente a precisão da sincronização.
@@ -171,12 +170,12 @@ No TinyOS 1.x, onde o FTSP foi primeiramente implementado e testado \cite{maroti
 %In future work, we want to use jiffys with microsecond resolution and measure the synchronization error per hop using a setup with GPIO pins for tracking events in an external and stable accuracy clock that record every exchanged messages.
 
 
-\section{Experimento 2}
-\outline{
-    Descrever o ambiente, tipo de sensor, tempo de duração e demais caracteristicas do cenário testado.
-}
-
-\section{Experimento 3}
-\outline{
-    Descrever o ambiente, tipo de sensor, tempo de duração e demais caracteristicas do cenário testado.
-}
+% \section{Experimento 2}
+% \outline{
+%     Descrever o ambiente, tipo de sensor, tempo de duração e demais caracteristicas do cenário testado.
+% }
+% 
+% \section{Experimento 3}
+% \outline{
+%     Descrever o ambiente, tipo de sensor, tempo de duração e demais caracteristicas do cenário testado.
+% }

@@ -1,5 +1,5 @@
 \chapter{FTSP+} \label{cap:cap4}
-\outlineon=1
+\outlineon=0
 
 \outline{
   \begin{itemize}
@@ -109,7 +109,7 @@ event Radio.receiveCorrectionMsg(
   addEntryAndEstimateDrift(msg);
 }
 \end{Verbatim}
- \caption{Receiver algorithm}\vspace{1em}
+ \caption{Algoritmo do receptor.}\vspace{1em}
  \label{fig:receiver_ftspplus}
 \end{figure}
 
@@ -163,7 +163,7 @@ event sendDone(SyncMsg *msg, error_t error){
  Radio.send(correctionMsg);
 }
 \end{Verbatim}
- \caption{Sender algorithm}\vspace{1em}
+ \caption{Algoritmo do emissor.}\vspace{1em}
  \label{fig:sender_ftspplus}
 \end{figure}
 
