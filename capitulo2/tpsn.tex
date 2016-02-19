@@ -16,10 +16,8 @@ O TPSN (Timing-sync Protocol for Sensor Networks) introduzido por Ganeriwal et. 
 
 %There are many existing protocols [40-42,6] which follow the hierarchical structure to spread the reference clock value. Due to the hierarchical nature of the protocol, the synchronization error of a node with respect to the root node depends on its hop distance from the root node [43]. The synchronization time for the whole network increases as the number of levels in the hierarchy increases. As a result, it takes more time to reestablish the network hierarchy and synchronization over the whole network after any failure of the root node.
 
-
-
-
-Vantagens do TPSN:
+O TPSN trouxe importantes contribuições para os protocolos de sincronização de RSSF, algumas de suas principais vantagens são listadas a seguir:
+%Vantagens do TPSN:
 
 \begin{itemize}
  \item O protocolo suporta sincronização \textit{post-facto}, como forma de economia de energia.
@@ -27,8 +25,7 @@ Vantagens do TPSN:
  \item Tem incerteza no tempo de envio, ele tenta reduzir este indeterminismo usando \textit{timestamp} na camada mac
 \end{itemize}
 
-Desvantagem do TPSN:
-
+A seguir alguns dos pontos fracos do protocolo:
 \begin{itemize}
  \item Autores não explicaram como o protocolo poderia suportar \textit{sleep mode} sem quebrar a estrutura da árvore.
  \item Autores concluem que TPSN tem performance 2 vezes superior ao RBS, porém nos testes é apresentado o \textit{offset} máximo do TPSN foi de 17 $\mu s$, maior que os 3 $\mu s$ do RBS.

@@ -259,7 +259,9 @@ O nó $i$ com uma informação mais acurada, pode enviar uma nova mensagem para $j$
  \label{fig:pairwise_recrec}
 \end{figure}
 
-A sincronização \textit{receiver-receiver} utiliza das características inerentes ao \textit{broadcast} na comunicação sem fio, onde a difusão de uma mensagem tem o mesmo tempo de recepção em cada um dos receptores, seu tempo de chegada varia muito pouco sendo sensível apenas aos atrasos de propagação e recebimento. No cenário descrito na Figura \ref{fig:pairwise_recrec}, têm-se um nó que envia \textit{beacons} (não necessariamente contendo um \textit{timestamp}) periodicamente, todos nós que recebem a mensagem registram o tempo de recebimento com o seu relógio local. Então, os \textit{receivers} ($j$ e $k$) trocam entre si a informação registrada, o que os permite calcularem a diferença entre o tempo de chegada dos \textit{beacons}, ou seja, o \textit{offset}. Esse tratamento pode remover duas das maiores fontes de atraso na comunicação sem fios: o atraso de envio e o tempo de acesso ao meio \cite{cho2011}.
+A sincronização receptor-receptor ou \textit{receiver-receiver} utiliza das características inerentes ao \textit{broadcast} na comunicação sem fio, onde a difusão de uma mensagem tem o mesmo tempo de recepção em cada um dos receptores, seu tempo de chegada varia muito pouco sendo sensível apenas aos atrasos de propagação e recebimento. 
+
+No cenário descrito na Figura \ref{fig:pairwise_recrec}, têm-se um nó que envia \textit{beacons} (não necessariamente contendo um \textit{timestamp}) periodicamente, todos nós que recebem a mensagem registram o tempo de recebimento com o seu relógio local. Então, os \textit{receivers} ($j$ e $k$) trocam entre si a informação registrada, o que os permite calcularem a diferença entre o tempo de chegada dos \textit{beacons}, ou seja, o \textit{offset}. Esse tratamento pode remover duas das maiores fontes de atraso na comunicação sem fios: o atraso de envio e o tempo de acesso ao meio \cite{cho2011}.
 
 
 
@@ -332,11 +334,11 @@ Esta dissertação é composta por sete capítulos, os assuntos discutidos neste tra
  
  \item \textbf{Capítulo 3:} É realizado o detalhamento do protocolo FTSP, que serviu de base para a implementação da proposta apresentada nesta dissertação. Detalha-se ainda seus principais componentes com o foco de posteriormente mostrar as modificações.
  
- \item \textbf{Capítulo 4:} Descreve o conceito da técnica que faz a estimativa de atraso que possibilita a substituição do MAC \textit{timestamp}, por um a nível de aplicação.
+ \item \textbf{Capítulo 4:} Apresenta o FTSP+, descreve o conceito da técnica que faz a estimativa de atraso que possibilita a substituição do MAC \textit{timestamp}, por um a nível de aplicação. 
  
- \item \textbf{Capítulo 5:} Neste capítulo apresentamos as ferramentas de software e os conceitos por traz do desenvolvimento do FTSP+.
+ \item \textbf{Capítulo 5:} Apresentamos as ferramentas de software e os conceitos por traz do desenvolvimento do FTSP+. O sistema operacional TinyOS e a linguagem de programação nesC.
  
- \item \textbf{Capítulo 6:} Lista e descreve os experimentos seus valores, métricas, ambientes e resultados.
+ \item \textbf{Capítulo 6:} Neste capítulo, descrevemos os experimentos realizados e os valores, métricas, ambientes e resultados.
  
- \item \textbf{Capítulo 7:} Conclusão da dissertação e sugestões de trabalhos futuros.
+ \item \textbf{Capítulo 7:} Conclusão acerca do trabalho baseado nos experimentos e resultados, trata do produto da dissertação e a aplicação da técnica em trabalhos futuros.
 \end{itemize}

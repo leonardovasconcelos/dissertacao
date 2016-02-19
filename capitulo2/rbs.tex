@@ -28,15 +28,15 @@ O RBS tem um alto nível de economia de energia, devido a forma com que o mesmo i
 
 A sincronização em cenários com multi-saltos é possível de ser implementada utilizando o RBS. Neste ambiente, apenas um nó como referência pode não ser o suficiente para cobrir todo o domínio de abrangência da rede, então múltiplos nós de referência podem ser utilizados, cada um com seu domínio de cobertura. Na verdade, a transmissão com vários saltos poderia acarretar um atraso na propagação de uma mensagem. Neste caso, para tratar este problema, a sincronização de dois nós em dois domínios diferentes é realizado por um terceiro nó localizado na intersecção dos domínios.
 
-
-As principais vantagens do RBS podem ser definidas como:
+Dentre as principais características do protocolo RBS, listamos as seguintes como vantagens:
+%Podemos listar como as principais vantagens do RBS:
 \begin{itemize}
  \item Remove as duas maiores fontes de atraso, tempo de envio e tempo de acesso.
  \item Sincronização \textit{post-facto} realiza ajustes somente quando necessário, diminuindo o custo de energia.
 \end{itemize}
 
 
-E as desvantagens são:
+Podemos destacar como desvantagens as que seguem:
 \begin{itemize}
  \item Nó que envia o \textit{beacon} nunca é sincronizado. Impossibilita a utilização em aplicações que necessitem sincronização do nó raiz.
  \item Em redes de um salto com $n$ nós, este protocolo precisa trocar $O(n^2)$ mensagens. Em caso de redes com grandes vizinhanças pode ter alto custo de computação.

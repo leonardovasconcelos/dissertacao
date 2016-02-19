@@ -1,4 +1,3 @@
- 
 \section{LTS}
 \outline{
     Lightweight Tree-Based Synchronization.
@@ -10,7 +9,7 @@ A versão centralizada é uma extensão do exemplo simples de um salto, ela é basea
 
 A versão distribuída do LTS não faz uso da construção da árvore geradora, a sincronização não é mais responsabilidade apenas do nó de referência e sim dos próprios nós. Neste modelo existe um ou mais nós de referência, eles são requisitados pelos nós sensores a qualquer momento que esses precisem sincronizar bem como a frequência de ressincronização. Para os nós determinarem suas taxas de sincronização é preciso reunir os seguintes parâmetros: precisão necessária, número de saltos até o nó de referência, taxa de escorregamento do relógio e o tempo desde a última sincronização. Só então ele calcula sua taxa. Desta forma, quando o nó determinar que precisa sincronizar fará solicitação de ressincronização ao nó de referência mais próximo. 
 
-As principais vantagens são:
+Dentre as principais características do protocolo LTS, listamos as seguintes como vantagens:
 \begin{itemize}
  \item Usa poucos recursos computacionais, como memória e CPU.
  \item Suporta sincronização \textit{post-facto}.
@@ -18,7 +17,7 @@ As principais vantagens são:
  \item Na versão distribuída, certos nós necessitam sincronizar menos frequentemente.
 \end{itemize}
 
-As desvantagens são:
+Os seguintes itens são as desvantagens:
 \begin{itemize}
  \item A precisão da técnica diminui de forma linear em relação a profundidade da árvore.
  \item Sensível a falhas do relógio ou informação errada da sub-rede.

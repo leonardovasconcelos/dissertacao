@@ -89,8 +89,50 @@ O FTSP+ foi elaborado utilizando os \textit{motes} Iris e Micaz \cite{Iris2007, 
 
 \begin{figure}[h]
  \centering
- \includegraphics[width=23cm, angle=90]{./figuras/time.png}
+ %\includegraphics[width=23cm, angle=90]{./figuras/time.png}
+ \includegraphics{./figuras/time.eps}
  % tos.lib.ftsp.TimeSyncC.png: 1177x293 pixel, 72dpi, 41.52x10.34 cm, bb=0 0 1177 293
- \caption{Diagrama de Componentes do FTSP}
+ \caption{Diagrama de Componentes do FTSP+}
  \label{fig:diagrama_componentes}
 \end{figure}
+
+O \texttt{TimeSyncP} faz parte a implementação original do FTSP, porém foi o único componente modificado. O FTSP usa uma mensagem de sincronização com informações como o nó raiz da rede, o nó que está enviando a mensagem de sincronização, o número de sequência da mensagem e o \textit{timestamp}. É acrescentado mais uma mensagem na comunicação, que é a mensagem de correção. A estrutura da mensagem é listada a seguir:
+
+% \begin{figure}[h]
+%  \begin{Verbatim}[numbersep=1pt,frame=single]
+% typedef nx_struct TimeSyncMsg
+% {
+%  nx_uint16_t rootID;
+%  nx_uint16_t nodeID; 
+%  nx_uint8_t  seqNum;
+%  nx_uint32_t globalTime;
+%  nx_uint32_t localTime;
+% } TimeSyncMsg;
+% \end{Verbatim}
+% \caption{Formato da mensagem de sincronização}
+% \end{figure}
+
+\begin{figure}[h]
+ \begin{Verbatim}[numbersep=1pt,frame=single]
+typedef nx_struct TimeSyncMsg
+{
+ nx_uint16_t rootID;
+ nx_uint16_t nodeID;      
+ nx_uint8_t  seqNum;
+ nx_uint32_t correction; 
+} TimeSyncMsg;
+\end{Verbatim}
+\caption{Formato da mensagem de sincronização}
+\end{figure}
+
+
+O mensagem conta com o \texttt{rootID}, se a mensagem tem \textit{root} com ID maior que a informação do \textit{root} local ela é descartada. O \texttt{nodeID} contém o ID de quem enviou a mensagem. O \texttt{seqNum} serve para identificar qual o \textit{timestamp} a mensagem está corrigindo. O campo \texttt{correction} é o campo que traz a estimativa de erro do emissor e é com ele que será feita a correção dos \textit{timestamp} anteriormente recebidos.
+
+No documento da TEP 132 \cite{tinyos132}, é fornecido uma breve descrição sobre o padrão de \textit{timestamps} oferecidos pela interface \texttt{PacketTimeStamp} que faz o acesso ao tempo de recepção e envio de determinada mensagem.
+
+A TEP 133 fornece a abstração para o mecanismo de sincronização de pares. Não provê um sincronização completa da redes, mas, com seus recursos é possível implementar um serviço de sincronização completo, exemplo o FTSP, pois os componentes e interfaces utilizados em sua implementação estão bem definidos em seu documento \cite{tinyos133}. 
+
+Outro aspecto importante da TEP 133 é o seu guia de implementação, que compreende duas abordagens, uma em que é possível mudar o \textit{payload} da mensagem durante a transmissão usando a interrupção SFD dos rádios orientados a pacote. A segunda abordagem descreve a possibilidade da sincronização para plataformas em que não seja possível a alteração do conteúdo durante a transmissão. Podemos verificar que o FTSP atende a primeira abordagem, já a segunda não é atendida, porém com o FTSP+ ambas as abordagens são acolhidas.
+
+
+O próximo capítulo traz experimento realizado com \textit{motes} reais, e gráficos estatísticos dos resultados encontrados. Os experimentos foram baseados nas técnicas desenvolvidas até aqui.

@@ -74,8 +74,9 @@ t4' - \bar{t4'} = \mbox{\textit{propagation time}} + \mbox{\textit{processing ti
 \end{equation}
 
 Desde de que o \textit{tempo de processamento} e o $\delta$ são latências do processamento da manipulação de interrupção. 
-Nós investigamos seus valores em nosso experimento na Seção \ref{exp:1}, eles tendem a anular-se mutuamente. Relembrando que o \textit{tempo de propagação} é negligenciável.
+Nós investigamos seus valores em nosso experimento no Capítulo \ref{cap:cap5}, eles tendem a anular-se mutuamente. Relembrando que o \textit{tempo de propagação} é negligenciável.
 
+%Seção \ref{exp:1}
 
 % Since \textit{processing time} and $\delta$ are interrupt handler processing latencies, they tend to cancel out each other.
 % We investigate their values in our experiments in Section \ref{sec:evaluation}.
@@ -136,7 +137,24 @@ Já a rotina \texttt{Radio.receiveCorrectionMsg(CorrectionMsg *msg)} recebe a men
 
 
 
-\begin{figure}[h]
+
+
+A Figura \ref{fig:sender_ftspplus} apresenta a listagem do código da rotina do emissor do FTSP+, são duas funções \texttt{Timer.fired()} que periodicamente envia mensagens de sincronização (igual ao FTSP) e \texttt{sendDone(message\_t *msg, error\_t error)} que envia a mensagem de correção.
+
+
+% As can be seen in Figure \ref{fig:sender_ftspplus}, an FTSP+ sender has two routines: \texttt{Timer.fired()} periodically sends synchronization messages (like in FTSP) and \texttt{sendDone(message\_t *msg, error\_t error)} sends the correction message.
+
+O \texttt{Timer.fired()} difere do FTSP somente pelas linhas 10 e 11, que coleta o \textit{timestamp} no nível de aplicação. 
+% \texttt{Timer.fired()} differs from FTSP only for lines 10 and 11, which collects the timestamp at application level.
+A rotina \texttt{sendDone(message\_t *msg, error\_t error)} é a manipulação da interrupção de quando o acesso ao meio sem fio é garantido e assim coletar o tempo de acesso ao meio pelo cálculo do tempo que se passou entre o início do envio até ele ser concluído (\texttt{send/sendDone}). Ao final é enviado a mensagem de correção.
+
+% \texttt{sendDone(message\_t *msg, error\_t error)} handles the interrupt when wireless medium access is granted to collect the medium access timestamp by compute the time that has passed between \texttt{send/sendDone} and send out the correction message. 
+
+As linhas 21-22 mostram como o tempo de correção é calculado. O \texttt{seqNum} é utilizado para identificar qual mensagem será ajustada, \texttt{finalTime} e \texttt{initialTime} referem-se ao tempos $t_2$ e $t_1$ da Equação (\ref{eq:correction_time}).
+% Lines 21-22 show how the correction time is computed. \texttt{seqNum} is used to identify which message is being adjusted, \texttt{finalTime} and \texttt{initialTime} refers to times $t2$ and $t1$ in Equation (\ref{eq:correction_time}).
+
+
+\begin{figure}[H]
 \begin{Verbatim}[numbers=left,numbersep=1pt,frame=single]
 event Timer.fired() {
   ++heartBeats;
@@ -167,19 +185,5 @@ event sendDone(SyncMsg *msg, error_t error){
  \label{fig:sender_ftspplus}
 \end{figure}
 
-A Figura \ref{fig:sender_ftspplus} apresenta a listagem do código da rotina do emissor do FTSP+, são duas funções \texttt{Timer.fired()} que periodicamente envia mensagens de sincronização (igual ao FTSP) e \texttt{sendDone(message\_t *msg, error\_t error)} que envia a mensagem de correção.
-
-
-% As can be seen in Figure \ref{fig:sender_ftspplus}, an FTSP+ sender has two routines: \texttt{Timer.fired()} periodically sends synchronization messages (like in FTSP) and \texttt{sendDone(message\_t *msg, error\_t error)} sends the correction message.
-
-O \texttt{Timer.fired()} difere do FTSP somente pelas linhas 10 e 11, que coleta o \textit{timestamp} no nível de aplicação. 
-% \texttt{Timer.fired()} differs from FTSP only for lines 10 and 11, which collects the timestamp at application level.
-A rotina \texttt{sendDone(message\_t *msg, error\_t error)} é a manipulação da interrupção de quando o acesso ao meio sem fio é garantido e assim coletar o tempo de acesso ao meio pelo cálculo do tempo que se passou entre o início do envio até ele ser concluído (\texttt{send/sendDone}). Ao final é enviado a mensagem de correção.
-
-% \texttt{sendDone(message\_t *msg, error\_t error)} handles the interrupt when wireless medium access is granted to collect the medium access timestamp by compute the time that has passed between \texttt{send/sendDone} and send out the correction message. 
-
-As linhas 21-22 mostram como o tempo de correção é calculado. O \texttt{seqNum} é utilizado para identificar qual mensagem será ajustada, \texttt{finalTime} e \texttt{initialTime} referem-se ao tempos $t_2$ e $t_1$ da Equação (\ref{eq:correction_time}).
-% Lines 21-22 show how the correction time is computed. \texttt{seqNum} is used to identify which message is being adjusted, \texttt{finalTime} and \texttt{initialTime} refers to times $t2$ and $t1$ in Equation (\ref{eq:correction_time}).
-
-
+O próximo capítulo trata dos recursos de \textit{software} e os requisitos dos sistemas para a implementação do FTSP+ na plataforma TinyOS.
 
