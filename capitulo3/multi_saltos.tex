@@ -12,19 +12,15 @@
 
 
 
-% \begin{figure}[h]
-%  \begin{Verbatim}[numbersep=1pt,frame=single]
-% typedef nx_struct TimeSyncMsg
-% {
-%  nx_uint16_t rootID;
-%  nx_uint16_t nodeID; 
-%  nx_uint8_t  seqNum;
-%  nx_uint32_t globalTime;
-%  nx_uint32_t localTime;
-% } TimeSyncMsg;
-% \end{Verbatim}
-% \caption{Formato da mensagem de sincronização}
-% \end{figure}
+
+A mensagem de sincronização do FTSP contém os seguintes campos: 
+\begin{itemize}
+ \item \texttt{rootID}: Este campo tem a informação do ID do \textit{root}, referente ao nó que enviou a mensagem.
+ \item \texttt{globalTime}: É a estimativa do tempo global do nó emissor no momento do envio da mensagem.
+ \item \texttt{seqNum}: É um número que é incrementado toda vez que o \textit{root} inicia uma nova rodada de sincronização. O \texttt{seqNum} é utilizado para que os nós sincronizados possam sabem quando uma mensagem é nova, assim conseguem diminuir a redundância de informação.
+\end{itemize}
+
+
 
 
 

@@ -7,7 +7,42 @@
   
 }
 
-Este capítulo trata sobre o sistema operacional TinyOS e da linguagem nesC. Aspectos importantes de sua arquitetura para a implementação de um protocolo de sincronização.
+Este capítulo trata sobre o sistema operacional TinyOS a linguagem nesC e os dispositivos de \textit{hardware}. Aspectos importantes de sua arquitetura para a implementação de um protocolo de sincronização. 
+
+
+
+\section{Mote}\label{sec:mote}
+
+O termo \textit{mote} é utilizado para se referir ao dispositivo que é nó em uma rede de sensores sem fio, foi introduzido por pesquisadores da Universidade de Berkeley \cite{culler2002mica} no início da década de 90, assim, constantemente podemos encontrar referências como ``Berkeley Mote'' para designar estes dispositivos de rede, independente do fabricante. 
+
+O MicaZ é um \textit{mote} disponível comercialmente e amplamente utilizado em pesquisas acadêmicas. Possui um processador de 4 MHz com 8 \textit{bits}, memória de 128 kB. A diferença comparado a um computador com a capacidade similar do início da década de 1980, como o 8088, é o baixo consumo de energia que varia de 15 $\mu$A no modo de economia até 8 mA em execução. Outro componente significativo é o rádio, esses dispositivos possuem transmissores com frequência de 2.4 GHz e taxa de dados de 250 kbps, usam a estratégia de acesso ao meio CSMA/CA, conseguindo transferências de 40.000 bps.
+
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcc}
+\hline
+\textbf{Item}         & \textbf{MicaZ}              & \textbf{Iris}\\
+\hline
+Processador           & ATMega 128L 8MHz            & ATmega1281 16MHz                                                                  \\
+\textit{Flash}        & \multicolumn{2}{c}{128 kB}                                                                                                                                                           \\
+Memória Dados         & \multicolumn{2}{c}{512 kB}                                                                                                                                                           \\
+EEPROM                & \multicolumn{2}{c}{4 kB}                                                                                                                                                             \\
+ADC                   & \multicolumn{2}{c}{10 bit}                                                                                                                                                           \\
+\textit{Chip} de Rádio         & CC2420                     & RF230                                                                             \\
+Frequência do Rádio   & \multicolumn{2}{c}{2.4 GHz}                                                                                                                                                          \\
+Taxa de Transferência & \multicolumn{2}{c}{250 kbps}                                                                                                                                                         \\
+Voltagem de Operação  & \multicolumn{2}{c}{3,6 - 2,7}                                                                                                                                                        \\
+Consumo de Energia    & \begin{tabular}[c]{@{}c@{}}RX 19,7 mA\\ TX 17,4 mA\\ \textless 15 $\mu$A (dormindo)\end{tabular} & \begin{tabular}[c]{@{}c@{}}RX 16 mA\\ TX 17 mA\\ 8 $\mu$A (dormindo)\end{tabular}\\
+\hline
+\end{tabular}
+\caption{Especificações de \textit{hardware} dos \textit{motes}}
+\label{tab:micazxiris}
+\end{table}
+
+A junção destas características, fornecem recursos que tornam o \textit{mote} uma boa opção para diversas aplicações, a capacidade de computação o consumo de energia trazem a flexibilidade para implantação destes equipamentos em RSSF, a Tabela \ref{tab:micazxiris} contém as especificações dos \textit{hardwares} utilizados.
+
+
 
 
 
@@ -51,7 +86,7 @@ Programas em nesC são construídos por itens definidos separadamente e então cone
 
 
 
-\section{Diagramas e Componentes}
+\section{Diagramas e Componentes}\label{sec:dia}
 
 \outline{
   O Tinyos tem o recurso de componentes para disponibilizar seus mais diversos recursos, descrever os componentes relevantes para o trabalho e os componentes resultantes das alterações.
