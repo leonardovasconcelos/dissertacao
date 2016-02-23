@@ -129,3 +129,34 @@ Se um nó é o \textit{root}, ele também tem que incrementar seu \textit{highestSe
 % A node decides to be root because has not received a synchronization message for ROOT\_TIMEOUT (lines 3 to 5).
 % A node sends synchronization messages if it is root or has synchronized (lines 6 to 10).
 % If a node is root, it also has to increment its \textit{highestSeqNum}. 
+
+
+
+\textbf{Mensagem de sincronização:}
+
+\textbf{Informação redundante:}
+
+\textbf{Problema da eleição do nó \textit{root}}: 
+
+\begin{figure}[H]
+\center
+\subfigure[fig:grafo1][Em um primeiro momento, todos os nós iniciam. As linhas pontilhadas denotam o alcance de transmissão do nó.]{\includegraphics[width=7cm]{./figuras/ftsp_grafo1.eps}}
+\qquad
+\subfigure[fig:grafo2][grafo 2]{\includegraphics[width=6cm]{./figuras/ftsp_grafo2.eps}}
+\qquad
+\subfigure[fig:grafo3][grafo 3]{\includegraphics[width=6cm]{./figuras/ftsp_grafo3.eps}}
+\qquad
+\subfigure[fig:grafo4][grafo 4]{\includegraphics[width=6cm]{./figuras/ftsp_grafo4.eps}}
+\qquad
+\subfigure[fig:grafo5][grafo 5]{\includegraphics[width=6cm]{./figuras/ftsp_grafo5.eps}}
+\qquad
+\subfigure[fig:grafo6][grafo 6]{\includegraphics[width=6cm]{./figuras/ftsp_grafo6.eps}}
+% \qquad
+% \subfigure[fig:grafo_leg][Legenda]{\includegraphics[width=2cm]{./figuras/ftsp_grafo_legenda.eps}}
+\caption{Eleição de lider}\label{fig:lider}
+
+\end{figure}
+
+
+
+

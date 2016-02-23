@@ -238,7 +238,7 @@ Onde $tp$ é o tempo de propagação, este tempo é muito pequeno podendo ser ignora
  \label{fig:pairwise2}
 \end{figure}
 
-A sincronização bidirecional, \textit{two-way} ou ainda denominada \textit{sender-receiver} usa duas mensagens de sincronização. A Figura \ref{fig:pairwise2} apresenta o comportamento desta técnica. Note que primeiro o nó $i$ envia seu tempo $t_1$ para $j$, este recebe a mensagem no tempo $t_2$ e registra seu tempo local. Assim, o tempo $t_2$ já pode ser calculado como na Equação (\ref{eq:tempo_t2}). No próximo passo o nó $j$ no tempo $t_3$ envia uma mensagem para $i$ com os \textit{timestamps} $t_2$ e $t_3$, então no instante $t_4$ tanto o nó $i$ como o $j$ são capazes de calcular o \textit{offset} entre ambos, porém o nó $i$ é capaz de determinar mais precisamente tanto o \textit{offset} quanto o tempo de propagação, como segue:
+A sincronização bidirecional, \textit{two-way} ou ainda denominada emissor-receptor (\textit{sender-receiver}) usa duas mensagens de sincronização. A Figura \ref{fig:pairwise2} apresenta o comportamento desta técnica. Note que primeiro o nó $i$ envia seu tempo $t_1$ para $j$, este recebe a mensagem no tempo $t_2$ e registra seu tempo local. Assim, o tempo $t_2$ já pode ser calculado como na Equação (\ref{eq:tempo_t2}). No próximo passo o nó $j$ no tempo $t_3$ envia uma mensagem para $i$ com os \textit{timestamps} $t_2$ e $t_3$, então no instante $t_4$ tanto o nó $i$ como o $j$ são capazes de calcular o \textit{offset} entre ambos, porém o nó $i$ é capaz de determinar mais precisamente tanto o \textit{offset} quanto o tempo de propagação, como segue:
 
 \begin{equation}\label{eq:two_way_tp}
  tp = \frac{[(t_2 - t_1) + (t_4 - t_3)]}{2}

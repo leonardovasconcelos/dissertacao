@@ -62,7 +62,7 @@ O emissor envia uma mensagem com o conteúdo ${t_2}'+\delta-{t_1}'$ então o recep
 \begin{eqnarray}
 \bar{t4'} & = & t1' - (t2' + \delta - t1') \nonumber\\
 \label{eq:estimated_t4}
-\bar{t4'} & = & t1' + \mbox{\textit{medium access time}} + \delta
+\bar{t4'} & = & t1' + \mbox{\textit{tempo de acesso ao meio}} + \delta
 \end{eqnarray}
 
 %The difference between $t4'$ and $\bar{t4'}$, which is the estimation error, is:
@@ -70,7 +70,7 @@ O emissor envia uma mensagem com o conteúdo ${t_2}'+\delta-{t_1}'$ então o recep
 A estimativa de erro é a diferença entre ${t_4}'$ e $\bar{t_4}'$, que é:
 \begin{equation}
 \label{eq:estimation_error}
-t4' - \bar{t4'} = \mbox{\textit{propagation time}} + \mbox{\textit{processing time}} - \delta
+t4' - \bar{t4'} = \mbox{\textit{tempo de propagação}} + \mbox{\textit{tempo de processamento}} - \delta
 \end{equation}
 
 Desde de que o \textit{tempo de processamento} e o $\delta$ são latências do processamento da manipulação de interrupção. 
@@ -121,7 +121,7 @@ Como podemos ver na Figura \ref{fig:receiver_ftspplus}, o receptor FTSP+ tem rot
 
 \begin{equation}
  \label{eq:correction_time}
- \mbox{\textit{correction time}} = t2' - t1' + \delta
+ \mbox{\textit{tempo de correção}} = t2' - t1' + \delta
 \end{equation}
 
 

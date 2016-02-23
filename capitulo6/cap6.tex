@@ -10,7 +10,7 @@ Listar o experimentos de maneira numérica 1,2 e 3. Em cada item explicar os exp 
  \item Colocar os gráficos e tabelas gerados pelos experimentos.
  \item Comentar e analizar os resultados.
 \end{itemize}
-
+    Descrever o ambiente, tipo de sensor, tempo de duração e demais caracteristicas do cenário testado.
 }
 
 Neste capítulo nos descrevemos nossos experimentos a respeito da precisão do FTSP+. Nós implementamos o FTSP+ sobre TinyOS 2.1.2 \cite{levis2004tinyos} e executamos os testes em \textit{motes} Micaz \cite{Micaz}.
@@ -20,9 +20,6 @@ Neste capítulo nos descrevemos nossos experimentos a respeito da precisão do FTS
 
 %\section{Experimento 1}\label{exp:1}
 
-\outline{
-    Descrever o ambiente, tipo de sensor, tempo de duração e demais caracteristicas do cenário testado.
-}
 
 Os \textit{motes} Micaz suportam o \textit{timestamp} na camada MAC, mas nós precisamos desta informação para medir a acurácia da nossas precisão.
 Para a sincronização, nó reescrevemos o recurso de MAC \textit{timestamp} com o nosso \textit{timestamp} na camada de aplicação.

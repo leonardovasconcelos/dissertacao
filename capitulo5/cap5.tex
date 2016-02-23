@@ -82,10 +82,21 @@ Programas em nesC são construídos por itens definidos separadamente e então cone
 
 
 
+\begin{figure}[h]
+\center
+\subfigure[fig:arq_trad][Arquitetura Tradicional]{\includegraphics{./figuras/arquitetura_tradicional.eps}}
+\qquad
+\subfigure[fig:arq_tinyos][Arquitetura Tinyos]{\includegraphics{./figuras/arquitetura_tinyos.eps}}
+\caption{Comparação das arquiteturas}\label{fig:comp_arq}
+
+\end{figure}
+
+
+A arquitetura do TinyOS difere das arquiteturas clássicas, a Figura \ref{fig:comp_arq} ilustra a organização dos dois tipos. No cenário das RSSF sistemas operacionais tradicionais apresentam as seguintes restrições: grande necessidade de armazenamento e memória, maior consumo de energia, custo computacional das trocas de contexto e uso memória virtual entre outros. O TinyOS simplifica sua arquitetura para tornar-se mais específico para suas aplicações: não possui \textit{kernel}, a manipulação do \textit{hardware} é realizado diretamente, sem gerenciamento de processos tem apenas um processo de tempo real, não utiliza memória virtual, ao invés disso, tem um único espaço de endereço físico linear. A figura do escalonador representa uma grande mudança entre os paradigmas, o TinyOS coloca seu \textit{scheduler} no topo da arquitetura, assim uma aplicação é o resultado da junção de seus componentes com o escalonador.
 
 
 
-
+ 
 \section{Diagramas e Componentes}\label{sec:dia}
 
 \outline{
@@ -131,7 +142,7 @@ O FTSP+ foi elaborado utilizando os \textit{motes} Iris e Micaz \cite{Iris2007, 
  \label{fig:diagrama_componentes}
 \end{figure}
 
-O \texttt{TimeSyncP} faz parte a implementação original do FTSP, porém foi o único componente modificado. O FTSP usa uma mensagem de sincronização com informações como o nó raiz da rede, o nó que está enviando a mensagem de sincronização, o número de sequência da mensagem e o \textit{timestamp}. É acrescentado mais uma mensagem na comunicação, que é a mensagem de correção. A estrutura da mensagem é listada a seguir:
+O \texttt{TimeSyncP} faz parte a implementação original do FTSP, porém foi o único componente modificado. O FTSP usa uma mensagem de sincronização com informações como o ID do nó raiz da rede, o ID do nó que está enviando a mensagem de sincronização, um número de sequência da mensagem e o seu \textit{timestamp}. No FTSP+ é acrescentado mais uma mensagem na comunicação, que é a mensagem de correção. A estrutura da mensagem é listada a seguir:
 
 % \begin{figure}[h]
 %  \begin{Verbatim}[numbersep=1pt,frame=single]
@@ -149,8 +160,7 @@ O \texttt{TimeSyncP} faz parte a implementação original do FTSP, porém foi o úni
 
 \begin{figure}[h]
  \begin{Verbatim}[numbersep=1pt,frame=single]
-typedef nx_struct TimeSyncMsg
-{
+typedef nx_struct TimeSyncMsg {
  nx_uint16_t rootID;
  nx_uint16_t nodeID;      
  nx_uint8_t  seqNum;
@@ -170,4 +180,14 @@ A TEP 133 fornece a abstração para o mecanismo de sincronização de pares. Não pr
 Outro aspecto importante da TEP 133 é o seu guia de implementação, que compreende duas abordagens, uma em que é possível mudar o \textit{payload} da mensagem durante a transmissão usando a interrupção SFD dos rádios orientados a pacote. A segunda abordagem descreve a possibilidade da sincronização para plataformas em que não seja possível a alteração do conteúdo durante a transmissão. Podemos verificar que o FTSP atende a primeira abordagem, já a segunda não é atendida, porém com o FTSP+ ambas as abordagens são acolhidas.
 
 
-O próximo capítulo traz experimento realizado com \textit{motes} reais, e gráficos estatísticos dos resultados encontrados. Os experimentos foram baseados nas técnicas desenvolvidas até aqui.
+\begin{figure}[h]
+ \centering
+ \includegraphics{./figuras/arq_prot_sync.eps}
+ % arq_prot_sync.eps: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+ \caption{Arquitetura de \textit{Software} do protocolo de sincronização}
+ \label{fig:arq_prot_sync}
+\end{figure}
+
+Ao final temos a seguinte arquitetura de sincronização resultante do FTSP+ no TinyOS, Figura \ref{fig:arq_prot_sync}. O oscilador de cristal incrementa o contador do relógio físico, que por sua vez alimenta o relógio lógico, o FTSP+ usa o relógio lógico (Componente \texttt{Timer}) para obter o valor do tempo local do nó, assim pode calcular seu desvio, estimar o tempo global e atualizar novamente o relógio, bem como, enviar e receber essas referências de tempo pelo transmissor de rádio. As setas da imagem denotam troca de dados entre os componentes, a seta tracejada refere-se ao mecanismo do FTSP de MAC \textit{timestamp}. 
+
+O próximo capítulo traz experimento realizado com \textit{motes} reais, e gráficos estatísticos dos resultados encontrados, os experimentos foram baseados nas técnicas descritas no trabalho.

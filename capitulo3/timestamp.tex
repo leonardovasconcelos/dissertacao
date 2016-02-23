@@ -8,9 +8,12 @@
 
 O FTSP usa \textit{broadcast} para sincronizar seus nós, essa mensagem contém um \textit{timestamp} com o valor estimado do tempo global no momento em que a transmissão é realizada. No instante do recebimento os nó obtém o valor do tempo do seu relógio local, assim com a diferença entre o tempo global e o local o nó pode estimar o seu \textit{offset}. 
 
-Caso a leitura do tempo seja armazenada na etapa de envio ainda no nível de aplicação, vários componentes de atrasos serão acumulados até que a mensagem seja lida pelos receptores, a Seção \ref{subsec:fontes_imp} lista esses componentes de atraso e a Tabela \ref{tab:decomp} quantifica a magnitude dessas fontes. A Figura \ref{fig:comp_apptimestamp} ilustra esse procedimento como segue, no tempo $t_0$ é iniciado o processo de envio da mensagem de sincronização a partir do nó $i$, logo em seguida é criado o pacote que armazena o \textit{timestamp} $t_1$ e comanda o envio para o sistema operacional, este encaminha a mensagem para a pilha de protocolos. O tempo de acesso ao meio é variável e depende da janela de contenção da rede. Quando $i$ ganha o direito de enviar a mensagem, dá-se inicio a transmissão em $t_2$, $t_3$ o nó $j$ termina de receber a transmissão, mas somente algum tempo depois o no $j$ gera uma interrupção e o sistema operacional irá armazenar o \textit{timestamp} da recepção em $t_5$. Neste momento $j$ tem como calcular seu \textit{offset}, porém esse valor não é representativo devido aos atrasos que as marcas de tempo sofreram em relação de seus valores ideais.
+Caso a leitura do tempo seja armazenada na etapa de envio ainda no nível de aplicação, vários componentes de atrasos serão acumulados até que a mensagem seja lida pelos receptores, a Seção \ref{subsec:fontes_imp} lista esses componentes de atraso e a Tabela \ref{tab:decomp} quantifica a magnitude dessas fontes de imprecisão. Esse procedimento é ilustrado na Figura \ref{fig:comp_apptimestamp}. Note que no tempo $t_0$ é iniciado o processo de envio da mensagem de sincronização a partir do nó $i$, logo em seguida é criado o pacote que armazena o \textit{timestamp} $t_1$ e comanda o envio para o sistema operacional, que por sua vez, encaminha a mensagem para a pilha de protocolos. O tempo de acesso ao meio é variável e depende da janela de contenção da rede. Quando $i$ ganha o direito de enviar a mensagem, dá-se inicio a transmissão em $t_2$, em $t_3$ o nó $j$ termina de receber a transmissão, mas somente algum tempo depois o nó $j$ gera uma interrupção e o sistema operacional irá armazenar o \textit{timestamp} da recepção em $t_5$. Neste momento $j$ tem como calcular seu \textit{offset}, porém esse valor não é representativo devido aos atrasos que as marcas de tempo sofreram em relação de seus valores ideais.
 
 %Para fazer isso o FTSP conta com o uso do \textit{timestamp} na camada MAC, que funciona da seguinte forma 
+
+
+
 
 \begin{figure}[h]
  \centering
@@ -20,7 +23,13 @@ Caso a leitura do tempo seja armazenada na etapa de envio ainda no nível de apli
  \label{fig:comp_apptimestamp}
 \end{figure}
 
-Como forma de corrigir esse problema, a leitura dos tempos pode ser efetuada em locais mais estratégicos. Vários transmissores tem \textit{chips} capazes de modificar o conteúdo da mensagem depois da transmissão ter sido iniciada, \textit{timestamps} na camada de acesso ao meio podem ser facilmente implementados nesses dispositivos para eliminar vários componentes de atraso.
+
+
+
+Visando corrigir esse problema, a leitura dos tempos pode ser efetuada em locais mais estratégicos. Vários transmissores tem \textit{chips} capazes de modificar o conteúdo da mensagem depois da transmissão ter sido iniciada, \textit{timestamps} na camada de acesso ao meio podem ser facilmente implementados nesses dispositivos para eliminar vários componentes de atraso.
+
+
+
 
 \begin{figure}[h]
  \centering
@@ -30,11 +39,19 @@ Como forma de corrigir esse problema, a leitura dos tempos pode ser efetuada em 
  \label{fig:comp_mactimestamp}
 \end{figure}
 
-Quando é iniciado o processo de transmissão a mensagem vai para a fila de saída, porém, quando os primeiros \textit{bits} são enviados o \textit{timestamp} é executado. Em um espaço reservado no \textit{payload} do pacote é inserido uma informação adicional de quanto tempo a mensagem levou desde a criação até o envio, procedimento este realizado pelo \textit{chip} de rádio (uma interrupção SFD - \textit{Start Frame Delimiter}). Isso permite que o receptor calcule e elimine os atrasos relacionados ao envio. Do lado do receptor é possível usar MAC \textit{timestamp} no momento do recebimento e também eliminar os atrasos do receptor.
 
-Na Figura \ref{fig:comp_mactimestamp} temos a ilustração do procedimento de envio de mensagem de sincronização utilizando \textit{timestamp} na camada MAC. O funcionamento do MAC \textit{timestamp} segue basicamente esse diagrama, onde o nó $i$ inicia o procedimento de envio mensagem de sincronização em $t_0$, logo em seguida cria-se a mensagem e comanda-se o envio. No início da transmissão é inserido na mensagem o tempo $t_3$, que é o mesmo instante do início do envio dos dados. Já no lado do receptor, depois do atraso de propagação e do tempo de transmissão o último \textit{bit} chega, então uma interrupção é disparada no tempo $t_5$ junto com ela é registrada o \textit{timestamp} $t_5$.
 
-\begin{figure}[h]
+
+Desta forma, quando é iniciado o processo de transmissão a mensagem vai para a fila de saída, porém, quando os primeiros \textit{bits} são enviados o \textit{timestamp} é executado. Em um espaço reservado no \textit{payload} do pacote é inserido uma informação adicional de quanto tempo a mensagem levou desde a criação até o envio, procedimento este realizado pelo \textit{chip} de rádio (uma interrupção SFD - \textit{Start Frame Delimiter}). Isso permite que o receptor calcule e elimine os atrasos relacionados ao envio. Do lado do receptor é possível usar MAC \textit{timestamp} no momento do recebimento e também eliminar os atrasos do receptor.
+
+Na Figura \ref{fig:comp_mactimestamp} têm-se a ilustração do procedimento de envio de mensagem de sincronização utilizando \textit{timestamp} na camada MAC. O funcionamento do MAC \textit{timestamp} segue basicamente esse diagrama, onde o nó $i$ inicia o procedimento de envio mensagem de sincronização em $t_0$, logo em seguida cria-se a mensagem e comanda-se o envio. No início da transmissão é inserido na mensagem o tempo $t_3$, que é o mesmo instante do início do envio dos dados. Já no lado do receptor, depois do atraso de propagação e do tempo de transmissão o último \textit{bit} chega, então uma interrupção é disparada no tempo $t_5$ junto com ela é registrada o \textit{timestamp} $t_5$.
+
+
+
+
+O formato da mensagem do FTSP segue o modelo da Figura \ref{fig:pacote}. A mensagem começa com um preâmbulo, seguido do conjunto de \textit{bytes} de SYNC, um campo de dados e por fim um campo de identificação de erros CRC. O PREAMBLE é usado para sincronizar a frequência dos rádios, o SYNC é utilizado para calcular o \textit{bit offset} e com isso alinhar os \textit{bytes} no receptor. Os \textit{timestamps} são armazenados no limite de cada \textit{byte} transmitido depois de SYNC, tando no envio quanto no recebimento. Os tempos são normalizados subtraindo um múltiplo inteiro correspondente ao tempo de transmissão. Somente o tempo final é inserido no campo de dados da mensagem.
+
+\begin{figure}[H]
  \centering
  \includegraphics{./figuras/ftsp_packet.eps}
  % ftsp_packet.eps: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=0 0 221 17
@@ -42,10 +59,19 @@ Na Figura \ref{fig:comp_mactimestamp} temos a ilustração do procedimento de envi
  \label{fig:pacote}
 \end{figure}
 
-O formato da mensagem do FTSP segue o modelo da Figura \ref{fig:pacote}, ele começa com um preâmbulo, seguido de \textit{bytes} de SYNC, um campo de dados e um campo de identificação de erros CRC. O PREAMBLE é usado para sincronizar a frequência dos rádios, o SYNC é utilizado para calcular o \textit{bit offset} e com isso alinhar os \textit{bytes} no receptor. Os \textit{timestamps} são armazenados no limite de cada \textit{byte} transmitido depois de SYNC, tando no envio quanto no recebimento. Os tempos são normalizados subtraindo um múltiplo inteiro correspondente ao tempo de transmissão. Somente o tempo final é inserido no campo de dados da mensagem.
 
 
-A forma como o \textit{timestamp} é realizado depende tanto do \textit{chip} de rádio, divididos em orientados a \textit{byte} e a pacote. Nos \textit{chips} orientados a \textit{byte} como o CC1000 \cite{cc1000} (Mica2 e Mica2dot), geram interrupção por cada \textit{byte} transmitido, essa interrupção armazena no metadado da mensagem o \textit{timestamp} do momento em que o \textit{byte} foi transmitido ou recebido. Ao final da transmissão é possível determinar um \textit{timestamp} único, calculando a taxa de transmissão e a média dos \textit{timestamps}. Os \textit{chips} CC2420 \cite{chipcon20032} (MicaZ, TelosA, TelosB, TmoteSky) e RF230 (Iris) \cite{iris2006crossbow} são orientados a pacote, nesses rádios ao invés de marcarem os tempos em cada \textit{byte} transmitido, é gerado apenas uma única interrupção SFD.
+
+
+
+A forma como o \textit{timestamp} é realizado depende do modelo do \textit{chip} de rádio. Pode ser dividido em dois tipos, orientado a \textit{byte} ou orientado pacotes. Nos \textit{chips} orientados a \textit{byte} como o CC1000 \cite{cc1000} (Mica2 e Mica2dot), geram interrupção por cada \textit{byte} transmitido, essa interrupção armazena no metadado da mensagem o \textit{timestamp} do momento em que o \textit{byte} foi transmitido ou recebido. Ao final da transmissão é possível determinar um \textit{timestamp} único, calculando a taxa de transmissão e a média dos \textit{timestamps}. Os \textit{chips} CC2420 \cite{chipcon20032} (MicaZ, TelosA, TelosB, TmoteSky) e RF230 (Iris) \cite{iris2006crossbow} são orientados a pacote, nesses rádios ao invés de marcarem os tempos em cada \textit{byte} transmitido, fazem apenas uma marcação para o pacote inteiro usando apenas uma única interrupção SFD.
+
+
+
+
+
+
+
 
 
 % Texto da tep 133:
