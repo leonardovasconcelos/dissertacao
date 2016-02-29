@@ -1,0 +1,18 @@
+\section{Técnica}
+
+\outline{Descrever o processo de cálculo do tempo de acesso ao meio, e onde foi baseado.}
+
+
+Em qualquer técnica de sincronização de relógios em sistemas distribuídos, os nós tem que dizer um ao outro o seu tempo local. A Figura \ref{fig:diagrama} ilustra esse cenário. O nó emissor armazena o seu tempo local ${t_1}'$ na mensagem de sincronização no tempo $t_1$ e ordena o envio da mensagem. Devido as incertezas aleatórias do acesso ao meio, o emissor só recebe o acesso ao meio no tempo $t_2$ e começa a enviar a mensagem. O \textit{tempo de acesso ao meio} é definido por $t_2 - t_1$. A mensagem propaga-se sobre o meio por um intervalo de tempo $tp$ até que atinge o rádio do receptor no tempo $t_3$. O \textit{tempo de propagação} é definido por $tp$. Devido as políticas de manipulação de interrupção e processamento do cabeçalho do pacote, o nó receptor marca o \textit{timestamp} do recebimento no tempo $t_4$ com o seu tempo local ${t_4}''$. O \textit{tempo de processamento} é dado por $t_4 - t_3$.
+
+
+
+\begin{figure}[htbp]
+	\centering
+		\includegraphics[width=\linewidth]{figuras/diagrama.eps}
+	\caption{Syncronization steps.}
+	\label{fig:diagrama}
+\end{figure}
+
+
+A imprecisão de sincronização acontece porque o nó de receptor pensa que no tempo $t_4$ o emissor tem o tempo ${t_1}'$ e o receptor tem o tempo ${t_4}''$. Como podemos ver na Figura \ref{fig:diagrama}, isso não é verdade. No tempo $t_4$, o nó emissor tem o tempo ${t_4}' = {t_1}' + \mbox{\textit{tempo de acesso ao meio}} + \mbox{\textit{tempo de propagação}} + \mbox{\textit{tempo processamento}}$. O \textit{timestamp} na camada MAC faz \textit{tempo de acesso ao meio} e \textit{tempo de processamento} igual a zero. Desde que o \textit{tempo de propagação} é desprezível ($\sim 1\mu{s}$) \cite{maroti2004}, algumas políticas de sincronização -- incluindo o FTSP -- podem atingir uma precisão muito boa. Contudo, sem o \textit{timestamp} na camada MAC, esses tempo não são negligenciáveis e tem que ser calculados. 

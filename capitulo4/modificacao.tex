@@ -1,0 +1,135 @@
+\section{Modificação}\label{sec:mod}
+
+\outline{
+   Pseudo código com explicação do passo-a-passo do algoritmo (no sender e no receiver).
+}
+
+
+O FTSP+ calcula o \textit{tempo de acesso ao meio} usando uma manipulação de interrupção para marcar o tempo do momento que o nó obtém o acesso ao meio para enviar a mensagem de sincronização. Embora o acesso ao meio é concedido no tempo ${t_2}'$, \textit{timestamp de acesso ao meio} é igual a ${t_2}'+\delta$, onde $\delta$ é o \textit{overhead} para processar a manipulação da interrupção.
+
+
+
+O emissor envia uma mensagem com o conteúdo ${t_2}'+\delta-{t_1}'$ então o receptor pode estimar ${t_4}'$. Vamos chamar esta estimativa de $\bar{{t_4}'}$. O receptor calcula $\bar{{t_4}'}$ as in Equação \eqref{eq:estimated_t4}.
+
+
+
+\begin{eqnarray}
+\bar{t4'} & = & t1' - (t2' + \delta - t1') \nonumber\\
+\label{eq:estimated_t4}
+\bar{t4'} & = & t1' + \mbox{\textit{tempo de acesso ao meio}} + \delta
+\end{eqnarray}
+
+
+
+A estimativa de erro é a diferença entre ${t_4}'$ e $\bar{t_4}'$, que é:
+\begin{equation}
+\label{eq:estimation_error}
+t4' - \bar{t4'} = \mbox{\textit{tempo de propagação}} + \mbox{\textit{tempo de processamento}} - \delta
+\end{equation}
+
+Desde de que o \textit{tempo de processamento} e o $\delta$ são latências do processamento da manipulação de interrupção. 
+Nós investigamos seus valores em nosso experimento no Capítulo \ref{cap:cap5}, eles tendem a anular-se mutuamente. Relembrando que o \textit{tempo de propagação} é negligenciável.
+
+
+
+
+\begin{figure}
+\begin{Verbatim}[numbers=left,numbersep=1pt,frame=single]
+event Radio.receiveSyncMsg(SyncMsg *msg){
+  if( msg->rootID < myRootID )
+      myRootID = msg->rootID;
+  else if( msg->rootID > myRootID
+    || msg->seqNum <= highestSeqNum )
+      return;
+  highestSeqNum = msg->seqNum;
+  if( myRootID < myID )
+      heartBeats = 0;
+  if( numEntries >= NUMENTRIES_LIMIT
+    && getError(msg) > TIME_ERROR_LIMIT )
+      clearRegressionTable();
+  else if (MAC_Time==false){
+      addToWaitCorrectionMsgList(msg);
+  }else{
+      addEntryAndEstimateDrift(msg); 
+  }  
+}
+
+event Radio.receiveCorrectionMsg(
+                            CorrectionMsg *msg){
+  applyCorrection(msg);
+  addEntryAndEstimateDrift(msg);
+}
+\end{Verbatim}
+ \caption{Algoritmo do receptor.}\vspace{1em}
+ \label{fig:receiver_ftspplus}
+\end{figure}
+
+Como podemos ver na Figura \ref{fig:receiver_ftspplus}, o receptor FTSP+ tem rotinas para manipular dois tipos diferentes de mensagens de recebimento: \texttt{Radio.receiveSyncMsg(SyncMsg *msg)} serve para as mensagens de sincronização e o \texttt{Radio.receiveCorrectionMsg(CorrectionMsg *msg)} é utilizado nas mensagens de correção. O \textit{tempo de correção}, expressado na Equação (\ref{eq:correction_time}), é a informação que é transmitida para o receptor aplicar como correção da mensagem anterior.
+
+
+
+\begin{equation}
+ \label{eq:correction_time}
+ \mbox{\textit{tempo de correção}} = t2' - t1' + \delta
+\end{equation}
+
+
+A rotina \texttt{Radio.receiveSyncMsg(SyncMsg *msg)} é diferente do receptor do FTSP somente nas linhas 13 e 14. Estas linha armazenam mensagens de sincronização em uma lista para aguardarem por suas respectivas mensagens de correção, caso MAC \textit{timestamp}  não esteja disponível.
+
+
+
+Já a rotina \texttt{Radio.receiveCorrectionMsg(CorrectionMsg *msg)} recebe a mensagem com o valor da correção, e usa a função \texttt{applyCorrection(msg)} para aplicar a correção e remover da lista de espera as mensagens de sincronização que correspondem com a mensagem de correção recebida, corrige o \textit{timestamp} e chama a função \texttt{addEntryAndEstimateDrift(msg)} que adiciona o valor já corrigido na tabela de regressão.
+
+
+
+
+
+
+A Figura \ref{fig:sender_ftspplus} apresenta a listagem do código da rotina do emissor do FTSP+, são duas funções \texttt{Timer.fired()} que periodicamente envia mensagens de sincronização (igual ao FTSP) e \texttt{sendDone(message\_t *msg, error\_t error)} que envia a mensagem de correção.
+
+
+
+O \texttt{Timer.fired()} difere do FTSP somente pelas linhas 10 e 11, que coleta o \textit{timestamp} no nível de aplicação. 
+
+A rotina \texttt{sendDone(message\_t *msg, error\_t error)} é a manipulação da interrupção de quando o acesso ao meio sem fio é garantido e assim coletar o tempo de acesso ao meio pelo cálculo do tempo que se passou entre o início do envio até ele ser concluído (\texttt{send/sendDone}). Ao final é enviado a mensagem de correção.
+
+
+
+As linhas 21-22 mostram como o tempo de correção é calculado. O \texttt{seqNum} é utilizado para identificar qual mensagem será ajustada, \texttt{finalTime} e \texttt{initialTime} referem-se ao tempos $t_2$ e $t_1$ da Equação (\ref{eq:correction_time}).
+
+
+
+\begin{figure}[H]
+\begin{Verbatim}[numbers=left,numbersep=1pt,frame=single]
+event Timer.fired() {
+  ++heartBeats;
+  if( myRootID != myID
+    && heartBeats >= ROOT_TIMEOUT )
+      myRootID = myID;
+  if( numEntries >= NUMENTRIES_LIMIT
+    || myRootID == myID ){
+      msg.rootID = myRootID;
+      msg.seqNum = highestSeqNum;
+      initialTime = call getLocalTime();
+      msg.timestamp = initialTime;
+      Radio.send(msg);
+  if( myRootID == myID )
+      ++highestSeqNum;
+  }
+}
+
+
+event sendDone(SyncMsg *msg, error_t error){
+ finalTime = call getLocalTime();
+ correctionMsg.correction = finalTime-initialTime;
+ correctionMsg.seqNum = msg.seqNum;
+ Radio.send(correctionMsg);
+}
+\end{Verbatim}
+ \caption{Algoritmo do emissor.}\vspace{1em}
+ \label{fig:sender_ftspplus}
+\end{figure}
+
+O próximo capítulo trata dos recursos de \textit{software} e os requisitos dos sistemas para a implementação do FTSP+ na plataforma TinyOS.
+
+ 

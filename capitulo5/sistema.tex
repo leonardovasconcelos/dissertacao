@@ -1,0 +1,43 @@
+\section{Sistema Operacional}
+
+\outline{
+\begin{itemize}
+ \item Gerencia de memória. Gerenciamento energético. Redes. Linguagem. Manipulação de interrupções. Programação baseada em eventos.
+\end{itemize}    
+}
+
+
+
+O desenvolvimento do FTSP+ foi realizado utilizando o sistema operacional TinyOS, que é um SO bem difundido na área de redes sensores sem fio \cite{levis2004tinyos}. O TinyOS não é um sistema operacional convencional, em que se instala completamente no sensor, ele se apresenta como um arcabouço de um conjunto de componentes reutilizáveis que permitem o desenvolvimento de aplicações para sistemas embarcados em conjunto com o SO. Esses componentes são separados por funções características, no momento de construir a aplicação somente os componentes especificados serão integrados na aplicação final, mantendo o uso minimal de recursos. 
+
+Com a limitação de recursos nos dispositivos sensores o TinyOS conta com pouco menos de 400 \textit{bytes} de tamanho, é um sistema baseado em eventos, com suporte a concorrência, eventos assíncronos e comandos. Um programa em TinyOS possui a abstração dos componentes em um modelo de grafo, como vemos na Figura \ref{fig:diagrama_componentes}.
+
+
+As aplicações e o próprio sistema operacional são escritos em nesC (\textit{networked systems C}) \cite{gay2003nesc} um dialeto da linguagem C, que dá o suporte a arquitetura de componentes e orientação a eventos, além de ser otimizada para reduzir o consumo de memória e ter primitivas que previnam problemas de baixo nível como condição de corrida. No desenvolvimento existe a separação da organização dos componentes e programação das interfaces, os componentes são conectados (\textit{wired}) juntos em um arquivo de aplicação, já o código dos eventos e tarefas são feitos em um arquivo de construção.
+
+
+%Como o TinyOS tem o código aberto, é possível alterá-lo e criar ou estender suas funcionalidades.
+
+Programas em nesC são construídos por itens definidos separadamente e então conectados de forma explicita para juntar todos em uma unidade \cite{levis2009tinyos}. A seguir definições importantes sobre essas características:
+
+\begin{itemize}
+ \item Componentes e interfaces: Um programa em nesC é um conjunto de componentes ligados entre si. O componente fornece interfaces que são responsáveis pela comunicação bidirecional entre os componentes, as interfaces fornecem comando e eventos.
+ 
+ \item Implementação: A implementação pode ser dividida em duas partes no nesC, uma chamada \textit{modules} e outra \textit{configuration}. Em \textit{modules} é implementado as interfaces, já em \textit{configuration} é usado para juntar os componentes conectando suas interfaces.
+ 
+ \item Modelo de concorrência: Define como os componentes interagem entre suas execuções. Temos dois tipos de tarefa, que são a tarefa (ou \textit{task}) propriamente dita e eventos de dispositivos. Quando uma tarefa é enviada para execução ela roda até completar, não fazendo preempção. Os eventos de dispositivos são como as tarefas, só que são geradas como respostas a eventos.
+\end{itemize}
+
+
+
+\begin{figure}[h]
+\center
+\subfigure[fig:arq_trad][Arquitetura Tradicional]{\includegraphics{./figuras/arquitetura_tradicional.eps}}
+\qquad
+\subfigure[fig:arq_tinyos][Arquitetura Tinyos]{\includegraphics{./figuras/arquitetura_tinyos.eps}}
+\caption{Comparação das arquiteturas}\label{fig:comp_arq}
+
+\end{figure}
+
+
+A arquitetura do TinyOS difere das arquiteturas clássicas, a Figura \ref{fig:comp_arq} ilustra a organização dos dois tipos. No cenário das RSSF sistemas operacionais tradicionais apresentam as seguintes restrições: grande necessidade de armazenamento e memória, maior consumo de energia, custo computacional das trocas de contexto e uso memória virtual entre outros. O TinyOS simplifica sua arquitetura para tornar-se mais específico para suas aplicações: não possui \textit{kernel}, a manipulação do \textit{hardware} é realizado diretamente, sem gerenciamento de processos tem apenas um processo de tempo real, não utiliza memória virtual, ao invés disso, tem um único espaço de endereço físico linear. A figura do escalonador representa uma grande mudança entre os paradigmas, o TinyOS coloca seu \textit{scheduler} no topo da arquitetura, assim uma aplicação é o resultado da junção de seus componentes com o escalonador. 

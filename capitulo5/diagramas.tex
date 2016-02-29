@@ -1,0 +1,94 @@
+\section{Diagramas e Componentes}\label{sec:dia}
+
+\outline{
+  O Tinyos tem o recurso de componentes para disponibilizar seus mais diversos recursos, descrever os componentes relevantes para o trabalho e os componentes resultantes das alterações.
+}
+
+O TinyOS foi desenvolvido seguindo um conjunto de diretrizes, chamado de TEP (TinyOS Enhancement Proposals) que orientam as modificações no núcleo do seu código, também é utilizado para guiar a criação de novas funcionalidades. Podemos citar as seguintes TEPs \cite{tinyos133, tinyos132, tinyos102} com definições importantes para a implementação do FTSP+:
+
+\begin{itemize}
+ \item TEP 102: Propõe a estrutura dos \texttt{Timers} (controladores do relógio) e suas propriedades de precisão, acurácia e tamanhos.
+ \item TEP 132: Descreve o mecanismo de \textit{timestamp} no nível de acesso ao meio. A funcionalidade que fornece o tempo de envio e recebimento de uma mensagem no processo de comunicação.
+ \item TEP 133: Descreve o funcionamento do mecanismo das mensagens de sincronização de tempo, como os tempos são convertidos do tempo do emissor para o do receptor e como são tratados nas pilhas de protocolos.
+\end{itemize}
+
+Os \textit{Timers} no TinyOS fornecem precisões listadas na Tabela \ref{tab:precision}, todas as precisões são binárias, ou seja, 1s contém 1024 milissegundos binários. A acurácia dependente de quão bem o dispositivo fornece de seu relógio, como vimos anteriormente os relógios são afetados pelas limitações de seu \textit{hardware}. Assim um relógio de um \textit{mote} que roda a 7.37MHz, tem valor real do relógio variando muito próximo desse valor. Os tamanhos são basicamente 8, 16, 32 e 64 \textit{bits}, sendo 32 \textit{bits} o tamanho indicado para representação dos tempos dos componentes.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lccc}
+Nome & TMilliC & T32kHz & TMicroC \\
+\hline
+Frequência & 1,024 Hz & 32,768 Hz & 0.9216 MHz \\
+\hline
+Precisão & 1024 ticks/s & 32768 ticks/s & 1048576 ticks/s \\
+\hline
+Periodo & 976 ms & 30.518 $\mu s$ & 1.084 $\mu s$
+\end{tabular}
+\caption{Precisões dos \textit{Timers} no TinyOS}
+\label{tab:precision}
+\end{table}%alemao
+
+
+O FTSP+ foi elaborado utilizando os \textit{motes} Iris e Micaz \cite{Iris2007, Micaz}, e construído sobre a implementação já existente do FTSP. A Figura \ref{fig:diagrama_componentes} apresenta os componentes utilizados pelo FTSP+, a alteração descrita na Seção \ref{sec:mod} estão presentes no componente central da imagem o \texttt{TimeSyncP}.
+
+
+
+\begin{figure}[h]
+ \centering
+ %\includegraphics[width=23cm, angle=90]{./figuras/time.png}
+ \includegraphics{./figuras/time.eps}
+ % tos.lib.ftsp.TimeSyncC.png: 1177x293 pixel, 72dpi, 41.52x10.34 cm, bb=0 0 1177 293
+ \caption{Diagrama de Componentes do FTSP+}
+ \label{fig:diagrama_componentes}
+\end{figure}
+
+O \texttt{TimeSyncP} faz parte a implementação original do FTSP, porém foi o único componente modificado. O FTSP usa uma mensagem de sincronização com informações como o ID do nó raiz da rede, o ID do nó que está enviando a mensagem de sincronização, um número de sequência da mensagem e o seu \textit{timestamp}. No FTSP+ é acrescentado mais uma mensagem na comunicação, que é a mensagem de correção. A estrutura da mensagem é listada a seguir:
+
+% \begin{figure}[h]
+%  \begin{Verbatim}[numbersep=1pt,frame=single]
+% typedef nx_struct TimeSyncMsg
+% {
+%  nx_uint16_t rootID;
+%  nx_uint16_t nodeID; 
+%  nx_uint8_t  seqNum;
+%  nx_uint32_t globalTime;
+%  nx_uint32_t localTime;
+% } TimeSyncMsg;
+% \end{Verbatim}
+% \caption{Formato da mensagem de sincronização}
+% \end{figure}
+
+\begin{figure}[h]
+ \begin{Verbatim}[numbersep=1pt,frame=single]
+typedef nx_struct TimeSyncMsg {
+ nx_uint16_t rootID;
+ nx_uint16_t nodeID;      
+ nx_uint8_t  seqNum;
+ nx_uint32_t correction; 
+} TimeSyncMsg;
+\end{Verbatim}
+\caption{Formato da mensagem de sincronização}
+\end{figure}
+
+
+O mensagem conta com o \texttt{rootID}, se a mensagem tem \textit{root} com ID maior que a informação do \textit{root} local ela é descartada. O \texttt{nodeID} contém o ID de quem enviou a mensagem. O \texttt{seqNum} serve para identificar qual o \textit{timestamp} a mensagem está corrigindo. O campo \texttt{correction} é o campo que traz a estimativa de erro do emissor e é com ele que será feita a correção dos \textit{timestamp} anteriormente recebidos.
+
+No documento da TEP 132 \cite{tinyos132}, é fornecido uma breve descrição sobre o padrão de \textit{timestamps} oferecidos pela interface \texttt{PacketTimeStamp} que faz o acesso ao tempo de recepção e envio de determinada mensagem.
+
+A TEP 133 fornece a abstração para o mecanismo de sincronização de pares. Não provê um sincronização completa da redes, mas, com seus recursos é possível implementar um serviço de sincronização completo, exemplo o FTSP, pois os componentes e interfaces utilizados em sua implementação estão bem definidos em seu documento \cite{tinyos133}. 
+
+Outro aspecto importante da TEP 133 é o seu guia de implementação, que compreende duas abordagens, uma em que é possível mudar o \textit{payload} da mensagem durante a transmissão usando a interrupção SFD dos rádios orientados a pacote. A segunda abordagem descreve a possibilidade da sincronização para plataformas em que não seja possível a alteração do conteúdo durante a transmissão. Podemos verificar que o FTSP atende a primeira abordagem, já a segunda não é atendida, porém com o FTSP+ ambas as abordagens são acolhidas.
+
+
+\begin{figure}[h]
+ \centering
+ \includegraphics{./figuras/arq_prot_sync.eps}
+ % arq_prot_sync.eps: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+ \caption{Arquitetura de \textit{Software} do protocolo de sincronização}
+ \label{fig:arq_prot_sync}
+\end{figure}
+
+Ao final temos a seguinte arquitetura de sincronização resultante do FTSP+ no TinyOS, Figura \ref{fig:arq_prot_sync}. O oscilador de cristal incrementa o contador do relógio físico, que por sua vez alimenta o relógio lógico, o FTSP+ usa o relógio lógico (Componente \texttt{Timer}) para obter o valor do tempo local do nó, assim pode calcular seu desvio, estimar o tempo global e atualizar novamente o relógio, bem como, enviar e receber essas referências de tempo pelo transmissor de rádio. As setas da imagem denotam troca de dados entre os componentes, a seta tracejada refere-se ao mecanismo do FTSP de MAC \textit{timestamp}. 
+
+O próximo capítulo traz experimento realizado com \textit{motes} reais, e gráficos estatísticos dos resultados encontrados, os experimentos foram baseados nas técnicas descritas no trabalho. 
