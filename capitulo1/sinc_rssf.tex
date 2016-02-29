@@ -1,0 +1,245 @@
+\section{Sincronização em Redes Sensores Sem Fio}
+
+\outline{
+    Razões e desafios.
+    NTP e GPS, Necessidade de algoritmos de sincronização especificos para RSSF.
+\begin{itemize}
+ \item Intro sobre redes sensores sem fio.
+ \item Necessidade da Sincronização em sistemas distribuídos.
+ \item Problemas inerentes a sincronização, fontes de atraso e imprecisão em RSSF
+\end{itemize}
+}
+
+Em sistemas distribuídos como as redes de sensores sem fio, cada nó tem seu próprio relógio e sua própria percepção de tempo. No entanto, uma escala de tempo comum entre nós sensores é importante para identificar relações entre eventos que estejam sendo monitorados, para apoiar a eliminação de dados redundantes de sensores e para facilitar a operação da rede. Uma vez que cada nó em uma rede de sensores opera de forma independente e conta com o seu próprio relógio, as leituras do relógio de diferentes nós de sensores também será divergente. Além destas diferenças aleatórias, a diferença entre os relógios de um conjunto de sensores vai aumentar ainda mais devido às taxas de escorregamento dos seus osciladores. Portanto, a sincronização dos relógios é necessário para assegurar que os tempos de detecção dos eventos que estejam sendo monitorados possam ser comparados e conseguinte significância. 
+
+Neste contexto, as técnicas de sincronização de tempo para redes com fios receberam uma quantidade significativa de atenção, esses métodos não são apropriados para uso em RSSF sem modificação, devido aos desafios colocados pelos ambientes sensores sem fio. Estes desafios incluem o tamanho das redes de sensores, a necessidade de auto-configuração e robustez, a mobilidade dos sensores além da necessidade primordial de conservação de energia \cite{Elson2001}.
+
+Nas RSSF a eficiência energética é uma necessidade básica para seu funcionamento, em uma rede de larga escala não é possível fornecer uma fonte de energia para toda a rede, esses sensores geralmente são acoplados a uma bateria. Devido ao tamanho dos dispositivos a quantidade de energia que eles podem produzir ou armazenar é muito limitada \cite{sundararaman2005}.
+
+Sincronização de tempo é um serviço necessário para muitas aplicações e serviços em sistemas distribuídos em geral. Numerosos protocolos de sincronização de tempo têm sido propostos para ambos os sistemas com e sem fio, por exemplo, o Network Time Protocol (NTP) \cite{mills1991} é uma abordagem de sincronização escalável, robusto e auto-configurável amplamente utilizado. Especialmente em combinação com o Sistema de Posicionamento Global (GPS), tem sido utilizado para alcançar a precisão da ordem de alguns microssegundos. No entanto, abordagens como NTP não são adequados para RSSFs devido a ser ineficiente neste contexto pois necessita de maior quantidade de memória. Já o uso de GPS pode elevar o custo de implantação de um sistema de monitoramento, além de requerer vários minutos para sintonizar, GPS também necessita de um uso maior de energia.
+
+%\section{Básico de Sincronização de Tempo}
+\subsection{Conceitos Básicos}\label{subsec:conceitos}
+
+\outline{
+     Terminologias.
+     Efeitos do Ambiente.
+     Restrição energética.
+     Mobilidade e acesso ao meio sem fio.
+     Capacidade dos dispositivos.
+}
+
+%A sincronização é normalmente baseada em algum tipo de troca de mensagens entre os nós sensores.
+
+Os relógios dos \textit{motes} nas RSSF são baseados em osciladores de quartzo, o tempo é mensurado nas oscilações do cristal em conjunto a um contador, este contador tem seu valor decrementado até atingir zero, então ele reinicia novamente para seu valor padrão e o processo continua indeterminadamente, toda vez que o contador chega a zero é gerado uma interrupção e essa interrupção é chamada de \textit{tick} ou \textit{clock tick}, ela incrementa outro contador o do relógio a nível de \textit{software} que é de onde vem tempo que utilizamos no sistema operacional. Com isso, esse relógio de \textit{software} fornece para o \textit{mote} um valor de tempo local (\textit{local time}).
+
+Supondo a existência de dois nós, cada um com o seu próprio relógio $R_{a}$ e $R_{b}$, onde $R(t)$ simboliza o valor do relógio no tempo $t$, sendo $t$ o tempo de referência. Se verificarmos $R_{a}(t)$ e $R_{b}(t)$ podemos encontrar uma diferença entre os tempos, essa diferença é chamada de \textit{clock offset}. Para corrigir esta diferença é necessário realizar uma sincronização para que os tempos sejam iguais ou que a diferença seja tão pequena quanto possível. Podemos definir o \textit{clock rate} como a frequência que um relógio progride, assim a frequência do tempo $t$ de um relógio $R_{a}$ é $R^{'}_{a}(t)$, ainda temos o \textit{clock skew} que é a diferença em termo de frequência entre dois relógios \cite{sundararaman2005}. 
+
+\begin{figure}[!h]
+ \centering
+ \includegraphics{./figuras/figura_drift.eps}
+ % figura_drift.png: 382x361 pixel, 96dpi, 10.11x9.55 cm, bb=0 0 286 271
+ \caption{Comportamento do relógio em relação ao tempo de referência}
+ \label{fig:drift}
+\end{figure}
+
+
+Em um mundo perfeito $R_{p}(t) = t$ para qualquer instante de tempo $t$, o relógio perfeito deve ter a variação pelo tempo de referência iguais, como visto na Equação (\ref{eq:perf_clock}), onde os tempos não variam entre si. Vários fatores influenciam o \textit{clock rate}, como por exemplo, temperatura e efeitos do ambiente, energia, limitação do hardware, impureza do cristal entre outros. Esta imprecisão do \textit{clock} faz com que a taxa de alteração dos relógios os afaste do valor de referência, $dR/dt > 1$ resulta em um relógio rápido, já $dR/dt < 1$ apresenta um relógio lento, a Figura \ref{fig:drift} ilustra esse efeito. Note que este comportamento é responsável pela instabilidade das leituras de tempo nos sensores, fazendo com que seja necessário realizar uma sincronização para corrigi-lo. Mesmo após a sincronização o relógio continuará se desviando, trazendo a necessidade realização de sincronizações periódicas.
+
+
+
+\begin{equation}\label{eq:perf_clock}
+ \frac{dR}{dt} = 1
+\end{equation}
+
+
+A sincronização deve ocorrer de forma cíclica, pois os relógios sempre vão afastar-se dos valores de referência, mas o ajuste do tempo local deve ser realizado de forma gradativa e suave, ou seja, deve-se utilizar uma função para suavizar o declive do tempo local ao invés de uma atribuição direta que poderia voltar ou adiantar várias unidades de tempo. Um dos problemas de efetuar uma mudança corrigindo o valor do tempo diretamente seria o relógio pulando para frente e para trás, ocasionando problemas como por exemplo, uma tarefa agendada poderia nunca ocorrer devido o tempo de sua execução nunca ter existido por causa do salto dos \textit{ticks}, ou ainda o mesmo tempo poder ocorrer duas vezes em virtude de um salto para trás no relógio.
+
+Podemos utilizar duas formas para classificarmos os tipos de sincronização: externo e interno. No método externo os relógios de todos os nós são sincronizados utilizando uma referência de tempo (\textit{clock reference}) externa a rede, geralmente uma fonte de tempo UTC (\textit{Coordinated Universal Time}), ou seja, o tempo do mundo real baseado em um relógio atômico. Por outro lado, na sincronização interna todos os nós são sincronizados sem a ajuda de uma referencia de tempo externa, o objetivo é minimizar a diferença entre os relógios locais dos sensores tendo assim uma noção consistente do tempo entre todos os nós da rede \cite{kopetz2011real}.
+
+Um conjunto de fatores podem influenciar o funcionamento dos sistemas de sensores sem fio, ocasionando alterações no seu desempenho. Os principais componentes que devem ser observados são listados abaixo:
+
+\textbf{Efeitos Ambientais:} Pressão, temperatura, umidade são algumas das condições de ambiente que alteram o funcionamento normal dos osciladores. Muitas RSSF são criadas para implantação \textit{outdoor}, nestes cenários as condições são bem diferentes das apresentadas em um ambiente estável como um laboratório \cite{karl2007protocols}. Fenômenos climáticos como chuva, neblina e vento também tem influência na performance de sistemas de RSSF, podendo até mesmo impossibilitar seu funcionamento \cite{otero2001high}.
+%\cite{mills1998}
+
+\textbf{Limitações Energéticas:} Economizar energia é o maior interesse em RSSF, o tamanho pequeno dos nós sensores limita o tamanho de sua bateria, bem como a quantidade de energia que ele pode produzir usando placa solar \cite{elson2003romer}. A transmissão de mensagens é a base dos algoritmos de sincronização, a energia utilizada para a transmissão de 1Kb a uma distância de 100 metros é aproximadamente de 3 joules, o mesmo necessário para o processador executar 3 milhões de instruções \cite{pottie2000}. Transmitir é mais custoso energeticamente do que computar, assim os algoritmos de sincronização devem minimizar a necessidade de troca de mensagens para serem mais eficientes energeticamente.
+
+
+\textbf{Wireless e Mobilidade:} A comunicação sem fio apresenta grandes desafios nas redes de sensores, como vimos, é gasto mais energia transmitindo dados do que processando, fenômenos climáticos como chuva, neblina degradam a performance da rede. A característica de transmissão de dados por difusão nas RSSF requer a utilização de um protocolo MAC (Media Access Control) para ordenar o acesso ao meio, dependendo da densidade da rede, faixa de alcance dos nós (entre 20-100 metros) e o tráfego dos dispositivos podem incorrer em interferências na comunicação que levam a perdas de mensagens e conexão intermitente. Grande quantidade de redes sensores são móveis, os nós podem se mover, podem ocorrer falhas na comunicação, a bateria pode esgotar e o nó ficar inativo, causando constantes mudanças na topologia das redes. Por consequência destes problemas os protocolos de sincronização devem ser projetados para respeitar todas essas propriedades.
+
+\begin{figure}[h]
+ \centering
+ \includegraphics{./figuras/esquema_sensor.eps}
+ % esquema_sensor.png: 662x178 pixel, 96dpi, 17.51x4.71 cm, bb=0 0 496 133
+ \caption{Componentes de um mote para RSSF \cite{hill2004platforms} }
+ \label{fig:esquema_sensor}
+\end{figure}
+
+\textbf{Limitação de \textit{Hardware}:} O tamanho e o preço dos sensores são algumas das razões pelas quais seu \textit{hardware} ser bastante limitado, aumentar o tamanho poderia elevar seu custo e consumo de energia, podendo tornar inviável as aplicações de redes sensores em larga escala \cite{kahn1999}. A capacidade computacional destes dispositivos é similar aos computadores pessoais do início da década de 80, a Figura \ref{fig:esquema_sensor} ilustra os componentes típicos de um nó sensor, transmissor fraco sujeito a perdas, memória limitada, processador de baixa capacidade aliado a fonte de energia restrita. Os algoritmos para RSSF devem respeitar esse conjunto de desafios e limitações com o objetivo de minimizar o uso dos recursos e manter seus resultados funcionais.
+
+
+\begin{figure}[h]
+ \centering
+ \includegraphics{./figuras/overhead.eps}
+ % overhead.png: 125x155 pixel, 96dpi, 3.31x4.10 cm, bb=0 0 94 116
+ \caption{Tradeoff custo-beneficio \cite{holtkamp2013}}
+ \label{fig:overhead}
+\end{figure}
+
+
+Os avanços recentes nos sistemas integrados nos permitem desenvolver dispositivos sensores com baixos recursos de energia, rádio e processamento. Considerando que uma rede de sensores consista de um bom número de sensores, o valor de um só nó afeta a implantação da rede toda. Existe uma tendência defendida por pesquisadores de que com a grande quantidade de sensores aplicados hoje em dia, a produção em larga escala faça com que seu valor possa chegar a ser menor que \$1 dólar \cite{cuevas2007, wang2007topology} por unidade. 
+
+De maneira geral, os \textit{motes} são fabricados com materiais de baixo custo e as vezes de menor qualidade, como por exemplo, um cristal de quartzo de baixa qualidade pode ser um dos fatores que tornam o relógios mais imprecisos. A Figura \ref{fig:overhead} apresenta o \textit{tradeoff} entre o  preço e a qualidade. Observe que o preço de produção do dispositivo determina a precisão do seu relógio, assim, quanto menos preciso o relógio é maior compensação será necessária para corrigir seu tempo, a compensação gera maior \textit{overhead} de comunicação que é gasto no uso de comunicação/energia.
+
+
+
+\subsection{Fontes de Imprecisão em Comunicação}\label{subsec:fontes_imp}
+
+\outline{
+    Send delay:
+    Access delay:
+    Propagation delay:
+    Receive delay:
+}
+
+
+A troca de mensagem baseada em \textit{timestamp} (marca de tempo) é a principal ferramenta dos protocolos de sincronização, porém o não determinismo causado pelas latências no processo de troca de mensagens interfere na precisão que pode ser obtida utilizando este método. Por exemplo, quando um nó envia uma mensagem com seu \textit{timestamp} para outro, os diversos procedimentos pelo qual essa informação vai percorrer até o destino apresentam um custo de computação e tempo para ser realizada, assim quando se dá a recepção do dado no destino já se passou uma quantidade determinada tempo, o relógio do nó origem continuou rodando e o \textit{timestamp} enviado está inconsistente com o valor atual da fonte. A latência deste procedimento pode ser decomposta em alguns componentes, descritos por Kopetz e Ochsenreiter \cite{kopetz1987} e classificados a seguir:
+
+\begin{itemize}
+ 
+ \item Tempo no envio: É o tempo que o sistema leva para montar a mensagem e passar a requisição de transmissão para a camada de acesso ao meio. Fonte de atraso causado principalmente pelo sistema operacional e da carga de uso do CPU.
+ 
+ \item Tempo de acesso ao meio: Ocorre devido a janela de contenção do acesso ao meio, é o tempo que o nó leva para ter acesso físico para transmissão esperando o canal estar desocupado para então para usá-lo. Redes sem fio compartilham o mesmo meio de comunicação necessitando de uma forma de coordenar quem pode usar o canal e assim evitar colisões. O protocolo MAC do 802.11 serve como base para as variações utilizadas em RSSF, estes buscam atingir maior eficiência no consumo de energia, algumas opções destes protocolos são: BMAC (\textit{Versatile low power media access}) \cite{bmac}, S-MAC  (\textit{Sensor-MAC}) \cite{smac}, Box-MAC \cite{boxmac}, PAMAS (\textit{Power-Aware Multi-Access Protocol}) \cite{pamas} e para uma especificação mais detalhada e atualizada desses protocolos podem ser obtidas em \cite{suriyachai2012survey, huang2013evolution}.
+ 
+ 
+ \item Tempo de transmissão: Tempo que leva para um nó transmitir uma mensagem para outro nó, varia dependendo do tamanho do pacote e da velocidade da banda.
+ 
+ \item Tempo de propagação: Tempo que a mensagem leva para chegar no receptor desde o momento que deixou o emissor. Este tempo é muito pequeno e geralmente insignificante para a análise geral do atraso.
+ 
+ \item Tempo de recebimento: É o tempo que o receptor leva para receber a mensagem, sendo igual ao da transmissão.
+ 
+ \item Tempo de recepção: Similar ao tempo de envio, é o \textit{delay} de receber a mensagem e encaminha-la para o nível da aplicação.
+
+\end{itemize}
+ 
+\begin{figure}[h]
+ \centering
+ \includegraphics{./figuras/decomposicao_delay.eps}
+ % decomposicao_delay.png: 461x99 pixel, 96dpi, 12.20x2.62 cm, bb=0 0 346 74
+ \caption{Decomposição das fontes de atraso na transmissão de uma mensagem}
+ \label{fig:dec_delay}
+\end{figure}
+
+A Figura \ref{fig:dec_delay} ilustra as tomadas de tempo que compõem as fontes de atraso na troca de mensagem. As principais técnicas de sincronização concentram-se em eliminar esses \textit{delays} ou ainda computar seus respectivos atrasos para usá-los mais a frente na forma de compensação. Parte desses trabalhos expandiram ainda mais a compreensão dos componentes de atraso \cite{maroti2004, horauer2002, ganeriwal2003}. Tais componentes estão listados abaixo:
+
+
+\begin{itemize}
+ \item Tempo de tratamento de interrupções: O tempo que o microcontrolador demora para responder a solicitação do \textit{chip} de rádio.
+ 
+ \item Codificação e Decodificação: Codificação é o tempo que o transmissor tira para codificar os \textit{bits} nas ondas de rádio. E decodificação o tempo que o receptor demora até transformar as ondas eletromagnéticas em \textit{bits}. 
+ 
+ \item Alinhamento de Byte: Diferentes tipos de alinhamento entre o transmissor e receptor, causam a necessidade de reordenar os bytes. Alguns \textit{chips} de rádio não são capazes de resolver o alinhamento de um fluxo de mensagem, o receptor deverá resolver o \textit{offset} da mensagem.
+\end{itemize}
+
+
+
+\begin{table}[htb!]
+ \centering
+ \begin{tabular}{c|c|c}	
+ 	\multirow{2}{*}{\textbf{Tempo}}	& \multirow{2}{*}{\textbf{Magnitude}}	& \multirow{2}{*}{\textbf{Distibuição}} \\
+		&&\\
+		\hline
+      \multirow{2}{*}{ $\mathbf{Enviar~e~Receber}$ } 			&  \multirow{2}{*}{$0 - 100~ms$}	& Não determinístico,	\\
+		&& depende da carga do CPU \\
+		\hline
+      \multirow{2}{*}{$\mathbf{Acesso~ao~Meio}$}  			&  \multirow{2}{*}{$10~ms - 500~ms$}	& Não determinístico,	\\
+		&& depende da contenção do canal \\
+		\hline
+      $\mathbf{Transmissão~e}$ 			& \multirow{2}{*}{$10~ms - 20~ms$}	& Determinístico, depende	\\
+		$\mathbf{Recepção}$&& do tamanho da mensagem \\
+		\hline
+      \multirow{2}{*}{$\mathbf{Propagação}$} 				& $< 1\mu s$ para 			& Determinístico,	\\
+		& distâncias acima de 300m & depende da distância\\
+		\hline
+      \multirow{2}{*}{$\mathbf{Tratar~Interrupção}$} 			& $< 5\mu s$ na maioria dos casos, 	& Não determinístico,	\\
+		&mas pode chegar a $30~\mu s$& depende das interrupções\\ 
+		\hline
+      $\mathbf{Codificar}$ 		& $100~\mu s - 200\mu s$,		& Determinístico,	\\
+		$\mathbf{Decodificar}$&$< 2\mu s$ de variância& depende o chip de rádio \\
+		\hline
+      $\mathbf{Alinhamento~de}$ 			& \multirow{2}{*}{$0 - 400\mu s$} 	& Determinístico,	\\
+		$\mathbf{Bytes}$&& pode ser calculado
+      
+ \end{tabular}
+ \caption{Fontes de atraso na transmissão de mensagens \cite{maroti2004}}
+ \label{tab:decomp}
+\end{table}
+
+Alguns dos componentes de atraso são de origem não determinístico, outros podem ser calculados e estimados, a Tabela \ref{tab:decomp} sintetiza o tamanho e classificação dos componentes já comentados. Note que nem todos os transmissores são afetados por todas essas fontes de erro. %lembrar de onde tirei isso?
+
+
+
+
+
+
+\subsection{Mensagens de Sincronização}\label{subsec:msg_sinc}
+\outline{
+    \textit{Pairwise synchronization, Uniderecional One-Way Message Exchange, Two-Way Message Exchange, Receiver-Receiver Synchronization}
+}
+
+Os protocolos de sincronização são essencialmente construídos a partir de troca de mensagens entre os nós participantes da rede. O modelo mais simples de sincronização utiliza pelo menos uma mensagem, chamado de \textit{pairwise synchronization} nele dois nós podem sincronizar apenas trocando uma mensagem, sendo que para sincronizar uma rede inteira repete-se a operação entre parelhos até que todos os pares estarem sincronizados, quando esse processo é concluído, têm-se o modelo \textit{network-wide synchronization}. A seguir detalha-se os métodos de sincronização.
+
+\begin{figure}[h]
+ \centering
+ \includegraphics{./figuras/pairwise_sync1.eps}
+ % pairwise_sync1.eps: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+ \caption{Unidirecional \textit{pairwise synchronization}}
+ \label{fig:pairwise1}
+\end{figure}
+
+A sincronização unidirecional ou \textit{one-way} é a forma mais elementar de sincronização \textit{pairwise}, esse procedimento é ilustrado na Figura \ref{fig:pairwise1}. Observe que o nó $i$ no tempo $t_1$ envia seu \textit{timestamp} para $j$, quando o nó $j$ recebe a mensagem seu relógio local está marcando o tempo $t_2$, assim o valor de $t_2$ pode ser calculado como na Equação (\ref{eq:tempo_t2}):
+
+\begin{equation} \label{eq:tempo_t2}
+  t_2 = t_1 + tp + \theta
+\end{equation}
+
+\begin{equation}\label{eq:tempo_teta}
+ t_j - t_i = \theta + tp 
+\end{equation}
+
+Onde $tp$ é o tempo de propagação, este tempo é muito pequeno podendo ser ignorado. O \textit{delay} de propagação para uma distância de 30 m é 10$^{-7}$s \cite{karl2007protocols}. O $\theta$ é a diferença entre os tempos de $i$ e $j$, ele indica o \textit{offset} dos relógios. Com essas informações o nó $j$ pode calcular o \textit{offset} e ajustar seu relógio com base no tempo de $i$, de acordo com a Equação (\ref{eq:tempo_teta}).
+
+
+
+\begin{figure}[h]
+ \centering
+ \includegraphics{./figuras/pairwise_sync2.eps}
+ % pairwise_sync2.eps: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+ \caption{Bidirecional \textit{pairwise synchronization}}
+ \label{fig:pairwise2}
+\end{figure}
+
+A sincronização bidirecional, \textit{two-way} ou ainda denominada emissor-receptor (\textit{sender-receiver}) usa duas mensagens de sincronização. A Figura \ref{fig:pairwise2} apresenta o comportamento desta técnica. Note que primeiro o nó $i$ envia seu tempo $t_1$ para $j$, este recebe a mensagem no tempo $t_2$ e registra seu tempo local. Assim, o tempo $t_2$ já pode ser calculado como na Equação (\ref{eq:tempo_t2}). No próximo passo o nó $j$ no tempo $t_3$ envia uma mensagem para $i$ com os \textit{timestamps} $t_2$ e $t_3$, então no instante $t_4$ tanto o nó $i$ como o $j$ são capazes de calcular o \textit{offset} entre ambos, porém o nó $i$ é capaz de determinar mais precisamente tanto o \textit{offset} quanto o tempo de propagação, como segue:
+
+\begin{equation}\label{eq:two_way_tp}
+ tp = \frac{[(t_2 - t_1) + (t_4 - t_3)]}{2}
+\end{equation}
+
+\begin{equation}\label{eq:two_way_theta}
+ \theta = \frac{[(t_2 - t_1) - (t_4 - t_3)]}{2}
+\end{equation}
+
+O nó $i$ com uma informação mais acurada, pode enviar uma nova mensagem para $j$ com o valor do $\theta$. A sincronização bidirecional tem a vantagem de moderar as incertezas na pilha de protocolos e no atraso de propagação usando troca de mensagens e a desvantagem de necessitar de um número adicional de troca de tráfego.
+
+
+\begin{figure}[h]
+ \centering
+ \includegraphics{./figuras/pairwise_receiver_receiver.eps}
+ % pairwise_receiver_receiver.eps: 0x0 pixel, 300dpi, 0.00x0.00 cm, bb=
+ \caption{Sincronização \textit{Receiver-receiver}}
+ \label{fig:pairwise_recrec}
+\end{figure}
+
+A sincronização receptor-receptor ou \textit{receiver-receiver} utiliza das características inerentes ao \textit{broadcast} na comunicação sem fio, onde a difusão de uma mensagem tem o mesmo tempo de recepção em cada um dos receptores, seu tempo de chegada varia muito pouco sendo sensível apenas aos atrasos de propagação e recebimento. 
+
+No cenário descrito na Figura \ref{fig:pairwise_recrec}, têm-se um nó que envia \textit{beacons} (não necessariamente contendo um \textit{timestamp}) periodicamente, todos nós que recebem a mensagem registram o tempo de recebimento com o seu relógio local. Então, os \textit{receivers} ($j$ e $k$) trocam entre si a informação registrada, o que os permite calcularem a diferença entre o tempo de chegada dos \textit{beacons}, ou seja, o \textit{offset}. Esse tratamento pode remover duas das maiores fontes de atraso na comunicação sem fios: o atraso de envio e o tempo de acesso ao meio \cite{cho2011}. 
