@@ -21,28 +21,13 @@ A sincronização multi-saltos do FTSP usa pontos de referência. Esses pontos são 
  \item \texttt{seqNum}: É um número que é incrementado toda vez que o \textit{root} inicia uma nova rodada de sincronização. O \texttt{seqNum} é utilizado para que os nós sincronizados possam sabem quando uma mensagem é nova, assim conseguem diminuir a redundância de informação.
 \end{itemize}
 
-\textbf{Informação redundante:}
+\textbf{Informação redundante:} Em uma rede com alta densidade de dispositivos, os nós recebem várias mensagens de outros nós ao seu alcance. Algumas delas com uma referência já lida, recebida de outro nó. Com o intuito de filtrar mensagens desnecessárias os nós mantém o valor do \texttt{highestSeqNum}, só utilizando mensagens com número de sequência (\texttt{seqNum}) maior do que o valor armazenado em \texttt{highestSeqNum}.
 
-\textbf{Problema da eleição do nó \textit{root}}: 
+\textbf{Problema da eleição do nó \textit{root}}: Durante o funcionamento de uma redes de sensores, alguns nós podem falhar, novos nós podem ser inseridos ou saírem do alcance da rede. Como é necessário apenas um \textit{root} para o funcionamento da rede, um processo de eleição deve ser realizado sempre houver uma mudança que venha a afetar o nó raiz. O processo de eleição do FTSP é baseado no menor ID, quando o nó tem o menor ID ele se auto declara \textit{root} e passa a sincronizar os outros nós, mas não antes de sincronizar-se com o tempo global da rede primeiro.
 
 
 
-%This section briefly describes the Flooding Time Synchronization Protocol (FTSP). For more detailed information, refer to \cite{maroti2004}.
 
-% FTSP is a synchronization protocol for WSN that provides high accuracy, consumes few resources, uses little bandwidth and is fault-tolerant. It elects a node as root to provide the time reference for synchronization; if root failure is detected (using timeouts), another root is elected.
-% Root and synchronized nodes send synchronization messages periodically, and receiving nodes use these messages to synchronize.
-% Therefore, FTSP supports multi-hop networks.
-% 
-% Synchronization messages comprise a \textit{sender timestamp} which is the estimated global time and \textit{rootID} which is the network identifier of the root (where the node with the lowest ID is the chosen root).
-% \textit{seqNum} is a sequence counter that is incremented each synchronization round; this field is used to verify the redundancy of messages \cite{maroti2004}.
-% 
-% All nodes think they are root when the network starts, so they broadcast synchronization messages to the network. 
-% When they receive a synchronization message, they check who has the lowest ID: if the local ID is higher, this node gives up on being root and starts synchronizing.
-% Another important check is the \textit{seqNum}.
-% If it is greater than the local value \textit{highestSeqNum}, it means that this is a new synchronization message and starts the synchronization procedure.
-% 
-% The synchronization procedure consists of computing a linear regression \cite{elson2003} that will provide the clock skew (used to estimate the global time) in relation to the reference node.
-% The last step is to forward its local (synchronized) time to other nodes. 
 
 
 %%A mensagem de sincronização compreende um \textit{timestamp} do emissor, que é estimativa de tempo global e \texttt{rootID} que é 
@@ -83,15 +68,7 @@ No caso de \texttt{rootID} ser maior que o verificado se o \texttt{seqNum} é mai
 Linhas 10 e 15 verificam se o tempo da mensagem está em discordância com a estimativa de tempo global mais recente, se é aplicável limpa a tabela de regressão, se não, acumula a mensagem para calcular a regressão linear e sincronizar.
 As linhas 10 a 15 armazenam mensagens de sincronização para calcular a regressão linear e realizar a sincronização.
 
-% Figure \ref{figure1} shows the routine of receiving synchronization messages.
-% Lines 2 and 3 compare the \textit{rootID} of the synchronization message with the local \textit{rootID}.
-% If the message has a lower \textit{rootID}, the node assumes this \textit{rootID} as root.
-% Lines 4 to 7 ignore messages with higher  \textit{rootID} and lower \textit{seqNum}.
-% If \textit{seqNum} is higher, local \textit{highestSeqNum} is updated.
-% Lines 8 and 9 makes a root node give up on being root when it has a \textit{rootID} lower than its own ID.
-% In case the \textit{rootID} is larger it is checked whether the \textit{seqNum} is greater or equal to the value of \textit{highestSeqNum}, this check prevents information redundancy because the message will only be used when the \textit{rootID} is less than or equal to \textit{myRootID} and the number greater than the value of \textit{highestSeqNum}.
-% Lines 10 to 15 verify if the time of a message is in disagreement with the earlier estimates of global time, if applicable clear the regression table, if not, accumulate synchronization messages to calculate the linear regression and synchronize.
-%Lines 10 to 15 accumulate synchronization messages to calculate the linear regression and synchronize.
+
 
 
 
@@ -116,52 +93,42 @@ event Timer.fired() {
   \label{figure2}
 \end{figure}
 
-\newpage 
-
-%
-% REMOVER NEW PAGE    // _____
-% REMOVER NEW PAGE    \\ 
-%
 
 A Figura \ref{figure2} mostra a rotina de envio de mensagem. 
 Um nó decide tornar-se \textit{root} por que está sem receber mensagens de sincronização por \texttt{ROOT\_TIMEOUT} (linhas 3 a 5).
 Um nó envia mensagens de sincronização se ele é o \textit{root} ou se está sincronizado (linhas 6 a 10).
 Se um nó é o \textit{root}, ele também tem que incrementar seu \textit{highestSeqNum}.
-% Figure \ref{figure2} shows the sending routine.
-% A node decides to be root because has not received a synchronization message for ROOT\_TIMEOUT (lines 3 to 5).
-% A node sends synchronization messages if it is root or has synchronized (lines 6 to 10).
-% If a node is root, it also has to increment its \textit{highestSeqNum}. 
 
 
 
 
 
-\begin{figure}[H]
-\center
-
-\subfigure[fig:grafo1][Em um primeiro momento, todos os nós iniciam. As linhas pontilhadas denotam o alcance de transmissão do nó. O
-nó (1) permanece desligado.]
-        {\includegraphics[width=6cm]{./figuras/ftsp_grafo1.eps}}
-~
-\subfigure[fig:grafo2][Múltiplos \textit{roots} na rede.]
-        {\includegraphics[width=6cm]{./figuras/ftsp_grafo2.eps}}
-~
-\subfigure[fig:grafo3][Nós começam a receber mensagens com \texttt{rootID} menor, logo atualizam sua referência.]
-        {\includegraphics[width=6cm]{./figuras/ftsp_grafo3.eps}}
-\quad
-\subfigure[fig:grafo4][A rede convergiu, e todos os nós ativos da rede estão sincronizados com o nó 2. Mensagens entre os nós 5-6 tem \texttt{seqNum} menor que \texttt{highestSeqNum} então são descartadas por redundância.]
-        {\includegraphics[width=6cm]{./figuras/ftsp_grafo4.eps}}
-\quad
-\subfigure[fig:grafo5][Nó 1 é ativado, sendo o menor ID da rede vai tornar-se o \textit{root}, porém precisa primeiro preencher sua tabela de regressão e sincronizar com o tempo global, após estar sincronizado inicia o envio de mensagens de sincronização]
-        {\includegraphics[width=6cm]{./figuras/ftsp_grafo5.eps}}
-\quad
-\subfigure[fig:grafo6][Nó 1 declara-se \textit{root}, passa a enviar suas mensagens de sincronização, após algumas rodadas a rede converge e todos os nós estão com \texttt{myRootID} = 1.]
-        {\includegraphics[width=6cm]{./figuras/ftsp_grafo6.eps}}
-% \qquad
-% \subfigure[fig:grafo_leg][Legenda]{\includegraphics[width=2cm]{./figuras/ftsp_grafo_legenda.eps}}
-\caption{Eleição de lider}\label{fig:lider}
-
-\end{figure}
+% \begin{figure}[H]
+% \center
+% 
+% \subfigure[fig:grafo1][Em um primeiro momento, todos os nós iniciam. As linhas pontilhadas denotam o alcance de transmissão do nó. O
+% nó 1 encontra-se desligado.]
+%         {\includegraphics[width=6cm]{./figuras/ftsp_grafo1.eps}}
+% ~
+% \subfigure[fig:grafo2][Como não receberam mensagens suficientes, múltiplos nós se declaram \textit{roots} na rede. Eles começam a enviar e receber mensagens de sincronização.]
+%         {\includegraphics[width=6cm]{./figuras/ftsp_grafo2.eps}}
+% ~
+% \subfigure[fig:grafo3][Nós começam a receber mensagens com \texttt{rootID} menor, logo atualizam sua referência. Dependendo de sua distância alguns nós ainda não tem a referencia atualizada, exemplo nó 4.]
+%         {\includegraphics[width=6cm]{./figuras/ftsp_grafo3.eps}}
+% \quad
+% \subfigure[fig:grafo4][A rede convergiu, e todos os nós ativos da rede estão sincronizados com o nó 2. Mensagens entre os nós 5-6 tem \texttt{seqNum} menor que \texttt{highestSeqNum} então são descartadas por redundância.]
+%         {\includegraphics[width=6cm]{./figuras/ftsp_grafo4.eps}}
+% \quad
+% \subfigure[fig:grafo5][Nó 1 é ativado, sendo o menor ID da rede vai tornar-se o \textit{root}, porém precisa primeiro preencher sua tabela de regressão e sincronizar com o tempo global, após estar sincronizado passa a enviar de mensagens de sincronização.]
+%         {\includegraphics[width=6cm]{./figuras/ftsp_grafo5.eps}}
+% \quad
+% \subfigure[fig:grafo6][Nó 1 declara-se \textit{root}, passa a enviar suas mensagens de sincronização, após algumas rodadas a rede converge e todos os nós estão com \texttt{myRootID} = 1.]
+%         {\includegraphics[width=6cm]{./figuras/ftsp_grafo6.eps}}
+% % \qquad
+% % \subfigure[fig:grafo_leg][Legenda]{\includegraphics[width=2cm]{./figuras/ftsp_grafo_legenda.eps}}
+% \caption{Eleição de lider}\label{fig:lider}
+% 
+% \end{figure}
 
 
 
