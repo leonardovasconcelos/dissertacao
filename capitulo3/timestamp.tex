@@ -49,7 +49,7 @@ Na Figura \ref{fig:comp_mactimestamp} têm-se a ilustração do procedimento de env
 
 
 
-O formato da mensagem do FTSP segue o modelo da Figura \ref{fig:pacote}. A mensagem começa com um preâmbulo, seguido do conjunto de \textit{bytes} de SYNC, um campo de dados e por fim um campo de identificação de erros CRC. O PREAMBLE é usado para sincronizar a frequência dos rádios, o SYNC é utilizado para calcular o \textit{bit offset} e com isso alinhar os \textit{bytes} no receptor. Os \textit{timestamps} são armazenados no limite de cada \textit{byte} transmitido depois de SYNC, tando no envio quanto no recebimento. Os tempos são normalizados subtraindo um múltiplo inteiro correspondente ao tempo de transmissão. Somente o tempo final é inserido no campo de dados da mensagem.
+O formato da mensagem do FTSP segue o modelo da Figura \ref{fig:pacote}. A mensagem começa com um preâmbulo, seguido do conjunto de \textit{bytes} de SYNC, um campo de dados e por fim um campo de identificação de erros CRC. O PREAMBLULO é usado para sincronizar a frequência dos rádios, o SYNC é utilizado para calcular o \textit{bit offset} e com isso alinhar os \textit{bytes} no receptor. Os \textit{timestamps} são armazenados no limite de cada \textit{byte} transmitido depois de SYNC, tando no envio quanto no recebimento. Os tempos são normalizados subtraindo um múltiplo inteiro correspondente ao tempo de transmissão. Somente o tempo final é inserido no campo de dados da mensagem.
 
 \begin{figure}[H]
  \centering

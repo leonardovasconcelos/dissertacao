@@ -1735,7 +1735,7 @@ Para mais informacoes, leia o manual da classe.\MessageBreak%
 
 \providecommand{\ABNTcoorientadordata}{}
 \providecommand{\ABNTcoorientadorname}{}
-\newcommand{\coorientador}[2][Co-orientador:\vspace{1mm}\\]%
+\newcommand{\coorientador}[2][Coorientador:\vspace{1mm}\\]%
   {\renewcommand{\ABNTcoorientadorname}{#1}%
    \renewcommand{\ABNTcoorientadordata}{#2}}
 \newcommand{\coorientadornameformat}{}
@@ -1743,7 +1743,7 @@ Para mais informacoes, leia o manual da classe.\MessageBreak%
 
 \providecommand{\ABNTcoorientadoradata}{}
 \providecommand{\ABNTcoorientadoraname}{}
-\newcommand{\coorientadora}[2][Co-orientadora:\vspace{1mm}\\]%
+\newcommand{\coorientadora}[2][Coorientadora:\vspace{1mm}\\]%
   {\renewcommand{\ABNTcoorientadoraname}{#1}%
    \renewcommand{\ABNTcoorientadoradata}{#2}}
 \newcommand{\coorientadoranameformat}{}
