@@ -104,33 +104,60 @@ Se um nó é o \textit{root}, ele também tem que incrementar seu \textit{highestSe
 
 
 
-
 \begin{figure}[H]
 \center
 
-\subfigure[fig:grafo1][Em um primeiro momento, todos os nós iniciam. As linhas pontilhadas denotam o alcance de transmissão do nó. O
-nó 1 encontra-se desligado.]
+\subfigure[fig:grafo1][Não existe nenhum \textit{root} quando a rede é ativada, os nós aguardam um determinado período a espera de mensagens de sincronização.]
         {\includegraphics[width=6cm]{./figuras/ftsp_grafo1.eps}}
 ~
-\subfigure[fig:grafo2][Como não receberam mensagens suficientes, múltiplos nós se declaram \textit{roots} na rede. Eles começam a enviar e receber mensagens de sincronização.]
+\subfigure[fig:grafo2][Assim, após uma primeira rodada, haverá pelo menos um, mas possivelmente vários nós se declarando \textit{root} da rede.]
         {\includegraphics[width=6cm]{./figuras/ftsp_grafo2.eps}}
 ~
-\subfigure[fig:grafo3][Nós começam a receber mensagens com \texttt{rootID} menor, logo atualizam sua referência. Dependendo de sua distância alguns nós ainda não tem a referencia atualizada, exemplo nó 4.]
+\subfigure[fig:grafo3][Em uma terceira rodada, os nós começam a se comunicar, passam a receber mensagens com ID menores e então atualizam sua referência de líder.]
         {\includegraphics[width=6cm]{./figuras/ftsp_grafo3.eps}}
 \quad
-\subfigure[fig:grafo4][A rede convergiu, e todos os nós ativos da rede estão sincronizados com o nó 2. Mensagens entre os nós 5-6 tem \texttt{seqNum} menor que \texttt{highestSeqNum} então são descartadas por redundância.]
+\subfigure[fig:grafo4][Na rodada seguinte, ainda existem nós que devido a distância ainda não receberam mensagens com ID menor (ex. nó 4).]
         {\includegraphics[width=6cm]{./figuras/ftsp_grafo4.eps}}
 \quad
-\subfigure[fig:grafo5][Nó 1 é ativado, sendo o menor ID da rede vai tornar-se o \textit{root}, porém precisa primeiro preencher sua tabela de regressão e sincronizar com o tempo global, após estar sincronizado passa a enviar de mensagens de sincronização.]
+\subfigure[fig:grafo5][Nesta rodada os nós continuam encaminhando suas mensagens.]
         {\includegraphics[width=6cm]{./figuras/ftsp_grafo5.eps}}
 \quad
-\subfigure[fig:grafo6][Nó 1 declara-se \textit{root}, passa a enviar suas mensagens de sincronização, após algumas rodadas a rede converge e todos os nós estão com \texttt{myRootID} = 1.]
+\subfigure[fig:grafo6][Ponto em que todos os nós concordam com o \textit{root}.]
         {\includegraphics[width=6cm]{./figuras/ftsp_grafo6.eps}}
 % \qquad
 % \subfigure[fig:grafo_leg][Legenda]{\includegraphics[width=2cm]{./figuras/ftsp_grafo_legenda.eps}}
 \caption{Eleição de lider}\label{fig:lider}
 
 \end{figure}
+
+
+
+% \begin{figure}[H]
+% \center
+% 
+% \subfigure[fig:grafo1][Em um primeiro momento, todos os nós iniciam. As linhas pontilhadas denotam o alcance de transmissão do nó. O
+% nó 1 encontra-se desligado.]
+%         {\includegraphics[width=6cm]{./figuras/ftsp_grafo1.eps}}
+% ~
+% \subfigure[fig:grafo2][Como não receberam mensagens suficientes, múltiplos nós se declaram \textit{roots} na rede. Eles começam a enviar e receber mensagens de sincronização.]
+%         {\includegraphics[width=6cm]{./figuras/ftsp_grafo2.eps}}
+% ~
+% \subfigure[fig:grafo3][Nós começam a receber mensagens com \texttt{rootID} menor, logo atualizam sua referência. Dependendo de sua distância alguns nós ainda não tem a referencia atualizada, exemplo nó 4.]
+%         {\includegraphics[width=6cm]{./figuras/ftsp_grafo3.eps}}
+% \quad
+% \subfigure[fig:grafo4][A rede convergiu, e todos os nós ativos da rede estão sincronizados com o nó 2. Mensagens entre os nós 5-6 tem \texttt{seqNum} menor que \texttt{highestSeqNum} então são descartadas por redundância.]
+%         {\includegraphics[width=6cm]{./figuras/ftsp_grafo4.eps}}
+% \quad
+% \subfigure[fig:grafo5][Nó 1 é ativado, sendo o menor ID da rede vai tornar-se o \textit{root}, porém precisa primeiro preencher sua tabela de regressão e sincronizar com o tempo global, após estar sincronizado passa a enviar de mensagens de sincronização.]
+%         {\includegraphics[width=6cm]{./figuras/ftsp_grafo5.eps}}
+% \quad
+% \subfigure[fig:grafo6][Nó 1 declara-se \textit{root}, passa a enviar suas mensagens de sincronização, após algumas rodadas a rede converge e todos os nós estão com \texttt{myRootID} = 1.]
+%         {\includegraphics[width=6cm]{./figuras/ftsp_grafo6.eps}}
+% % \qquad
+% % \subfigure[fig:grafo_leg][Legenda]{\includegraphics[width=2cm]{./figuras/ftsp_grafo_legenda.eps}}
+% \caption{Eleição de lider}\label{fig:lider}
+% 
+% \end{figure}
 
 
 
