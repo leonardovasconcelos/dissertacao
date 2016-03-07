@@ -23,13 +23,54 @@ A sincronização multi-saltos do FTSP usa pontos de referência. Esses pontos são 
 
 \textbf{Informação redundante:} Em uma rede com alta densidade de dispositivos, os nós recebem várias mensagens de outros nós ao seu alcance. Algumas delas com uma referência já lida, recebida de outro nó. Com o intuito de filtrar mensagens desnecessárias os nós mantém o valor do \texttt{highestSeqNum}, só utilizando mensagens com número de sequência (\texttt{seqNum}) maior do que o valor armazenado em \texttt{highestSeqNum}.
 
-\textbf{Problema da eleição do nó \textit{root}}: Durante o funcionamento de uma rede de sensores, alguns nós podem falhar, novos nós podem ser inseridos ou saírem do alcance da rede. Como é necessário apenas um \textit{root} para o funcionamento da rede, um processo de eleição deve ser realizado sempre houver uma mudança que venha a afetar o nó raiz. O processo de eleição do FTSP é baseado no menor ID, quando o nó tem o menor ID ele se auto declara \textit{root} e passa a sincronizar os outros nós, mas não antes de sincronizar-se com o tempo global da rede.
+\textbf{Problema da eleição do nó \textit{root}}: Durante o funcionamento de uma rede de sensores, alguns nós podem falhar, novos nós podem ser inseridos ou saírem do alcance da rede. Como é necessário apenas um \textit{root} para o funcionamento da rede, um processo de eleição deve ser realizado sempre houver uma mudança que venha a afetar o nó raiz. O processo de eleição do FTSP é baseado no menor ID, quando o nó tem o menor ID ele se auto declara \textit{root} e passa a sincronizar os outros nós, mas não antes de sincronizar-se com o tempo global da rede, a Figura \ref{fig:lider} ilustra e descreve o procedimento, nela para efeito didático assumimos que todos os enlaces são confiáveis e ignoramos a necessidade de preenchimento das tabelas de regressão para a sincronização.
 
 A variável de ambiente \texttt{ROOT\_TIMEOUT} determina o período que o nó aguarda sem receber mensagens de sincronização, quando expirado o tempo o nó se autodeclara \textit{root} (\texttt{myRootID = myID}). O contador \texttt{heartBeats} contém o período desde a última mensagem inserida na tabela de regressão. Caso o nó \textit{root} fique inativo, o valor de \texttt{heartBeats} atinge o valor de \texttt{ROOT\_TIMEOUT} em determinado número de nós e então possivelmente múltiplos nós da rede irão se declarar \textit{root}. Quando os nós passam a trocar novas mensagens, aquelas que tem o \texttt{rootID} menor que \texttt{myRootID} do nó, faz com que os nós com ID maior desistam de ser \textit{root}. Este mecanismo faz com que após algumas rodadas a rede inteira concorde com o valor do ID de apenas um \textit{root}.
 
+Outro problema relativo a eleição do nó \textit{root} é a chegada de um novo nó na rede que tenha um ID menor do que o \textit{root} atual. Esse novo nó naturalmente irá se declarar \textit{root}, mas antes, para evitar uma transição brusca ele aguarda um período de \texttt{ROOT\_TIMEOUT}, que é o tempo necessário para coletar pontos de referência suficientes e estimar seu próprio escorregamento e \textit{offset}.
+
+
+\textbf{Convergência de sincronização da rede:} O tempo que leva para uma rede estar sincronizada depois de sua inicialização, ou de alguma falha, pode ser calculado e definido conhecendo algumas variáveis. Assim, temos os valores de \texttt{NUMENTRIES\_LIMIT} definido por $N$, \texttt{ROOT\_TIMEOUT} é $T$, o período de envio de mensagens é dado por $P$ e o raio da rede é $R$. Então quando não tem nenhum \textit{root} na rede é necessário aguardar $P * T$ para que todos os nós se declarem líder.
+
+\begin{figure}[h]
+\center
+
+\subfigure[fig:grafo1][Não existe nenhum \textit{root} quando a rede é ativada, os nós aguardam um determinado período a espera de mensagens de sincronização.]
+        {\includegraphics[width=6cm]{./figuras/ftsp_grafo1.eps}}
+~
+\subfigure[fig:grafo2][Assim, após uma primeira rodada, haverá pelo menos um, mas possivelmente vários nós se declarando \textit{root} da rede.]
+        {\includegraphics[width=6cm]{./figuras/ftsp_grafo2.eps}}
+~
+\subfigure[fig:grafo3][Em uma terceira rodada, os nós começam a se comunicar, passam a receber mensagens com ID menores e então atualizam sua referência de líder.]
+        {\includegraphics[width=6cm]{./figuras/ftsp_grafo3.eps}}
+\quad
+\subfigure[fig:grafo4][Na rodada seguinte, ainda existem nós que devido a distância ainda não receberam mensagens com ID menor (ex. nó 4).]
+        {\includegraphics[width=6cm]{./figuras/ftsp_grafo4.eps}}
+\quad
+\subfigure[fig:grafo5][Nesta rodada os nós continuam encaminhando suas mensagens.]
+        {\includegraphics[width=6cm]{./figuras/ftsp_grafo5.eps}}
+\quad
+\subfigure[fig:grafo6][Ao final, temos o ponto em que todos os nós concordam com o \textit{root}.]
+        {\includegraphics[width=6cm]{./figuras/ftsp_grafo6.eps}}
+% \qquad
+% \subfigure[fig:grafo_leg][Legenda]{\includegraphics[width=2cm]{./figuras/ftsp_grafo_legenda.eps}}
+\caption{Eleição de líder}\label{fig:lider}
+
+\end{figure}
 
 
 
+\begin{figure}[h]
+\center
+
+\subfigure[fig:reeleicao1][Com a chegada de um novo nó com ID menor, esse nó não se declara \textit{root} e começa a enviar suas mensagens imediatamente, ele aguarda até preencher sua tabela e estar atualizado.]
+        {\includegraphics[width=6cm]{./figuras/releicao_root1.eps}}
+~
+\subfigure[fig:reeleicao2][Após algumas rodadas de sincronização, o nó está atualizado e então passa a enviar suas mensagens de sincronização com sua referência de tempo. Os outros nós atualizam seu \textit{rootID}.]
+        {\includegraphics[width=6cm]{./figuras/releicao_root2.eps}}
+        
+\caption{Entrada de um nó com menor ID, reeleição de líder.}\label{fig:reeleicao}
+\end{figure}        
 
 
 %%A mensagem de sincronização compreende um \textit{timestamp} do emissor, que é estimativa de tempo global e \texttt{rootID} que é 
@@ -104,31 +145,7 @@ Se um nó é o \textit{root}, ele também tem que incrementar seu \textit{highestSe
 
 
 
-\begin{figure}[H]
-\center
 
-\subfigure[fig:grafo1][Não existe nenhum \textit{root} quando a rede é ativada, os nós aguardam um determinado período a espera de mensagens de sincronização.]
-        {\includegraphics[width=6cm]{./figuras/ftsp_grafo1.eps}}
-~
-\subfigure[fig:grafo2][Assim, após uma primeira rodada, haverá pelo menos um, mas possivelmente vários nós se declarando \textit{root} da rede.]
-        {\includegraphics[width=6cm]{./figuras/ftsp_grafo2.eps}}
-~
-\subfigure[fig:grafo3][Em uma terceira rodada, os nós começam a se comunicar, passam a receber mensagens com ID menores e então atualizam sua referência de líder.]
-        {\includegraphics[width=6cm]{./figuras/ftsp_grafo3.eps}}
-\quad
-\subfigure[fig:grafo4][Na rodada seguinte, ainda existem nós que devido a distância ainda não receberam mensagens com ID menor (ex. nó 4).]
-        {\includegraphics[width=6cm]{./figuras/ftsp_grafo4.eps}}
-\quad
-\subfigure[fig:grafo5][Nesta rodada os nós continuam encaminhando suas mensagens.]
-        {\includegraphics[width=6cm]{./figuras/ftsp_grafo5.eps}}
-\quad
-\subfigure[fig:grafo6][Ponto em que todos os nós concordam com o \textit{root}.]
-        {\includegraphics[width=6cm]{./figuras/ftsp_grafo6.eps}}
-% \qquad
-% \subfigure[fig:grafo_leg][Legenda]{\includegraphics[width=2cm]{./figuras/ftsp_grafo_legenda.eps}}
-\caption{Eleição de lider}\label{fig:lider}
-
-\end{figure}
 
 
 
