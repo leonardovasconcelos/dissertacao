@@ -12,7 +12,7 @@
 
 
 
-A sincronização multi-saltos do FTSP usa pontos de referência. Esses pontos são pares de \textit{timestamps}, um com o tempo global e outro local, ambos referem-se ao mesmo instante de tempo. Eles são capturados no envio e recebimento de mensagens, como descrito na Seção \ref{sec:ftsp_timestamp}, são transmitidos pelo nó \textit{root} ou qualquer nó que esteja sincronizado. O nó \textit{root} é eleito e reeleito dinamicamente, ele é o responsável por difundir periodicamente mensagens de sincronização, os nós ao seu alcance armazenam os pontos de referência. Nós que não estão ao alcance de transmissão do \textit{root}, recebem através dos nós intermediários que já estejam sincronizados. Quando os nós têm pontos suficientes, eles são capazes de calcular seu respectivo \textit{offset} e taxa de escorregamento do relógio. As principais questões sobre esse procedimento são: a mensagem de sincronização, tratamento da redundância de informação, eleição do \textit{root}.
+A sincronização multi-saltos do FTSP usa pontos de referência. Esses pontos são pares de \textit{timestamps}, um com o tempo global e outro local, ambos referem-se ao mesmo instante de tempo. Eles são capturados no envio e recebimento de mensagens, como descrito na Seção \ref{sec:ftsp_timestamp}, são transmitidos pelo nó \textit{root} ou qualquer nó que esteja sincronizado. O nó \textit{root} é eleito e reeleito dinamicamente, ele é o responsável por difundir periodicamente mensagens de sincronização, os nós ao seu alcance armazenam os pontos de referência. Nós que não estão ao alcance de transmissão do \textit{root}, recebem através dos nós intermediários que já estejam sincronizados. Quando os nós têm pontos suficientes, eles são capazes de calcular seu respectivo \textit{offset} e taxa de escorregamento do relógio. As principais questões sobre esse procedimento são: a mensagem de sincronização, tratamento da redundância de informação, eleição do \textit{root} e tempo de convergência da rede.
 
 \textbf{Mensagem de sincronização:} A primeira questão do processo de sincronização é o conteúdo e o formato da mensagem de sincronização do FTSP, a seguir os campos.
 \begin{itemize}
@@ -27,34 +27,34 @@ A sincronização multi-saltos do FTSP usa pontos de referência. Esses pontos são 
 
 A variável de ambiente \texttt{ROOT\_TIMEOUT} determina o período que o nó aguarda sem receber mensagens de sincronização, quando expirado o tempo o nó se autodeclara \textit{root} (\texttt{myRootID = myID}). O contador \texttt{heartBeats} contém o período desde a última mensagem inserida na tabela de regressão. Caso o nó \textit{root} fique inativo, o valor de \texttt{heartBeats} atinge o valor de \texttt{ROOT\_TIMEOUT} em determinado número de nós e então possivelmente múltiplos nós da rede irão se declarar \textit{root}. Quando os nós passam a trocar novas mensagens, aquelas que tem o \texttt{rootID} menor que \texttt{myRootID} do nó, faz com que os nós com ID maior desistam de ser \textit{root}. Este mecanismo faz com que após algumas rodadas a rede inteira concorde com o valor do ID de apenas um \textit{root}.
 
-Outro problema relativo a eleição do nó \textit{root} é a chegada de um novo nó na rede que tenha um ID menor do que o \textit{root} atual. Esse novo nó naturalmente irá se declarar \textit{root}, mas antes, para evitar uma transição brusca ele aguarda um período de \texttt{ROOT\_TIMEOUT}, que é o tempo necessário para coletar pontos de referência suficientes e estimar seu próprio escorregamento e \textit{offset}.
+Outro problema relativo a eleição do nó \textit{root} é a chegada de um novo nó na rede que tenha um ID menor do que o \textit{root} atual, como ilustra a Figura \ref{fig:reeleicao}. Esse novo nó naturalmente irá se declarar \textit{root}, mas antes, para evitar uma transição brusca ele aguarda um período de \texttt{ROOT\_TIMEOUT}, que é o tempo necessário para coletar pontos de referência suficientes e estimar seu próprio escorregamento e \textit{offset}.
 
 
 \textbf{Convergência de sincronização da rede:} O tempo que leva para uma rede estar sincronizada depois de sua inicialização, ou de alguma falha, pode ser calculado e definido conhecendo algumas variáveis. Assim, temos os valores de \texttt{NUMENTRIES\_LIMIT} definido por $N$, \texttt{ROOT\_TIMEOUT} é $T$, o período de envio de mensagens é dado por $P$ e o raio da rede é $R$. Então quando não tem nenhum \textit{root} na rede é necessário aguardar $P * T$ para que todos os nós se declarem líder.
 
-\begin{figure}[h]
+\begin{figure}[H]
 \center
 
-\subfigure[fig:grafo1][Não existe nenhum \textit{root} quando a rede é ativada, os nós aguardam um determinado período a espera de mensagens de sincronização.]
-        {\includegraphics[width=6cm]{./figuras/ftsp_grafo1.eps}}
+\subfigure[Não existe nenhum \textit{root} quando a rede é ativada, os nós aguardam um determinado período a espera de mensagens de sincronização.]
+        {\includegraphics[width=7cm]{./figuras/ftsp_grafo1.eps}\label{fig:grafo1}}
 ~
-\subfigure[fig:grafo2][Assim, após uma primeira rodada, haverá pelo menos um, mas possivelmente vários nós se declarando \textit{root} da rede.]
-        {\includegraphics[width=6cm]{./figuras/ftsp_grafo2.eps}}
+\subfigure[Assim, após uma primeira rodada, haverá pelo menos um, mas possivelmente vários nós se declarando \textit{root} da rede.]
+        {\includegraphics[width=7cm]{./figuras/ftsp_grafo2.eps}\label{fig:grafo2}}
 ~
-\subfigure[fig:grafo3][Em uma terceira rodada, os nós começam a se comunicar, passam a receber mensagens com ID menores e então atualizam sua referência de líder.]
-        {\includegraphics[width=6cm]{./figuras/ftsp_grafo3.eps}}
+\subfigure[Em uma terceira rodada, os nós começam a se comunicar, passam a receber mensagens com ID menores e então atualizam sua referência de líder.]
+        {\includegraphics[width=7cm]{./figuras/ftsp_grafo3.eps}\label{fig:grafo3}}
 \quad
-\subfigure[fig:grafo4][Na rodada seguinte, ainda existem nós que devido a distância ainda não receberam mensagens com ID menor (ex. nó 4).]
-        {\includegraphics[width=6cm]{./figuras/ftsp_grafo4.eps}}
+\subfigure[Na rodada seguinte, ainda existem nós que devido a distância ainda não receberam mensagens com ID menor (ex. nó 4).]
+        {\includegraphics[width=7cm]{./figuras/ftsp_grafo4.eps}\label{fig:grafo4}}
 \quad
-\subfigure[fig:grafo5][Nesta rodada os nós continuam encaminhando suas mensagens.]
-        {\includegraphics[width=6cm]{./figuras/ftsp_grafo5.eps}}
+\subfigure[Nesta rodada os nós continuam encaminhando suas mensagens.]
+        {\includegraphics[width=7cm]{./figuras/ftsp_grafo5.eps}\label{fig:grafo5}}
 \quad
-\subfigure[fig:grafo6][Ao final, temos o ponto em que todos os nós concordam com o \textit{root}.]
-        {\includegraphics[width=6cm]{./figuras/ftsp_grafo6.eps}}
+\subfigure[Ao final, temos o ponto em que todos os nós concordam com o \textit{root}.]
+        {\includegraphics[width=7cm]{./figuras/ftsp_grafo6.eps}\label{fig:grafo6}}
 % \qquad
 % \subfigure[fig:grafo_leg][Legenda]{\includegraphics[width=2cm]{./figuras/ftsp_grafo_legenda.eps}}
-\caption{Eleição de líder}\label{fig:lider}
+\caption{Eleição de líder.}\label{fig:lider}
 
 \end{figure}
 
@@ -64,10 +64,10 @@ Outro problema relativo a eleição do nó \textit{root} é a chegada de um novo nó 
 \center
 
 \subfigure[fig:reeleicao1][Com a chegada de um novo nó com ID menor, esse nó não se declara \textit{root} e começa a enviar suas mensagens imediatamente, ele aguarda até preencher sua tabela e estar atualizado.]
-        {\includegraphics[width=6cm]{./figuras/releicao_root1.eps}}
+        {\includegraphics[width=7cm]{./figuras/releicao_root1.eps}}
 ~
 \subfigure[fig:reeleicao2][Após algumas rodadas de sincronização, o nó está atualizado e então passa a enviar suas mensagens de sincronização com sua referência de tempo. Os outros nós atualizam seu \textit{rootID}.]
-        {\includegraphics[width=6cm]{./figuras/releicao_root2.eps}}
+        {\includegraphics[width=7cm]{./figuras/releicao_root2.eps}}
         
 \caption{Entrada de um nó com menor ID, reeleição de líder.}\label{fig:reeleicao}
 \end{figure}        
@@ -78,7 +78,7 @@ Outro problema relativo a eleição do nó \textit{root} é a chegada de um novo nó 
 
 
 
-\begin{figure}[h]
+\begin{figure}[h!]
 \begin{Verbatim}[numbers=left,numbersep=1pt,frame=single]
 event Radio.receive(TimeSyncMsg *msg){
   if( msg->rootID < myRootID )
@@ -115,7 +115,7 @@ As linhas 10 a 15 armazenam mensagens de sincronização para calcular a regressão
 
 
 
-\begin{figure}[h]
+\begin{figure}[h!]
    \begin{Verbatim}[numbers=left,numbersep=1pt,frame=single]
 event Timer.fired() {
   ++heartBeats;
