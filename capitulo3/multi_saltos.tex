@@ -30,7 +30,9 @@ A variável de ambiente \texttt{ROOT\_TIMEOUT} determina o período que o nó aguar
 Outro problema relativo a eleição do nó \textit{root} é a chegada de um novo nó na rede que tenha um ID menor do que o \textit{root} atual, como ilustra a Figura \ref{fig:reeleicao}. Esse novo nó naturalmente irá se declarar \textit{root}, mas antes, para evitar uma transição brusca ele aguarda um período de \texttt{ROOT\_TIMEOUT}, que é o tempo necessário para coletar pontos de referência suficientes e estimar seu próprio escorregamento e \textit{offset}.
 
 
-\textbf{Convergência de sincronização da rede:} O tempo que leva para uma rede estar sincronizada depois de sua inicialização, ou de alguma falha, pode ser calculado e definido conhecendo algumas variáveis. Assim, temos os valores de \texttt{NUMENTRIES\_LIMIT} definido por $N$, \texttt{ROOT\_TIMEOUT} é $T$, o período de envio de mensagens é dado por $P$ e o raio da rede é $R$. Então quando não tem nenhum \textit{root} na rede é necessário aguardar $P * T$ para que todos os nós se declarem líder.
+\textbf{Convergência de sincronização da rede:} O tempo que leva para uma rede estar sincronizada depois de sua inicialização, ou de alguma falha, pode ser calculado e definido conhecendo algumas variáveis. Assim, temos os valores de \texttt{NUMENTRIES\_LIMIT} definido por $N$, \texttt{ROOT\_TIMEOUT} é $T$, o período de envio de mensagens é dado por $P$ e o raio da rede é $R$. Então quando não existe nenhum \textit{root} na rede é necessário aguardar $P * T$ para que todos os nós se declarem líder. 
+
+São necessários $N$ entradas na tabela para que os nós sejam capazes de calcular seu \textit{offset} e escorregamento de seu relógio, então o tempo máximo de mínimo para uma rede ficar toda sincronizada a partir do momento que o \textit{root} começa a enviar suas mensagens é respectivamente $P * (N - 1) * R$ e $P * N * R$. Por consequência, o tempo total para a rede sincronizar com um nó com o menor ID leva entre $P * (T + (N - 1) * R$ e $P * (T + N * R)$.
 
 \begin{figure}[H]
 \center
@@ -43,13 +45,13 @@ Outro problema relativo a eleição do nó \textit{root} é a chegada de um novo nó 
 ~
 \subfigure[Em uma terceira rodada, os nós começam a se comunicar, passam a receber mensagens com ID menores e então atualizam sua referência de líder.]
         {\includegraphics[width=7cm]{./figuras/ftsp_grafo3.eps}\label{fig:grafo3}}
-\quad
+~
 \subfigure[Na rodada seguinte, ainda existem nós que devido a distância ainda não receberam mensagens com ID menor (ex. nó 4).]
         {\includegraphics[width=7cm]{./figuras/ftsp_grafo4.eps}\label{fig:grafo4}}
-\quad
+~
 \subfigure[Nesta rodada os nós continuam encaminhando suas mensagens.]
         {\includegraphics[width=7cm]{./figuras/ftsp_grafo5.eps}\label{fig:grafo5}}
-\quad
+~
 \subfigure[Ao final, temos o ponto em que todos os nós concordam com o \textit{root}.]
         {\includegraphics[width=7cm]{./figuras/ftsp_grafo6.eps}\label{fig:grafo6}}
 % \qquad
