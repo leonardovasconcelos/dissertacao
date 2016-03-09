@@ -124,7 +124,7 @@ Aos muitos amigos que fiz durante essa etapa: Diego, Eyder, Pedro, Priscilla, Ra
 
 Aos demais professores e funcionários do IC/UFF que direto ou indiretamente contribuíram para tornar possível a concretização deste trabalho.
 
-A CAPES pelo apoio financeiro, sem o qual seria difícil o andamento dos estudos.
+À CAPES pelo apoio financeiro, sem o qual seria difícil o andamento dos estudos.
 
 Muito obrigado a todos!
 
@@ -136,13 +136,13 @@ Muito obrigado a todos!
 \begin{resumo}
 
 Redes sensores sem fio (RSSF) são sistemas distribuídos compostos de nós com bateria acoplada e baixos recursos computacionais. Assim como em muitos sistemas distribuídos, algumas aplicações de RSSF requerem sincronização entre seus nós. Para as RSSF em particular, os algoritmos de sincronização precisam respeitar as limitações computacionais. 
-O FTSP é um protocolo de sincronização \textit{ad-hoc}, multi-saltos para redes sensores que consegue um bom nível de precisão na faixa de nanosegundos. A alta acurácia é alcançada eliminando o tempo de acesso ao meio através de mensagens com \textit{timestamp} nas camadas mais baixas da pilha de rádio e compensação do escorregamento dos relógios usando regressão linear.
+O FTSP é um protocolo de sincronização \textit{ad-hoc}, multi-saltos para redes sensores que consegue um bom nível de precisão na faixa de nanosegundos. A alta acurácia é alcançada eliminando o tempo de acesso ao meio através de mensagens com \textit{timestamp} nas camadas mais baixas da pilha de comunicação e compensação do escorregamento dos relógios usando regressão linear.
 %O protocolo FTSP, bem conhecido por conseguir precisão de nanosegundos com baixa sobrecarga. 
 
-Contudo, o FTSP não é aplicado para todos os tipos de dispositivos, ele depende do recurso de MAC \textit{timestamp} que só está disponível em equipamentos com \textit{chips} de rádio mais sofisticados.
+Contudo, o FTSP não é aplicado para todos os tipos de dispositivos, uma vez que ele depende do recurso de MAC \textit{timestamp} que só está disponível em equipamentos com \textit{chips} de rádio mais sofisticados.
 %Contudo, ele depende de MAC \textit{timestamp}, um recurso que não está disponível em todos os dispositivos. 
 Neste trabalho, nós propomos uma versão do FTSP independente de MAC \textit{timestamp}, o FTSP+. Ele estende o funcionamento do FTSP para \textit{hardware} que não tenha MAC \textit{timestamp} enquanto mantém a baixa carga computacional e alta precisão da sincronização. 
-Em nossos testes com \textit{motes} reais, os resultados indicaram uma média de erro de sincronização de 1.508$\mu{s}$ por salto, enquanto é adicionada uma mensagem de correção a mais no processo.
+Em nossos testes com sensores reais, os resultados indicaram uma média de erro de sincronização de 1.508$\mu{s}$ por salto, enquanto é adicionada uma mensagem de correção a mais no processo.
 
 
 {\hspace{-8mm} \bf{Palavras-chave}}: RSSF, Sincronização de Relógios, FTSP, MAC \textit{Timestamp}.
