@@ -5,4 +5,6 @@
 \end{itemize}
 }
  
-Baseado no problema descrito na Seção \ref{sec:problema}, este trabalho propõe a extensão do FTSP para funcionamento independente de \textit{hardware}, o FTSP+. O objetivo é fornecer uma extensão para o funcionamento do FTSP em plataformas que não suportam a implementação do \textit{timestamp} na camada MAC, visto que ainda é possível fornecer a funcionalidade de sincronização a nível de pacote, com um baixo custo de \textit{overhead} de comunicação. Realizar a implementação do FTPS+ de acordo com o padrão de sincronização formalizado pelo sistema TinyOS na sua TEP 133 \cite{tinyos133}. 
+Baseado no problema descrito na Seção \ref{sec:problema}, este trabalho propõe o FTSP+ a extensão do FTSP para funcionamento independente de \textit{timestamp} na camada de acesso ao meio. O objetivo é fornecer uma extensão para o funcionamento do FTSP em plataformas que não suportam a implementação do \textit{timestamp} na camada MAC, visto que ainda é possível fornecer a funcionalidade de sincronização a nível de pacote, com um baixo custo de \textit{overhead} de comunicação. Além de manter as qualidades do protocolo, como, alta precisão, compensação do relógio e algoritmo de eleição de líder robusto. Realizar a implementação do FTPS+ de acordo com o padrão de sincronização formalizado pelo sistema TinyOS em sua documentação \cite{tinyos133}. 
+
+%TEPs são propostas de aprimoramento, documentos que normalizam as modificações e estrutura do código do TinyOS.

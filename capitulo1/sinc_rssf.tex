@@ -12,11 +12,7 @@
 
 Em sistemas distribuídos como as redes de sensores sem fio, cada nó tem seu próprio relógio e sua própria percepção de tempo. No entanto, uma escala de tempo comum entre nós sensores é importante para identificar relações entre eventos que estejam sendo monitorados, para apoiar a eliminação de dados redundantes de sensores e para facilitar a operação da rede. Uma vez que cada nó em uma rede de sensores opera de forma independente e conta com o seu próprio relógio, as leituras do relógio de diferentes nós de sensores também será divergente. Além destas diferenças aleatórias, a diferença entre os relógios de um conjunto de sensores vai aumentar ainda mais devido às taxas de escorregamento dos seus osciladores. Portanto, a sincronização dos relógios é necessária para assegurar que os tempos de detecção dos eventos que estejam sendo monitorados sejam realmente acontecendo em um mesmo instante de tempo ou muito próximo disso.
 
-Neste contexto, as técnicas de sincronização de tempo para redes com fios receberam uma quantidade significativa de atenção, esses métodos não são apropriados para uso em RSSF sem modificação, devido aos desafios colocados pelos ambientes de sensores sem fio. Estes desafios incluem o tamanho das redes de sensores, a necessidade de auto-configuração e robustez, a mobilidade dos sensores além da necessidade primordial de conservação de energia \cite{Elson2001}.
 
-Nas RSSF a eficiência energética é uma necessidade básica para seu funcionamento, em uma rede de larga escala não é possível fornecer uma fonte de energia para toda a rede, esses sensores geralmente são acoplados a uma bateria. Devido ao tamanho dos dispositivos a quantidade de energia que eles podem produzir ou armazenar é muito limitada \cite{sundararaman2005}.
-
-Sincronização de tempo é um serviço necessário para muitas aplicações e serviços em sistemas distribuídos em geral. Numerosos protocolos de sincronização de tempo têm sido propostos para ambos os sistemas com e sem fio, por exemplo, o Network Time Protocol (NTP) \cite{mills1991} é uma abordagem de sincronização escalável, robusto e auto-configurável amplamente utilizado. Especialmente em combinação com o Sistema de Posicionamento Global (GPS), tem sido utilizado para alcançar a precisão da ordem de alguns microssegundos. No entanto, abordagens como NTP não são adequados para RSSF devido a serem ineficientes neste contexto pois necessitam de uma maior quantidade de memória, processamento e uso da rede. Já o uso de GPS pode elevar o custo de implantação de um sistema de monitoramento, além de requerer vários minutos para sintonizar, GPS também necessita de um uso maior de energia.
 
 %\section{Básico de Sincronização de Tempo}
 \subsection{Conceitos Básicos}\label{subsec:conceitos}
@@ -75,7 +71,7 @@ Um conjunto de fatores podem influenciar o funcionamento dos sistemas de sensore
  \label{fig:esquema_sensor}
 \end{figure}
 
-\textbf{Limitação de \textit{Hardware}:} O tamanho e o preço dos sensores são algumas das razões pelas quais seu \textit{hardware} ser bastante limitado, aumentar o tamanho poderia elevar seu custo e consumo de energia, podendo tornar inviável as aplicações de redes sensores em larga escala \cite{kahn1999}. A capacidade computacional destes dispositivos é similar aos computadores pessoais do início da década de 80, a Figura \ref{fig:esquema_sensor} ilustra os componentes típicos de um nó sensor, transmissor fraco sujeito a perdas, memória limitada, processador de baixa capacidade aliado a fonte de energia restrita. Os algoritmos para RSSF devem respeitar esse conjunto de desafios e limitações com o objetivo de minimizar o uso dos recursos e manter seus resultados funcionais.
+\textbf{Limitação de \textit{Hardware}:} O tamanho e o preço dos sensores são algumas das razões pelas quais seu \textit{hardware} ser bastante limitado. Aumentar o tamanho poderia elevar seu custo e consumo de energia, podendo tornar inviável as aplicações de redes sensores em larga escala \cite{kahn1999}. A capacidade computacional destes dispositivos é similar aos computadores pessoais do início da década de 80. A Figura \ref{fig:esquema_sensor} ilustra os componentes típicos de um nó sensor, transmissor fraco sujeito a perdas, memória limitada, processador de baixa capacidade aliado a fonte de energia restrita. Os algoritmos para RSSF devem respeitar esse conjunto de desafios e limitações com o objetivo de minimizar o uso dos recursos e manter seus resultados funcionais.
 
 
 \begin{figure}[h]
@@ -87,9 +83,9 @@ Um conjunto de fatores podem influenciar o funcionamento dos sistemas de sensore
 \end{figure}
 
 
-Os avanços recentes nos sistemas integrados nos permitem desenvolver dispositivos sensores com baixos recursos de energia, rádio e processamento. Considerando que uma rede de sensores consista em um bom número de sensores, o valor de um só nó afeta a implantação da rede toda. Existe uma tendência defendida por pesquisadores de que com a grande quantidade de sensores aplicados hoje em dia, a produção em larga escala faça com que seu valor possa chegar a ser menor que \$1 dólar \cite{cuevas2007, wang2007topology} por unidade. 
+Os avanços recentes nos sistemas integrados nos permitem desenvolver dispositivos sensores com baixos recursos de energia, rádio e processamento. Considerando que uma rede de sensores consista em um bom número de sensores, o valor de um só nó afeta a implantação da rede inteira. Existe uma tendência defendida por pesquisadores de que com a grande quantidade de sensores aplicados hoje em dia, a produção em larga escala faça com que seu valor possa chegar a ser menor que \$1 dólar \cite{cuevas2007, wang2007topology} por unidade. 
 
-De maneira geral, os \textit{motes} são fabricados com materiais de baixo custo e as vezes de menor qualidade, por exemplo, um cristal de quartzo de baixa qualidade pode ser um dos fatores que tornam o relógios mais imprecisos. A Figura \ref{fig:overhead} apresenta o \textit{tradeoff} entre o  preço e a qualidade. Observe que o preço de produção do dispositivo determina a precisão do seu relógio, assim, quanto menos preciso o relógio é maior compensação será necessária para corrigir seu tempo, a compensação gera maior \textit{overhead} de comunicação que é gasto no uso de comunicação/energia.
+De maneira geral, os \textit{motes} são fabricados com materiais de baixo custo e as vezes de menor qualidade. Um cristal de quartzo de baixa qualidade pode ser um dos fatores que tornam o relógios mais imprecisos. A Figura \ref{fig:overhead} apresenta o \textit{tradeoff} entre o  preço e a qualidade. Observe que o preço de produção do dispositivo determina a precisão do seu relógio, assim, quanto menos preciso o relógio é, maior compensação será necessária para corrigir seu tempo. A compensação gera maior sobrecarga de comunicação que é gasto no uso de comunicação/energia.
 
 
 
@@ -103,22 +99,22 @@ De maneira geral, os \textit{motes} são fabricados com materiais de baixo custo 
 }
 
 
-A troca de mensagem baseada em \textit{timestamp} (marca de tempo) é a principal ferramenta dos protocolos de sincronização, porém o não determinismo causado pelas latências no processo de troca de mensagens interfere na precisão que pode ser obtida utilizando este método. Por exemplo, quando um nó envia uma mensagem com seu \textit{timestamp} para outro, os diversos procedimentos pelo qual essa informação vai percorrer até o destino apresentam um custo de computação e tempo para ser realizada, assim quando se dá a recepção do dado no destino já se passou uma quantidade determinada tempo, o relógio do nó origem continuou rodando e o \textit{timestamp} enviado está inconsistente com o valor atual da fonte. A latência deste procedimento pode ser decomposta em alguns componentes, descritos por Kopetz e Ochsenreiter \cite{kopetz1987} e classificados a seguir:
+A troca de mensagem baseada em \textit{timestamp} (marca de tempo) é a principal ferramenta dos protocolos de sincronização \cite{Lenzen:Sensys09}, porém o não determinismo causado pelas latências no processo de troca de mensagens interfere na precisão que pode ser obtida utilizando este método. Por exemplo, quando um nó envia uma mensagem com seu \textit{timestamp} para outro, os diversos procedimentos pelo qual essa informação vai percorrer até o destino apresentam um custo de computação e tempo para ser realizada, assim quando se dá a recepção do dado no destino já se passou uma quantidade determinada tempo, o relógio do nó origem continuou rodando e o \textit{timestamp} enviado está inconsistente com o valor atual da fonte. A latência deste procedimento pode ser decomposta em alguns componentes, descritos por Kopetz e Ochsenreiter \cite{kopetz1987} e classificados a seguir:
 
 \begin{itemize}
  
- \item Tempo no envio: É o tempo que o sistema leva para montar a mensagem e passar a requisição de transmissão para a camada de acesso ao meio. Fonte de atraso causado principalmente pelo sistema operacional e da carga de uso do CPU.
+ \item \textbf{Tempo no envio}: É o tempo que o sistema leva para montar a mensagem e passar a requisição de transmissão para a camada de acesso ao meio. Fonte de atraso causado principalmente pelo sistema operacional e da carga de uso do CPU.
  
- \item Tempo de acesso ao meio: Ocorre devido a janela de contenção do acesso ao meio, é o tempo que o nó leva para ter acesso físico para transmissão esperando o canal estar desocupado para então para usá-lo. Redes sem fio compartilham o mesmo meio de comunicação necessitando de uma forma de coordenar quem pode usar o canal e assim evitar colisões. O protocolo MAC do 802.11 serve como base para as variações utilizadas em RSSF, estes buscam atingir maior eficiência no consumo de energia, algumas opções destes protocolos são: BMAC (\textit{Versatile low power media access}) \cite{bmac}, S-MAC  (\textit{Sensor-MAC}) \cite{smac}, Box-MAC \cite{boxmac}, PAMAS (\textit{Power-Aware Multi-Access Protocol}) \cite{pamas} e para uma especificação mais detalhada e atualizada desses protocolos podem ser obtidas em \cite{suriyachai2012survey, huang2013evolution}.
+ \item \textbf{Tempo de acesso ao meio}: Ocorre devido a janela de contenção do acesso ao meio, é o tempo que o nó leva para ter acesso físico para transmissão esperando o canal estar desocupado para então para usá-lo. Redes sem fio compartilham o mesmo meio de comunicação necessitando de uma forma de coordenar quem pode usar o canal e assim evitar colisões. O protocolo MAC do 802.11 serve como base para as variações utilizadas em RSSF, estes buscam atingir maior eficiência no consumo de energia, algumas opções destes protocolos são: BMAC (\textit{Versatile low power media access}) \cite{bmac}, S-MAC  (\textit{Sensor-MAC}) \cite{smac}, Box-MAC \cite{boxmac}, PAMAS (\textit{Power-Aware Multi-Access Protocol}) \cite{pamas} e para uma especificação mais detalhada e atualizada desses protocolos podem ser obtidas em \cite{suriyachai2012survey, huang2013evolution}.
  
  
- \item Tempo de transmissão: Tempo que leva para um nó transmitir uma mensagem para outro nó, varia dependendo do tamanho do pacote e da velocidade da banda.
+ \item \textbf{Tempo de transmissão}: Tempo que leva para um nó transmitir uma mensagem para outro nó, varia dependendo do tamanho do pacote e da velocidade da banda.
  
- \item Tempo de propagação: Tempo que a mensagem leva para chegar no receptor desde o momento que deixou o emissor. Este tempo é muito pequeno e geralmente insignificante para a análise geral do atraso.
+ \item \textbf{Tempo de propagação}: Tempo que a mensagem leva para chegar no receptor desde o momento que deixou o emissor. Este tempo é muito pequeno e geralmente insignificante para a análise geral do atraso.
  
- \item Tempo de recebimento: É o tempo que o receptor leva para receber a mensagem, sendo igual ao da transmissão.
+ \item \textbf{Tempo de recebimento}: É o tempo que o receptor leva para receber a mensagem, sendo igual ao da transmissão.
  
- \item Tempo de recepção: Similar ao tempo de envio, é o \textit{delay} de receber a mensagem e encaminha-la para o nível da aplicação.
+ \item \textbf{Tempo de recepção}: Similar ao tempo de envio, é o \textit{delay} de receber a mensagem e encaminha-la para o nível da aplicação.
 
 \end{itemize}
  
@@ -134,11 +130,11 @@ A Figura \ref{fig:dec_delay} ilustra as tomadas de tempo que compõem as fontes d
 
 
 \begin{itemize}
- \item Tempo de tratamento de interrupções: O tempo que o microcontrolador demora para responder a solicitação do \textit{chip} de rádio.
+ \item \textbf{Tempo de tratamento de interrupções}: O tempo que o microcontrolador demora para responder a solicitação do \textit{chip} de rádio.
  
- \item Codificação e Decodificação: Codificação é o tempo que o transmissor tira para codificar os \textit{bits} nas ondas de rádio. E decodificação o tempo que o receptor demora até transformar as ondas eletromagnéticas em \textit{bits}. 
+ \item \textbf{Codificação e Decodificação}: Codificação é o tempo que o transmissor tira para codificar os \textit{bits} nas ondas de rádio. E decodificação o tempo que o receptor demora até transformar as ondas eletromagnéticas em \textit{bits}. 
  
- \item Alinhamento de \textit{Byte}: Diferentes tipos de alinhamento entre o transmissor e receptor, causam a necessidade de reordenar os \textit{bytes}. Alguns \textit{chips} de rádio não são capazes de resolver o alinhamento de um fluxo de mensagem, o receptor deverá resolver o \textit{offset} da mensagem.
+ \item \textbf{Alinhamento de \textit{Byte}}: Diferentes tipos de alinhamento entre o transmissor e receptor, causam a necessidade de reordenar os \textit{bytes}. Alguns \textit{chips} de rádio não são capazes de resolver o alinhamento de um fluxo de mensagem, o receptor deverá resolver o \textit{offset} da mensagem.
 \end{itemize}
 
 

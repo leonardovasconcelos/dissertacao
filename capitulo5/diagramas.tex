@@ -74,11 +74,11 @@ typedef nx_struct TimeSyncMsg {
 
 O mensagem conta com o \texttt{rootID}, se a mensagem tem \textit{root} com ID maior que a informação do \textit{root} local ela é descartada. O \texttt{nodeID} contém o ID de quem enviou a mensagem. O \texttt{seqNum} serve para identificar qual o \textit{timestamp} a mensagem está corrigindo. O campo \texttt{correction} é o campo que traz a estimativa de erro do emissor e é com ele que será feita a correção dos \textit{timestamp} anteriormente recebidos.
 
-No documento da TEP 132 \cite{tinyos132}, é fornecido uma breve descrição sobre o padrão de \textit{timestamps} oferecidos pela interface \texttt{PacketTimeStamp} que faz o acesso ao tempo de recepção e envio de determinada mensagem.
+No documento da TEP 132 \cite{tinyos132}, é fornecido uma breve descrição sobre o padrão de \textit{timestamp} oferecido pela interface \texttt{PacketTimeStamp}, que faz o acesso ao tempo de recepção e envio de determinada mensagem.
 
-A TEP 133 fornece a abstração para o mecanismo de sincronização de pares. Não provê um sincronização completa da redes, mas, com seus recursos é possível implementar um serviço de sincronização completo, exemplo o FTSP, pois os componentes e interfaces utilizados em sua implementação estão bem definidos em seu documento \cite{tinyos133}. 
+A TEP 133 fornece a abstração para o mecanismo de sincronização de pares. Não provê um mecanismo de sincronização completo para a rede, mas, com seus recursos é possível implementar um serviço de sincronização completo, como o FTSP, pois os componentes e interfaces utilizados em sua implementação estão bem definidos em seu documento \cite{tinyos133}. 
 
-Outro aspecto importante da TEP 133 é o seu guia de implementação, que compreende duas abordagens, uma em que é possível mudar o \textit{payload} da mensagem durante a transmissão usando a interrupção SFD dos rádios orientados a pacote. A segunda abordagem descreve a possibilidade da sincronização para plataformas em que não seja possível a alteração do conteúdo durante a transmissão. Podemos verificar que o FTSP atende a primeira abordagem, já a segunda não é atendida, porém com o FTSP+ ambas as abordagens são acolhidas.
+Outro aspecto importante da TEP 133 é o seu guia de implementação, que compreende duas abordagens. A primeira define que é possível mudar o \textit{payload} da mensagem durante a transmissão usando a interrupção SFD dos rádios orientados a pacote. A segunda abordagem descreve a possibilidade da sincronização para plataformas em que não seja possível a alteração do conteúdo durante a transmissão. Podemos verificar que o FTSP atende o que é descrito na primeira abordagem, a segunda não é atendida. Porém, com o FTSP+ ambas as abordagens são acolhidas.
 
 
 \begin{figure}[h]
@@ -89,6 +89,6 @@ Outro aspecto importante da TEP 133 é o seu guia de implementação, que compreend
  \label{fig:arq_prot_sync}
 \end{figure}
 
-Ao final temos a seguinte arquitetura de sincronização resultante do FTSP+ no TinyOS, Figura \ref{fig:arq_prot_sync}. O oscilador de cristal incrementa o contador do relógio físico, que por sua vez alimenta o relógio lógico, o FTSP+ usa o relógio lógico (Componente \texttt{Timer}) para obter o valor do tempo local do nó, assim pode calcular seu desvio, estimar o tempo global e atualizar novamente o relógio, bem como, enviar e receber essas referências de tempo pelo transmissor de rádio. As setas da imagem denotam troca de dados entre os componentes, a seta tracejada refere-se ao mecanismo do FTSP de MAC \textit{timestamp}. 
+Ao final temos a seguinte arquitetura de sincronização resultante do FTSP+ no TinyOS, Figura \ref{fig:arq_prot_sync}. O oscilador de cristal incrementa o contador do relógio físico, que por sua vez alimenta o relógio lógico. O FTSP+ usa o relógio lógico (Componente \texttt{Timer}) para obter o valor do tempo local do nó. Com este valor, o protocolo pode calcular o desvio, estimar o tempo global e atualizar novamente o relógio. Da mesma forma, pode enviar e receber essas referências de tempo pelo transmissor de rádio. As setas da imagem denotam a troca de dados entre os componentes, a seta tracejada refere-se ao mecanismo de MAC \textit{timestamp} do FTSP . 
 
-O próximo capítulo traz experimento realizado com \textit{motes} reais, e gráficos estatísticos dos resultados encontrados, os experimentos foram baseados nas técnicas descritas no trabalho. 
+O próximo capítulo traz os experimentos realizados com \textit{motes} reais, bem como, os gráficos estatísticos dos resultados encontrados. Os experimentos foram baseados nas técnicas descritas no trabalho. 

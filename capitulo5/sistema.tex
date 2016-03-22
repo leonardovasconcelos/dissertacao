@@ -8,12 +8,12 @@
 
 
 
-O desenvolvimento do FTSP+ foi realizado utilizando o sistema operacional TinyOS, que é um SO bem difundido na área de redes sensores sem fio \cite{levis2004tinyos}. O TinyOS não é um sistema operacional convencional, em que se instala completamente no sensor, ele se apresenta como um arcabouço de um conjunto de componentes reutilizáveis que permitem o desenvolvimento de aplicações para sistemas embarcados em conjunto com o SO. Esses componentes são separados por funções características, no momento de construir a aplicação somente os componentes especificados serão integrados na aplicação final, mantendo o uso minimal de recursos. 
+O desenvolvimento do FTSP+ foi realizado utilizando o sistema operacional TinyOS, que é um SO bem difundido na área de redes sensores sem fio \cite{levis2004tinyos}. O TinyOS não é um sistema operacional convencional, em que se instala completamente no sensor. O sistema apresenta-se como um arcabouço de um conjunto de componentes, reutilizáveis e que permite o desenvolvimento de aplicações para sistemas embarcados em conjunto com o SO. Esses componentes são separados por funções características, no momento de construir a aplicação somente os componentes especificados serão integrados na aplicação final, mantendo o uso minimal de recursos. 
 
 Com a limitação de recursos nos dispositivos sensores o TinyOS conta com pouco menos de 400 \textit{bytes} de tamanho, é um sistema baseado em eventos, com suporte a concorrência, eventos assíncronos e comandos. Um programa em TinyOS possui a abstração dos componentes em um modelo de grafo, como vemos na Figura \ref{fig:diagrama_componentes}.
 
 
-As aplicações e o próprio sistema operacional são escritos em nesC (\textit{networked systems C}) \cite{gay2003nesc} um dialeto da linguagem C, que dá o suporte a arquitetura de componentes e orientação a eventos, além de ser otimizada para reduzir o consumo de memória e ter primitivas que previnam problemas de baixo nível como condição de corrida. No desenvolvimento existe a separação da organização dos componentes e programação das interfaces, os componentes são conectados (\textit{wired}) juntos em um arquivo de aplicação, já o código dos eventos e tarefas são feitos em um arquivo de construção.
+As aplicações e o próprio sistema operacional são escritos em nesC (\textit{networked systems C}) \cite{gay2003nesc} um dialeto da linguagem C. Esta linguagem dá o suporte a arquitetura de componentes e orientação a eventos. É otimizada para reduzir o consumo de memória e tem primitivas que previnem problemas de baixo nível, como por exemplo, condição de corrida. No desenvolvimento existe a separação da organização dos componentes e programação das interfaces, os componentes são conectados (\textit{wired}) juntos em um arquivo de aplicação, já o código dos eventos e tarefas são feitos em um arquivo de construção.
 
 
 %Como o TinyOS tem o código aberto, é possível alterá-lo e criar ou estender suas funcionalidades.
